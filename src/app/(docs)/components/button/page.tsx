@@ -22,25 +22,22 @@ export const metadata = metaConfig({
 
 export default function ButtonDocsPage() {
   return (
-    <div className="max-w-5xl mx-auto py-12 space-y-12">
-      {/* Heading */}
+    <div className="max-w-5xl mx-auto pt-12 pb-6 space-y-12 ">
       <div>
-        <h1 className="text-5xl font-extrabold tracking-tight">Button</h1>
-        <p className="mt-3 text-lg text-muted-foreground">
+        <h1 className="text-3xl font-bold tracking-tight">Button</h1>
+        <p className="mt-3 text-accent-foreground">
           A simple customizable button component with a variety of variants to
           choose from.
         </p>
       </div>
 
-      {/* Note */}
-      <div className="rounded-xl border bg-muted/40 p-4 text-sm text-muted-foreground">
-        <strong>NOTE:</strong> This is a starting point for the{" "}
-        <code>Button</code> component. You can customize it according to your
-        needs. We are adding more variants as you read this guide, so stay tuned
-        for updates.
+      <div className="text-accent-foreground">
+        <span className="font-semibold">NOTE: </span>
+        This is a starting point for the Button component. You can customize it
+        according to your needs, we are adding more variants as you read this
+        guide, so stay tuned for more updates.
       </div>
 
-      {/* Examples */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">Examples</h2>
         <ComponentPreview
@@ -62,17 +59,32 @@ export default function ButtonDocsPage() {
             <InstallationCli value="button" />
           </TabsContent>
 
-          <TabsContent value="manual" className="mt-4 space-y-4">
-            <p>
-              If you haven't completed the installation refer to the guide{" "}
-              <a href="/docs/installation" className="text-primary underline">
-                here
-              </a>
-              .
-            </p>
-            <p>Copy and paste the following code into your project:</p>
-            <CodeBlock filePath="src/components/ui/button.tsx" />
-            <p>Update the import paths to match your project setup.</p>
+          <TabsContent value="manual" className="mt-4 space-y-8">
+            <ol className="list-decimal list-outside ml-5 space-y-4">
+              <li>
+                <p>
+                  If you haven't completed the installation refer to the guide{" "}
+                  <a
+                    href="/docs/installation"
+                    className="text-primary underline"
+                  >
+                    here
+                  </a>
+                  .
+                </p>
+              </li>
+
+              <li>
+                <div>
+                  <p>Copy and paste the following code into your project:</p>
+                  <CodeBlock filePath="src/components/ui/button.tsx" />
+                </div>
+              </li>
+
+              <li>
+                <p>Update the import paths to match your project setup.</p>
+              </li>
+            </ol>
           </TabsContent>
         </Tabs>
       </section>
@@ -151,7 +163,6 @@ export default function ButtonDocsPage() {
         </p>
       </section>
 
-      {/* Prev/Next */}
       <PrevNextBtn current="button" />
     </div>
   );

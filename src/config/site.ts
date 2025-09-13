@@ -2,15 +2,15 @@
 import type { Metadata } from "next";
 
 export const siteConfig = {
-  name: "aurora/ui",
-  url: "http://localhost:3000",
+  name: "Aether/ui",
+  url: "https://aetherui.in",
   bgImage:
-    "",
+    "https://res.cloudinary.com/di0av3xly/image/upload/v1744973705/Aether-ui/au-meta-banner_vidmtc.png",
   description:
-    "aurora/ui is a collection of beautiful, animated components for your next product, built with Motion and Tailwind CSS.",
+    "Aether/ui is a collection of beautiful, animated components for your next product, built with Motion and Tailwind CSS.",
   links: {
-    twitter: "",
-    github: "",
+    twitter: "https://dub.sh/harshit-x?utm_source=aether-ui",
+    github: "https://git.new/aether-ui?utm_source=aether-ui",
   },
 };
 
@@ -27,7 +27,7 @@ export interface MetaConfigProps {
   description: string;
 }
 
-const fallbackURL = "";
+const fallbackURL = "https://ui-aether.vercel.app";
 
 /**
  * @param title: Metadata["title"];
@@ -43,11 +43,11 @@ export const metaConfig = ({
   keywords: ["Next.js", "React", "Tailwind CSS", "Motion", "JavaScript", "TypeScript"],
   metadataBase: new URL(siteConfig.url),
   applicationName: siteConfig.name,
-  authors: [{ name: "aurora/ui's Team", url: siteConfig.url }],
-  publisher: "aurora/ui's Team",
+  authors: [{ name: "Aether/ui's Team", url: siteConfig.url }],
+  publisher: "Aether/ui's Team",
   alternates: { canonical: fallbackURL },
   twitter: {
-    creator: "",
+    creator: "@pantharhsit007",
     title,
     description,
     card: "summary_large_image",
@@ -81,7 +81,7 @@ export const metaConfig = ({
 export const rootSiteConfig = {
   title: {
     default: siteConfig.name,
-    template: "%s | aurora/ui",
+    template: "%s | Aether/ui",
   },
   description: siteConfig.description,
   url: siteConfig.url,
@@ -95,8 +95,8 @@ export const rootSiteConfig = {
   keywords: ["Next.js", "React", "Tailwind CSS", "Motion", "JavaScript", "TypeScript"],
   metadataBase: new URL(siteConfig.url),
   applicationName: siteConfig.name,
-  authors: [{ name: "aurora/ui's Team", url: siteConfig.url }],
-  publisher: "aurora/ui's Team",
+  authors: [{ name: "Aether/ui's Team", url: siteConfig.url }],
+  publisher: "Aether/ui's Team",
   alternates: { canonical: fallbackURL },
   twitter: {
     creator: "@pantharhsit007",
@@ -108,7 +108,7 @@ export const rootSiteConfig = {
         url: siteConfig.bgImage,
         width: 1200,
         height: 630,
-        alt: "aurora/ui Banner",
+        alt: "Aether/ui Banner",
       },
     ],
   },
@@ -123,7 +123,7 @@ export const rootSiteConfig = {
         url: siteConfig.bgImage,
         width: 1200,
         height: 630,
-        alt: "aurora/ui Banner",
+        alt: "Aether/ui Banner",
       },
     ],
   },
