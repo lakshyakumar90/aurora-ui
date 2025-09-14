@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+
 export default function header() {
   return (
     <div className=" px-10 py-4 flex items-center justify-between backdrop-blur-lg">
