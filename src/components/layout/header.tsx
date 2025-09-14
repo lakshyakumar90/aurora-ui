@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function header() {
   return (
-    <div className=" px-10 py-4 flex items-center justify-between backdrop-blur-lg">
+    <div className="fixed top-0 w-full px-10 py-4 flex items-center justify-between bg-background z-[9999] border-b-[1px] border-dotted border-zinc-400 dark:border-white/20">
       <Link href="/" className="flex items-center gap-2">
         <Image
           src="/logo.png"

@@ -32,7 +32,7 @@ function ComponentCodePreview({
         </TabsList>
         <TabsContent
           value="preview"
-          className="rounded-md border border-zinc-200 dark:border-zinc-800"
+          className="rounded-md border border-zinc-200 dark:border-zinc-800 px-20"
         >
           <FinalPreview
             component={component}
