@@ -45,10 +45,10 @@ export default function DocsLayout({
   currentSlug,
 }: DocsLayoutProps) {
   return (
-    <div className="max-w-5xl mx-auto pt-12 pb-6 space-y-12">
+    <div className="max-w-5xl mx-auto pb-6 space-y-12">
       {/* Heading */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+        <h1 id="overview" data-heading="1" className="text-3xl font-bold tracking-tight">{title}</h1>
         <p className="mt-3 text-accent-foreground">{description}</p>
       </div>
 
@@ -62,7 +62,7 @@ export default function DocsLayout({
 
       {/* Examples */}
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Examples</h2>
+        <h2 id="examples" data-heading="2" className="text-2xl font-semibold mb-4">Examples</h2>
         <ComponentPreview
           component={example.component}
           filePath={example.filePath}
@@ -71,7 +71,7 @@ export default function DocsLayout({
 
       {/* Installation */}
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Installation</h2>
+        <h2 id="installation" data-heading="2" className="text-2xl font-semibold mb-4">Installation</h2>
         <Tabs defaultValue="cli">
           <TabsList>
             <TabsTrigger value="cli">CLI</TabsTrigger>
@@ -114,7 +114,7 @@ export default function DocsLayout({
       <section>
         {propsTable && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Component Props</h2>
+            <h2 id="props" data-heading="2" className="text-2xl font-semibold mb-4">Component Props</h2>
             <p className="text-muted-foreground mb-4">
               You can customize the content of the <code>{title}</code> by
               passing the following props:
@@ -146,7 +146,7 @@ export default function DocsLayout({
       {/* Credits */}
       {credits && (
         <section>
-          <h2 className="text-2xl font-semibold mb-4">Credits</h2>
+          <h2 id="credits" data-heading="2" className="text-2xl font-semibold mb-4">Credits</h2>
           <p className="text-muted-foreground">
             {credits.text}{" "}
             <a

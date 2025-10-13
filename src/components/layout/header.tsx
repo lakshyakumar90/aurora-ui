@@ -1,33 +1,69 @@
-import Image from "next/image";
+"use client";
+
+import React from "react";
 import Link from "next/link";
+import Logo from "./logo";
+import ThemeToggle from "./theme-toggle";
+import SideBarToggle from "./sidebar-toggle";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import CommandMenu from "./command-menu";
 
-
-export default function header() {
+function Header({ landing = false }: { landing?: boolean }) {
+  const pathname = usePathname();
   return (
-    <div className="sticky top-0 z-[9999] w-full">
-      <div className="h-13 flex items-center justify-center bg-gradient-to-br from-[#A44BF8] to-blue-500 shadow-[0_12px_60px_#A44BF8,0_0_120px_#A44BF8] animate-gradient-move  ">
-            <p>Looking for components? Introducing <span className="underline">Aurora UI </span></p>
-      </div>
-      <div className=" w-full px-10 py-4 flex items-center justify-between bg-background  border-b-[1px] border-dotted border-zinc-400 dark:border-white/20 ">
-      <Link href="/" className="flex items-center gap-2">
-        <Image
-          src="/logo.png"
-          width={40}
-          height={40}
-          alt="logo"
-          className=""
-        ></Image>
-        <span className="text-xl font-semibold">Aurora-UI</span>
-      </Link>
-
-      <div className="flex items-center gap-4">
-        {["Docs", "Components", "Templates"].map((item, index) => (
-          <Link key={index} href="#">
-            <span className="text-sm">{item}</span>
+    <nav className="sticky top-0 z-15 border-b border-border bg-background px-6">
+      <div className="mx-auto flex h-[3.5rem] w-full items-center justify-between max-sm:px-2 md:max-w-7xl">
+        {/* Logo */}
+        <div className="flex items-center gap-x-4 px-1">
+          <Link href="/">
+            Aurora UI
           </Link>
-        ))}
+
+          {/* Navigation Links */}
+          <div className="ml-3 hidden md:block">
+            <div className="flex items-center space-x-4 font-sans text-sm tracking-wide">
+              <Link
+                href="/components/button"
+                className={cn(
+                  "hover:text-foreground transition-colors hover:font-medium",
+                  pathname.startsWith("/docs") ? "text-foreground" : "text-foreground/80"
+                )}
+              >
+                Components
+              </Link>
+
+              <Link
+                href="/installation"
+                className={cn(
+                  "hover:text-foreground transition-colors hover:font-medium",
+                  pathname.startsWith("/showcase") ? "text-foreground" : "text-foreground/80"
+                )}
+              >
+                Installation
+              </Link>
+              <Link
+                href="/templates"
+                className={cn(
+                  "hover:text-foreground transition-colors hover:font-medium",
+                  pathname.startsWith("/community") ? "text-foreground" : "text-foreground/80"
+                )}
+              >
+                Templates
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <span className="flex items-center gap-x-4">
+          <CommandMenu />
+
+          <ThemeToggle />
+          <SideBarToggle />
+        </span>
       </div>
-    </div>
-    </div>
+    </nav>
   );
 }
+
+export default Header;

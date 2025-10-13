@@ -64,17 +64,17 @@ export function InstallationCli({ value, className }: InstallationCliProps) {
       defaultValue={activeTab}
       onValueChange={setActiveTab}
       className={cn(
-        "group mt-2 gap-0 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800",
+        "group mt-2 gap-0 overflow-hidden rounded-md border",
         className
       )}
     >
-      <div className="bg-accent flex flex-row items-center justify-between overflow-hidden rounded-t-md border border-b-0 border-zinc-200 dark:border-zinc-800">
+      <div className="bg-accent flex flex-row items-center justify-between overflow-hidden rounded-t-md border border-b-0">
         <TabsList className="">
           {pkgManager.map((tab) => (
             <TabsTrigger
               key={tab.label}
               value={tab.label}
-              className="flex flex-row items-center justify-center gap-x-1 p-2 font-mono text-sm text-zinc-800 dark:text-zinc-200"
+              className="flex flex-row items-center justify-center gap-x-1 p-2 font-mono text-sm"
             >
               <span>{tab.label}</span>
             </TabsTrigger>
@@ -107,10 +107,7 @@ export function InstallationCli({ value, className }: InstallationCliProps) {
           className="overflow-hidden rounded-b-md border-none"
         >
           <pre
-            className="not-prose p-4 font-mono text-sm text-zinc-50"
-            style={{
-              backgroundColor: "#18181b",
-            }}
+            className="not-prose p-4 font-mono text-sm"
           >
             {cmd.code}
           </pre>

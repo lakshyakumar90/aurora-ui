@@ -32,7 +32,7 @@ function Logo({
 
       <p
         className={cn(
-          "font-bricolage-grotesque text-shadow-glow text-2xl font-medium tracking-tight text-white",
+          "font-bricolage-grotesque text-shadow-glow text-2xl font-medium tracking-tight text-foreground",
           className
         )}
       >

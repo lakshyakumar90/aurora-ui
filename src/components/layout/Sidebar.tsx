@@ -20,32 +20,34 @@ function NavigationDesktop() {
           animate={{ x: 0 }}
           exit={{ x: -200 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="sticky top-14 hidden h-[calc(100dvh-(--spacing(16)))] w-[220px] shrink-0 border-r-[1px] border-dotted border-zinc-400 pt-8 md:block lg:pt-12 dark:border-white/20"
+          className="fixed left-0 top-14 px-6 z-10 hidden h-[calc(100vh-3.5rem)] w-[220px] border-r border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:block"
         >
-          <ScrollArea className="h-full w-full">
-            <nav>
-              <ul role="list" className="h-full pb-9 [&>li:not(:first-child)>div]:pt-6">
-                {NavigationLinks.map((item, index) => {
-                  return (
-                    <li key={`${item.name}-${index}`}>
-                      <div className="relative z-10 w-11/12 pb-4 font-sans text-sm tracking-wide text-zinc-950 dark:text-white">
-                        {item.name}
-                      </div>
+          <div className="h-full pt-8">
+            <ScrollArea className="h-full w-full">
+              <nav>
+                <ul role="list" className="h-full pb-9 [&>li:not(:first-child)>div]:pt-6">
+                  {NavigationLinks.map((item, index) => {
+                    return (
+                      <li key={`${item.name}-${index}`}>
+                        <div className="relative z-10 w-11/12 pb-4 font-sans text-sm tracking-wide text-foreground">
+                          {item.name}
+                        </div>
 
-                      <ul
-                        role="list"
-                        className="space-y-3.5 border-l border-zinc-200 dark:border-zinc-800"
-                      >
-                        {item.children.map((child: NavigationItem) =>
-                          NavSubItems({ item: child, pathname })
-                        )}
-                      </ul>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
-          </ScrollArea>
+                        <ul
+                          role="list"
+                          className="space-y-3.5 border-l border-border"
+                        >
+                          {item.children.map((child: NavigationItem) =>
+                            NavSubItems({ item: child, pathname })
+                          )}
+                        </ul>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+            </ScrollArea>
+          </div>
         </motion.aside>
       )}
     </AnimatePresence>
@@ -76,12 +78,12 @@ function NavigationMobile() {
                 {NavigationLinks.map((item, index) => {
                   return (
                     <li key={`${item.name}-${index}`}>
-                      <div className="relative z-10 w-11/12 pb-4 font-sans text-lg tracking-wide text-zinc-950 dark:text-white">
+                      <div className="relative z-10 w-11/12 pb-4 font-sans text-lg tracking-wide text-foreground">
                         {item.name}
                       </div>
                       <ul
                         role="list"
-                        className="space-y-3.5 border-l border-zinc-200 dark:border-zinc-800"
+                        className="space-y-3.5 border-l border-border"
                       >
                         {item.children.map((child: NavigationItem) =>
                           NavSubItems({
@@ -122,8 +124,8 @@ function NavSubItems({
       <li key={item.href}>
         <Link
           className={cn(
-            "relative inline-flex items-center pl-4 text-sm font-normal text-zinc-700 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-100",
-            isActive && "text-zinc-950 dark:text-zinc-100",
+            "relative inline-flex items-center pl-4 text-sm font-normal text-muted-foreground hover:text-foreground",
+            isActive && "text-foreground",
             className
           )}
           href={item.href}
@@ -132,7 +134,7 @@ function NavSubItems({
           {isActive && (
             <motion.div
               layout
-              className="absolute top-0 -left-[1px] h-full w-0.5 rounded-[4px] bg-zinc-950 dark:bg-white"
+              className="absolute top-0 -left-[1px] h-full w-0.5 rounded-[4px] bg-foreground"
               transition={{
                 type: "spring",
                 stiffness: 26.7,

@@ -7,7 +7,7 @@ export default function Publish() {
           Become a creative <br />
           designer today
         </h1>
-        <h4 className="text-3xl text-center text-gray-400">
+        <h4 className="text-3xl text-center text-muted-foreground">
           Built apps faster with <br />
           pre-built components...
         </h4>
@@ -26,7 +26,7 @@ export default function Publish() {
         className=" h-20 w-50 text-xl  cursor-pointer absolute z-9  top-15
   px-6 py-3 
   rounded-2xl 
-  text-white 
+  text-foreground 
   font-bold 
   bg-[#A44BF8] 
   shadow-[0_12px_60px_#A44BF8,0_0_80px_#A44BF8] 

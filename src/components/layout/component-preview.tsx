@@ -14,7 +14,6 @@ type ComponentCodePreview = {
 function ComponentCodePreview({
   component,
   filePath,
-  hasReTrigger,
   classNameComponentContainer,
 }: ComponentCodePreview) {
   const fileContent = readCode(filePath);
@@ -32,7 +31,7 @@ function ComponentCodePreview({
         </TabsList>
         <TabsContent
           value="preview"
-          className="rounded-md border border-zinc-200 dark:border-zinc-800 px-20"
+          className="rounded-md border border-border px-20"
         >
           <FinalPreview
             component={component}
@@ -42,7 +41,7 @@ function ComponentCodePreview({
         </TabsContent>
         <TabsContent
           value="code"
-          className="rounded-md border border-zinc-200 dark:border-zinc-800"
+          className="rounded-md border border-border"
         >
           <CodePreview code={fileContent} expandable>
             <CodeRenderer code={fileContent} lang="tsx" />

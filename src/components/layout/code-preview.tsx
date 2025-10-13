@@ -41,7 +41,7 @@ export default function CodePreview({
               hasCheckIcon ? "scale-0 opacity-0" : "scale-100 opacity-100"
             }`}
           >
-            <Copy className="h-4 w-4 text-zinc-50" />
+            <Copy className="h-4 w-4 text-foreground" />
           </div>
 
           <div
@@ -49,7 +49,7 @@ export default function CodePreview({
               hasCheckIcon ? "scale-100 opacity-100" : "scale-0 opacity-0"
             }`}
           >
-            <Check className="h-4 w-4 text-zinc-50" />
+            <Check className="h-4 w-4 text-foreground" />
           </div>
         </button>
       </div>

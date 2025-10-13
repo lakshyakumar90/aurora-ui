@@ -16,11 +16,11 @@ export const NavigationLinks: NavigationGroup[] = [
     children: [
       {
         name: "Introduction",
-        href: "/docs",
+        href: "/introduction",
       },
       {
         name: "Installation",
-        href: "/docs/installation",
+        href: "/installation",
       },
     ],
   },
@@ -29,49 +29,32 @@ export const NavigationLinks: NavigationGroup[] = [
     children: [
       {
         name: "Button",
-        href: "/docs/button",
+        href: "/components/button",
       },
       {
-        name: "Hover Card",
-        href: "/docs/hover-card",
+        name: "Accordion",
+        href: "/components/accordion",
       },
       {
-        name: "Morphing Card",
-        href: "/docs/morphing-card",
-      },
-      {
-        name: "Feedback Modal",
-        href: "/docs/feedback-modal",
-      },
-      {
-        name: "Bento Grid",
-        href: "/docs/bento-grid",
-      },
-      {
-        name: "Mouse Trailer",
-        href: "/docs/mouse-trailer",
-        isNew: true,
-      },
-      {
-        name: "Help Desk",
-        href: "/docs/help-desk",
+        name: "Card",
+        href: "/components/card",
       },
     ],
   },
-  {
-    name: "Animations",
-    children: [
-      {
-        name: "Fuzzy Text",
-        href: "/docs/fuzzy-text",
-      },
-      {
-        name: "Smooth Slider",
-        href: "/docs/smooth-slider",
-        isNew: true,
-      },
-    ],
-  },
+  // {
+  //   name: "Animations",
+  //   children: [
+  //     {
+  //       name: "Fuzzy Text",
+  //       href: "/components/fuzzy-text",
+  //     },
+  //     {
+  //       name: "Smooth Slider",
+  //       href: "/components/smooth-slider",
+  //       isNew: true,
+  //     },
+  //   ],
+  // },
 ] as const;
 
 export const useNavigationLinks = () =>

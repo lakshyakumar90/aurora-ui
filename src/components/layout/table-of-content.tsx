@@ -21,7 +21,6 @@ function Toc() {
       const subheadings: Heading[] = elements
         .map((elem) => {
           const level = parseInt(elem.getAttribute("data-heading") || "2", 10);
-          if (level === 1) return null;
 
           return {
             id: `lvl-${level}-${elem.id}`,
@@ -49,17 +48,17 @@ function Toc() {
   if (headings.length === 0) {
     return (
       <div className="space-y-2">
-        <p className="mb-2 font-sans text-sm font-medium text-black dark:text-white">
+        <p className="mb-2 font-sans text-sm font-medium text-foreground">
           On this page
         </p>
-        <p className="text-sm text-zinc-700 dark:text-zinc-400">No table of contents available.</p>
+        <p className="text-sm text-muted-foreground">No table of contents available.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-2">
-      <p className="mb-2 font-sans text-sm font-medium text-black dark:text-white">On this page</p>
+      <p className="mb-2 font-sans text-sm font-medium text-foreground">On this page</p>
       <TreeView tree={headings} activeHeading={activeHeading} path={pathname} />
     </div>
   );
@@ -75,7 +74,7 @@ function TreeView({ tree, activeHeading, path }: TreeViewProps) {
   return (
     <>
       <ul
-        className="list-none space-y-2 text-sm/relaxed text-zinc-700 dark:text-zinc-400"
+        className="list-none space-y-2 text-sm/relaxed text-muted-foreground"
         role="list"
         aria-labelledby="toc-heading"
         key={path}
@@ -85,6 +84,7 @@ function TreeView({ tree, activeHeading, path }: TreeViewProps) {
             key={`toc-${item.id}`}
             className={cn(
               "font-sans transition-colors",
+              item.level === 1 && "pl-0 font-medium",
               item.level === 2 && "pl-2",
               item.level === 3 && "pl-4",
               item.level === 4 && "pl-6"
@@ -94,6 +94,7 @@ function TreeView({ tree, activeHeading, path }: TreeViewProps) {
               href={`#${item.url}`}
               className={cn(
                 "hover:text-foreground",
+                item.level === 1 && "text-foreground font-medium",
                 activeHeading === item.url && "text-foreground font-medium"
               )}
             >
@@ -123,8 +124,19 @@ function useActiveHeading(subheadings: Heading[]) {
       if (intersecting.length > 0) {
         // pick the first heading (closest to top)
         setActiveId(intersecting[0].target.id);
+      } else {
+        // If no headings are intersecting, find the closest one
+        const closestEntry = entries.reduce((closest, entry) => {
+          const closestDistance = Math.abs(closest.boundingClientRect.top);
+          const currentDistance = Math.abs(entry.boundingClientRect.top);
+          return currentDistance < closestDistance ? entry : closest;
+        });
+        setActiveId(closestEntry.target.id);
       }
-    }, { rootMargin: "0px 0px -50% 0px" });
+    }, { 
+      rootMargin: "-80px 0px -60% 0px",
+      threshold: [0, 0.25, 0.5, 0.75, 1]
+    });
 
     subheadings?.forEach((subheading) => {
       const element = document.getElementById(subheading.url);

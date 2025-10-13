@@ -11,7 +11,7 @@ import { sub } from "date-fns";
 
 export default function Home() {
 
-  return <div className="h-full w-full bg-black p-20 flex flex-col gap-20"> 
+  return <div className="h-full w-full bg-background p-20 flex flex-col gap-20"> 
       <HeroSection/>
       <TemplateShow/>
       <ShowCase/>
