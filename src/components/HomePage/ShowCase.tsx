@@ -19,11 +19,12 @@ export default function ShowCase() {
       { threshold: 0.3 } // 30% visible
     );
 
-    observer.observe(counterRef.current);
+    const currentRef = counterRef.current;
+    observer.observe(currentRef);
 
     return () => {
-      if (counterRef.current) {
-        observer.unobserve(counterRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, [started]);

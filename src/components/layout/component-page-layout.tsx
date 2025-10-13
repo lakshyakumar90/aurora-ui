@@ -86,7 +86,7 @@ export default function DocsLayout({
             <ol className="list-decimal list-outside ml-5 space-y-4">
               <li>
                 <p>
-                  If you haven't completed the installation refer to the guide{" "}
+                  If you haven&apos;t completed the installation refer to the guide{" "}
                   <a
                     href="/docs/installation"
                     className="text-primary underline"

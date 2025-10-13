@@ -2,14 +2,13 @@
 
 import React from "react";
 import Link from "next/link";
-import Logo from "./logo";
 import ThemeToggle from "./theme-toggle";
 import SideBarToggle from "./sidebar-toggle";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import CommandMenu from "./command-menu";
 
-function Header({ landing = false }: { landing?: boolean }) {
+function Header() {
   const pathname = usePathname();
   return (
     <nav className="sticky top-0 z-15 border-b border-border bg-background px-6">

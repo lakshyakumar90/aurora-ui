@@ -1,7 +1,7 @@
 "use client"; // 👈 Add this line at the very top
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { FaReact } from "react-icons/fa6";
 import { SiTypescript } from "react-icons/si";
 import { RiTailwindCssFill } from "react-icons/ri";

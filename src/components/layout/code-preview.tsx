@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { Check, Copy, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 

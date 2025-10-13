@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/useMobile";
 import { MenuIcon, Sidebar, XIcon } from "lucide-react";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed";
@@ -35,9 +35,9 @@ function SidebarProvider({ children, defaultOpen = true }: SidebarProviderProps)
   const [openMobile, setOpenMobile] = useState(false);
   const isMobile = useIsMobile();
 
-  const toggleSidebar = () => {
+  const toggleSidebar = useCallback(() => {
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-  };
+  }, [isMobile]);
 
   useEffect(() => {
     if (!isMobile) setOpenMobile(false);
