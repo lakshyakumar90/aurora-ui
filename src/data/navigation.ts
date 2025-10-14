@@ -22,6 +22,11 @@ export const NavigationLinks: NavigationGroup[] = [
         name: "Installation",
         href: "/installation",
       },
+      {
+        name: "Playground",
+        href: "/playground",
+        isNew: true,
+      },
     ],
   },
   {

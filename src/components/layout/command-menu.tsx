@@ -22,7 +22,7 @@ function CommandMenu({ ...props }: DialogProps) {
 
   React.useEffect(() => {
     function keyPress(e: KeyboardEvent) {
-      if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         // don't invoke on editable content
         if (
           (e.target instanceof HTMLElement && e.target.isContentEditable) ||
