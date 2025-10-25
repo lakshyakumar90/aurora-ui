@@ -3,9 +3,9 @@ export default function Benefits(){
     return(
        <div className=" flex flex-col gap-25 mt-15">
         
-        <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-15 p-10">
-                      <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
+        <div className="md:min-h-[60vh] md:w-full  px-25 ">
+                  <div className=" h-[100%] rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-15 p-10">
+                      <div className="bg-[#0A0A0A] w-[50%]  rounded-lg ">
                           <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
                               <Image src="/first.png" alt="" fill className="rounded-lg object-cover absolute hover:scale-75 transition-transform duration-500"/>
                           </div>
@@ -27,8 +27,8 @@ export default function Benefits(){
                   </div>
               </div>
 
-        <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex  gap-20 p-10">
+        <div className="min-h-[60vh] w-full  px-25 ">
+                  <div className=" h-[100%] rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex  gap-20 p-10">
                      
                       <div className=" w-[40%] h-[70%] rounded-lg  mt-8 flex flex-col gap-3">
                           <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-[#60A5FA] bg-gray-950
@@ -45,7 +45,7 @@ export default function Benefits(){
                           </div>
                       </div>
 
-                       <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
+                       <div className="bg-[#0A0A0A] w-[50%]  rounded-lg ">
                           <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
                               <Image src="/second.png" alt="" fill className="rounded-lg object-cover absolute hover:scale-75 transition-transform duration-500"/>
                           </div>
@@ -54,9 +54,9 @@ export default function Benefits(){
               </div>
 
 
-              <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-15 p-10">
-                      <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
+              <div className="min-h-[60vh] w-full  px-25 ">
+                  <div className=" h-[100%] rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-15 p-10">
+                      <div className="bg-[#0A0A0A] w-[50%] l rounded-lg ">
                           <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
                               <Image src="/third.png" alt="" height={350} width={350} className="rounded-lg object-contain absolute hover:scale-75 transition-transform duration-500"/>
                           </div>
@@ -79,8 +79,8 @@ export default function Benefits(){
               </div>
 
 
-              <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-20 p-10">
+              <div className="min-h-[60vh] w-full  px-25 ">
+                  <div className=" h-[100%] rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-20 p-10">
                       
                       <div className=" w-[40%] h-[70%] rounded-lg  mt-8 flex flex-col gap-3">
                           <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-[#60A5FA] bg-gray-950
@@ -96,7 +96,7 @@ export default function Benefits(){
                                hover:border-gray-800 hover:bg-gradient-to-br from-[#A44BF8] to-blue-500 hover:scale-110 leading-6 transition-transform duration-500">screen friendly</p>
                           </div>
                       </div>
-                      <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
+                      <div className="bg-[#0A0A0A] w-[50%]  rounded-lg ">
                           <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
                               <Image src="/fourth.png" alt="" fill className="rounded-lg object-cover absolute hover:scale-75 transition-transform duration-500"/>
                           </div>
@@ -105,9 +105,9 @@ export default function Benefits(){
               </div>
 
 
-              <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-15 p-10">
-                      <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
+              <div className="min-h-[60vh] w-full  px-25 ">
+                  <div className=" h-[100%] rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-15 p-10">
+                      <div className="bg-[#0A0A0A] w-[50%]  rounded-lg ">
                           <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
                               <Image src="/fifth.png" alt="" height={350} width={350} className="rounded-lg object-contain absolute hover:scale-75 transition-transform duration-500"/>
                           </div>

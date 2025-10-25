@@ -20,10 +20,10 @@ export default function Publish() {
           src="/hand.png"
           alt=""
          fill
-          className=" rounded-lg object-cover absolute"
+          className=" rounded-lg object-cover absolute  "
         />
         <button
-        className=" h-20 w-50 text-xl  cursor-pointer absolute z-9  top-15
+        className=" h-20 w-50 text-xl  cursor-pointer absolute z-9  top-15 
   px-6 py-3 
   rounded-2xl 
   text-white 
