@@ -19,12 +19,17 @@ export async function GET(request: NextRequest) {
     if (componentName === 'accordion') {
       demoPath = `src/app/(docs)/components/${componentName}/${componentName}-demo.tsx`;
     } else {
-      demoPath = `src/app/(docs)/components/${componentName}/${componentName}-basic.tsx`;
+      demoPath = `src/app/(docs)/components/${componentName}/${componentName}-demo.tsx`;
     }
     files.demo = readFileSync(join(process.cwd(), demoPath), 'utf-8');
     
     // Read UI component
-    const uiPath = `src/components/ui/${componentName}.tsx`;
+    let uiPath: string;
+    if (componentName === 'glassicons') {
+      uiPath = `src/app/(docs)/components/glassicons/GlassIcons.tsx`;
+    } else {
+      uiPath = `src/components/ui/${componentName}.tsx`;
+    }
     files.ui = readFileSync(join(process.cwd(), uiPath), 'utf-8');
     
     // Read utils

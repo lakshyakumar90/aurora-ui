@@ -1,7 +1,7 @@
 // src/app/(docs)/components/button/page.tsx
 import { metaConfig } from "@/config/site";
 import DocsLayout from "@/components/layout/component-page-layout";
-import ButtonBasic from "./button-basic";
+import ButtonBasic from "./button-demo";
 
 export const metadata = metaConfig({
   title: "Button",
@@ -17,7 +17,7 @@ export default function ButtonDocsPage() {
       note="This is a starting point for the Button component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{
         component: <ButtonBasic />,
-        filePath: "src/app/(docs)/components/button/button-basic.tsx",
+        filePath: "src/app/(docs)/components/button/button-demo.tsx",
       }}
       installationFilePath="src/components/ui/button.tsx"
       propsTable={[

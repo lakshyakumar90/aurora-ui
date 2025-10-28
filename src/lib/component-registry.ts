@@ -9,7 +9,7 @@ export interface ComponentRegistryEntry {
 
 export const componentRegistry: Record<string, ComponentRegistryEntry> = {
   button: {
-    demoFile: 'src/app/(docs)/components/button/button-basic.tsx',
+    demoFile: 'src/app/(docs)/components/button/button-demo.tsx',
     uiFiles: ['src/components/ui/button.tsx'],
     dependencies: ['@radix-ui/react-slot', 'class-variance-authority', 'clsx', 'tailwind-merge'],
     utilFiles: ['src/lib/utils.ts'],
@@ -25,12 +25,20 @@ export const componentRegistry: Record<string, ComponentRegistryEntry> = {
     description: 'A vertically stacked set of interactive headings that each reveal a section of content.'
   },
   card: {
-    demoFile: 'src/app/(docs)/components/card/card-basic.tsx',
+    demoFile: 'src/app/(docs)/components/card/card-demo.tsx',
     uiFiles: ['src/components/ui/card.tsx'],
     dependencies: ['clsx', 'tailwind-merge'],
     utilFiles: ['src/lib/utils.ts'],
     title: 'Card',
     description: 'A flexible container component for displaying content.'
+  },
+  glassIcons: {
+    demoFile: 'src/app/(docs)/components/glassIcons/glassIcons-demo.tsx',
+    uiFiles: ['src/app/(docs)/components/glassIcons/GlassIcons.tsx'],
+    dependencies: [],
+    utilFiles: ['src/lib/utils.ts'],
+    title: 'GlassIcons',
+    description: 'A customizable glass icons grid.'
   }
 };
 

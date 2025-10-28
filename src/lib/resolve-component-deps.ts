@@ -84,17 +84,45 @@ export async function resolveComponentDependencies(
     // Convert and add demo component as a proper App component
     let demoCode = convertImportsToRelative(componentFiles.demo, "root");
 
-    // Extract the component name from the demo code (e.g., "ButtonBasic", "CardBasic", etc.)
-    // Look for: function ComponentName, const ComponentName, or export default ComponentName
-    const componentMatch = demoCode.match(
-      /(?:function|const|export\s+default)\s+(\w+)/
+    // Fix relative imports for demos that import a local component instead of @/ path (e.g., GlassIcons)
+    // We place the UI component at /components/ui/<lowercased-title>.tsx in Sandpack
+    const uiModuleName = entry.title.toLowerCase();
+    // Common pattern in our demos: import X from './X'
+    // Rewrite it to sandbox location: './components/ui/<name>'
+    demoCode = demoCode.replace(
+      /from\s+["']\.\/[A-Za-z0-9_-]+["']/g,
+      (match) => `from "./components/ui/${uiModuleName}"`
     );
-    const demoComponentName = componentMatch
-      ? componentMatch[1]
-      : "DemoComponent";
 
-    // Ensure the demo component has a default export
-    // Remove any existing export default at the end if present
+    // Extract a reliable component name from the demo code
+    // Priority:
+    // 1) export default function Name
+    // 2) function Name
+    // 3) const Name
+    // 4) export default Name
+    let demoComponentName = "DemoComponent";
+
+    const exportDefaultFn = demoCode.match(/export\s+default\s+function\s+(\w+)/);
+    const namedFn = demoCode.match(/\bfunction\s+(\w+)/);
+    const constDecl = demoCode.match(/\bconst\s+(\w+)/);
+    const exportDefaultName = demoCode.match(/export\s+default\s+(\w+)/);
+
+    if (exportDefaultFn && exportDefaultFn[1]) {
+      demoComponentName = exportDefaultFn[1];
+      // Transform to a normal function declaration so we can add a single default export later
+      demoCode = demoCode.replace(/export\s+default\s+function\s+(\w+)/, "function $1");
+    } else if (namedFn && namedFn[1]) {
+      demoComponentName = namedFn[1];
+    } else if (constDecl && constDecl[1]) {
+      demoComponentName = constDecl[1];
+    } else if (exportDefaultName && exportDefaultName[1]) {
+      demoComponentName = exportDefaultName[1];
+      // Remove the inline default export statement, we'll add one explicitly later
+      demoCode = demoCode.replace(/export\s+default\s+(\w+)\s*;?/, "$1");
+    }
+
+    // Ensure the demo component has a single default export
+    // Remove any trailing "export default Name;" if present (we'll add exactly one)
     demoCode = demoCode.replace(/export\s+default\s+\w+;\s*$/, "").trim();
 
     // If the component doesn't already start with export default, add it
@@ -153,13 +181,13 @@ export default function App(): JSX.Element {
         // Added requested packages for sandbox environment
         "gsap": "^3.12.5",
         "motion": "^12.23.12",
+        "lucide-react": "^0.542.0",
         ...entry.dependencies.reduce(
           (acc, dep) => {
             const versionMap: Record<string, string> = {
               "class-variance-authority": "^0.7.0",
               "clsx": "^2.0.0",
               "tailwind-merge": "^2.0.0",
-              "lucide-react": "^0.263.1",
               "framer-motion": "^12.23.12",
             };
             acc[dep] = versionMap[dep] || "latest";

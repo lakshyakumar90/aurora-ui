@@ -1,7 +1,7 @@
 // src/app/(docs)/components/button/page.tsx
 import { metaConfig } from "@/config/site";
 import DocsLayout from "@/components/layout/component-page-layout";
-import CardBasic from "./card-basic";
+import CardBasic from "./card-demo";
 
 export const metadata = metaConfig({
   title: "Card",
@@ -17,7 +17,7 @@ export default function CardDocsPage() {
       note="This is a starting point for the Button component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{
         component: <CardBasic />,
-        filePath: "src/app/(docs)/components/card/card-basic.tsx",
+        filePath: "src/app/(docs)/components/card/card-demo.tsx",
       }}
       installationFilePath="src/components/ui/card.tsx"
       propsTable={[

@@ -46,20 +46,15 @@ export const NavigationLinks: NavigationGroup[] = [
       },
     ],
   },
-  // {
-  //   name: "Animations",
-  //   children: [
-  //     {
-  //       name: "Fuzzy Text",
-  //       href: "/components/fuzzy-text",
-  //     },
-  //     {
-  //       name: "Smooth Slider",
-  //       href: "/components/smooth-slider",
-  //       isNew: true,
-  //     },
-  //   ],
-  // },
+  {
+    name: "Animations",
+    children: [
+      {
+        name: "GlassIcons",
+        href: "/components/glassIcons",
+      },
+    ],
+  },
 ] as const;
 
 export const useNavigationLinks = () =>
