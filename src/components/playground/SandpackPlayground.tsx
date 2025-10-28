@@ -4,10 +4,15 @@ import { Sandpack } from "@codesandbox/sandpack-react";
 import { useMounted } from "@/hooks/useMounted";
 import { useSearchParams } from "next/navigation";
 import { getComponentFromRegistry } from "@/lib/component-registry";
-import { resolveComponentDependencies, generateSandpackSetup, SandpackFiles } from "@/lib/resolve-component-deps";
+import {
+  resolveComponentDependencies,
+  generateSandpackSetup,
+  SandpackFiles,
+} from "@/lib/resolve-component-deps";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
+// Sidebar removed
 
 // Default code when no component is selected
 const defaultCode = `import React from "react";
@@ -98,67 +103,16 @@ body {
 }`;
 
 // Tailwind config with CSS variable mapping
-const tailwindConfig = `<script>
-  tailwind.config = {
-    darkMode: 'class',
-    theme: {
-      extend: {
-        colors: {
-          background: 'var(--background)',
-          foreground: 'var(--foreground)',
-          card: {
-            DEFAULT: 'var(--card)',
-            foreground: 'var(--card-foreground)',
-          },
-          popover: {
-            DEFAULT: 'var(--popover)',
-            foreground: 'var(--popover-foreground)',
-          },
-          primary: {
-            DEFAULT: 'var(--primary)',
-            foreground: 'var(--primary-foreground)',
-          },
-          secondary: {
-            DEFAULT: 'var(--secondary)',
-            foreground: 'var(--secondary-foreground)',
-          },
-          muted: {
-            DEFAULT: 'var(--muted)',
-            foreground: 'var(--muted-foreground)',
-          },
-          accent: {
-            DEFAULT: 'var(--accent)',
-            foreground: 'var(--accent-foreground)',
-          },
-          destructive: {
-            DEFAULT: 'var(--destructive)',
-            foreground: 'var(--destructive-foreground)',
-          },
-          border: 'var(--border)',
-          input: 'var(--input)',
-          ring: 'var(--ring)',
-        },
-        borderRadius: {
-          lg: 'var(--radius)',
-          md: 'calc(var(--radius) - 2px)',
-          sm: 'calc(var(--radius) - 4px)',
-        },
-      },
-    },
-  }
-</script>`;
 
 // Helper function to get HTML with theme
-function getHtmlWithTheme(theme: 'light' | 'dark') {
+function getHtmlWithTheme(theme: "light" | "dark") {
   return `<!DOCTYPE html>
 <html lang="en" class="${theme}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aurora UI Playground</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    ${tailwindConfig}
-  </head>
+    </head>
   <body class="${theme}">
     <div id="root"></div>
   </body>
@@ -166,7 +120,7 @@ function getHtmlWithTheme(theme: 'light' | 'dark') {
 }
 
 // Helper function to get default files with theme
-function getDefaultFiles(theme: 'light' | 'dark' = 'light') {
+function getDefaultFiles(theme: "light" | "dark" = "light") {
   return {
     "/App.tsx": {
       code: defaultCode,
@@ -206,7 +160,12 @@ root.render(<App />);`,
     "react-dom": "^18.2.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "gsap": "^3.12.5",
+    "motion": "^12.23.12",
+    "tailwindcss": "^4",
+    "@tailwindcss/postcss": "^4",
+    "postcss": "^8.4.47"
   }
 }`,
       hidden: false,
@@ -220,9 +179,18 @@ function getDefaultSetup() {
     dependencies: {
       react: "^18.2.0",
       "react-dom": "^18.2.0",
+      typescript: "^5.0.0",
+      "class-variance-authority": "^0.7.0",
+      clsx: "^2.0.0",
+      "tailwind-merge": "^2.0.0",
       "@types/react": "^18.2.0",
       "@types/react-dom": "^18.2.0",
-      "typescript": "^5.0.0",
+      // Added requested packages for sandbox environment
+      gsap: "^3.12.5",
+      motion: "^12.23.12",
+      tailwindcss: "^4",
+      "@tailwindcss/postcss": "^4",
+      postcss: "^8.4.47",
     },
   } as const;
 }
@@ -230,12 +198,19 @@ function getDefaultSetup() {
 export function SandpackPlayground() {
   const mounted = useMounted();
   const searchParams = useSearchParams();
-  const componentName = searchParams.get('component');
-  
-  const [playgroundTheme, setPlaygroundTheme] = useState<'light' | 'dark'>('dark');
-  const [files, setFiles] = useState<SandpackFiles>(getDefaultFiles(playgroundTheme));
-  const [customSetup, setCustomSetup] = useState<{ dependencies: Record<string, string> }>(getDefaultSetup());
+  const componentName = searchParams.get("component");
+
+  const [playgroundTheme, setPlaygroundTheme] = useState<"light" | "dark">(
+    "dark"
+  );
+  const [files, setFiles] = useState<SandpackFiles>(
+    getDefaultFiles(playgroundTheme)
+  );
+  const [customSetup, setCustomSetup] = useState<{
+    dependencies: Record<string, string>;
+  }>(getDefaultSetup());
   const [loading, setLoading] = useState(false);
+  const [activeFile] = useState<string>("/App.tsx");
 
   // Load component when componentName or theme changes
   useEffect(() => {
@@ -244,12 +219,12 @@ export function SandpackPlayground() {
       if (componentEntry) {
         setLoading(true);
         resolveComponentDependencies(componentEntry, playgroundTheme) // Pass theme here
-          .then(resolvedFiles => {
+          .then((resolvedFiles) => {
             setFiles(resolvedFiles);
             setCustomSetup(generateSandpackSetup(componentEntry));
           })
-          .catch(error => {
-            console.error('Failed to load component:', error);
+          .catch((error) => {
+            console.error("Failed to load component:", error);
             setFiles(getDefaultFiles(playgroundTheme));
             setCustomSetup(getDefaultSetup());
           })
@@ -274,49 +249,55 @@ export function SandpackPlayground() {
   }
 
   const toggleTheme = () => {
-    setPlaygroundTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setPlaygroundTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
   return (
     <div className="h-screen w-full relative">
-      {/* Theme Toggle Button */}
-      <div className="absolute top-4 right-4 z-50">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={toggleTheme}
-          className="bg-background/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all"
-          title={playgroundTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-        >
-          {playgroundTheme === 'light' ? (
-            <Moon className="h-5 w-5" />
-          ) : (
-            <Sun className="h-5 w-5" />
-          )}
-        </Button>
-      </div>
+      {/* Main Content */}
+      <div className="h-full w-full relative">
+        {/* Theme Toggle Button */}
+        <div className="absolute top-4 right-4 z-50">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={toggleTheme}
+            className="bg-background/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all"
+            title={
+              playgroundTheme === "light"
+                ? "Switch to dark mode"
+                : "Switch to light mode"
+            }
+          >
+            {playgroundTheme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
 
-      <Sandpack
-        key={playgroundTheme} 
-        template="react-ts"
-        theme={playgroundTheme}
-        files={files}
-        customSetup={customSetup}
-        options={{
-          showTabs: true,
-          showLineNumbers: true,
-          editorHeight: "100vh",
-          wrapContent: true,
-          resizablePanels: true,
-          showConsole: true,
-          showConsoleButton: true,
-          showNavigator: true,
-          showInlineErrors: true,
-          externalResources: [
-            "https://cdn.tailwindcss.com",
-          ],
-        }}
-      />
+        <Sandpack
+          key={playgroundTheme}
+          template="react-ts"
+          theme={playgroundTheme}
+          files={files}
+          customSetup={customSetup}
+          options={{
+            showTabs: true,
+            showLineNumbers: true,
+            editorHeight: "100vh",
+            wrapContent: true,
+            resizablePanels: true,
+            showConsole: true,
+            showConsoleButton: true,
+            showNavigator: true,
+            showInlineErrors: true,
+            activeFile: activeFile,
+            externalResources: ["https://cdn.tailwindcss.com"],
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -70,7 +70,7 @@ function convertImportsToRelative(
  */
 export async function resolveComponentDependencies(
   entry: ComponentRegistryEntry,
-  theme: 'light' | 'dark' = 'light'
+  theme: "light" | "dark" = "light"
 ): Promise<SandpackFiles> {
   const files: SandpackFiles = {};
 
@@ -147,24 +147,63 @@ export default function App(): JSX.Element {
       description: entry.description,
       main: "index.tsx",
       dependencies: {
-        react: "^18.2.0",
+        "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "@types/react": "^18.2.0",
-        "@types/react-dom": "^18.2.0",
         "typescript": "^5.0.0",
-        ...entry.dependencies.reduce((acc, dep) => {
-          const versionMap: Record<string, string> = {
-            "@radix-ui/react-slot": "^1.0.2",
-            "@radix-ui/react-accordion": "^1.1.2",
-            "class-variance-authority": "^0.7.0",
-            clsx: "^2.0.0",
-            "tailwind-merge": "^2.0.0",
-            "lucide-react": "^0.263.1",
-          };
-          acc[dep] = versionMap[dep] || "latest";
-          return acc;
-        }, {} as Record<string, string>),
+        // Added requested packages for sandbox environment
+        "gsap": "^3.12.5",
+        "motion": "^12.23.12",
+        ...entry.dependencies.reduce(
+          (acc, dep) => {
+            const versionMap: Record<string, string> = {
+              "class-variance-authority": "^0.7.0",
+              "clsx": "^2.0.0",
+              "tailwind-merge": "^2.0.0",
+              "lucide-react": "^0.263.1",
+              "framer-motion": "^12.23.12",
+            };
+            acc[dep] = versionMap[dep] || "latest";
+            return acc;
+          },
+          {} as Record<string, string>
+        ),
       },
+    };
+
+    // Add tsconfig.json for proper TypeScript configuration
+    files["/tsconfig.json"] = {
+      code: JSON.stringify(
+        {
+          compilerOptions: {
+            target: "ES2020",
+            allowNonTsExtensions: true,
+            module: "ESNext",
+            noEmit: true,
+            jsx: "React",
+            esModuleInterop: true,
+            allowSyntheticDefaultImports: true,
+            jsxFactory: "React.createElement",
+            jsxFragmentFactory: "React.Fragment",
+            lib: ["dom", "dom.iterable", "esnext"],
+            strict: false, // Changed from true to false for playground
+            isolatedModules: true,
+            skipLibCheck: true,
+            forceConsistentCasingInFileNames: true,
+            resolveJsonModule: true,
+            importHelpers: true,
+            enableAutoImports: true,
+            baseUrl: "./",
+            paths: {
+              "@/*": ["*"],
+            },
+          },
+          include: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.json"],
+          exclude: ["node_modules"],
+        },
+        null,
+        2
+      ),
+      hidden: false,
     };
 
     files["/package.json"] = {
@@ -192,19 +231,20 @@ export default function App(): JSX.Element {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${entry.title} Playground</title>
-    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
     <div id="root" class="${theme}"></div>
   </body>
 </html>`,
-  active: true,
-  hidden: false,
-};
+      active: true,
+      hidden: false,
+    };
 
-// Create base styles with CSS variables for design system
-files["/styles.css"] = {
-  code: `:root {
+    // Create base styles with CSS variables for design system
+    files["/styles.css"] = {
+
+      code: `
+:root {
   --radius: 0.65rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
@@ -363,8 +403,8 @@ body {
   background-color: var(--background);
   color: var(--foreground);
 }`,
-  hidden: false,
-};
+      hidden: false,
+    };
 
     return files;
   } catch (error) {
@@ -382,14 +422,15 @@ export function generateSandpackSetup(entry: ComponentRegistryEntry) {
     "react-dom": "^18.2.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "typescript": "^5.0.0",
+    typescript: "^5.0.0",
+    // Added requested packages for sandbox environment
+    gsap: "^3.12.5",
+    motion: "^12.23.12",
   };
 
   // Add component-specific dependencies
   entry.dependencies.forEach((dep) => {
     const versionMap: Record<string, string> = {
-      "@radix-ui/react-slot": "^1.0.2",
-      "@radix-ui/react-accordion": "^1.1.2",
       "class-variance-authority": "^0.7.0",
       clsx: "^2.0.0",
       "tailwind-merge": "^2.0.0",
