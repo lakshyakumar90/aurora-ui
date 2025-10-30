@@ -44,17 +44,25 @@ export const NavigationLinks: NavigationGroup[] = [
         name: "Card",
         href: "/components/card",
       },
-    ],
-  },
-  {
-    name: "Animations",
-    children: [
       {
-        name: "GlassIcons",
-        href: "/components/glassIcons",
+        name: "Marquee",
+        href: "/components/marquee"
       },
+      {
+        name: "Dock",
+        href: "/components/dock"
+      }
     ],
   },
+  // {
+  //   name: "Animations",
+  //   children: [
+  //     {
+  //       name: "Glass Icons",
+  //       href: "/components/glass-icons",
+  //     },
+  //   ],
+  // },
 ] as const;
 
 export const useNavigationLinks = () =>

@@ -1,6 +1,4 @@
 "use client"
-
-import GlassIcons from './GlassIcons'
 import {
   FileText,
   Book,
@@ -9,6 +7,7 @@ import {
   Pencil,
   BarChart2,
 } from "lucide-react";
+import GlassIcons from "./glass-icons";
 type DemoProps = { colorful?: boolean }
 
 export default function GlassIconsDemo({ colorful = true }: DemoProps) {

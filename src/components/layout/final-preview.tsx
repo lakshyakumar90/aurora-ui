@@ -30,12 +30,12 @@ const FinalPreview = ({ component, className, filePath, disable }: ComponentPrev
   return (
     <div
       className={cn(
-        "group flex min-h-[350px] w-full items-center justify-center rounded-md",
+        "group/preview flex min-h-[350px] w-full items-center justify-center rounded-md",
         className
       )}
     >
       <div className="absolute top-1 right-2 z-[10] md:top-14">
-        <div className="flex items-center gap-3 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="flex items-center gap-3 opacity-0 transition-opacity group-hover/preview:opacity-100">
           {/* Re trigger */}
           <></>
           {componentSlug && (

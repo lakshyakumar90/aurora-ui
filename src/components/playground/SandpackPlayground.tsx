@@ -12,6 +12,11 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
+import { aiRequest } from "@/lib/ai";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 // Sidebar removed
 
 // Default code when no component is selected
@@ -212,6 +217,26 @@ export function SandpackPlayground() {
   const [loading, setLoading] = useState(false);
   const [activeFile] = useState<string>("/App.tsx");
 
+  // AI panel state
+  const [aiOpen, setAiOpen] = useState<boolean>(false);
+  const [aiMode, setAiMode] = useState<
+    "generate" | "explain" | "transform" | "fix" | "theme"
+  >("generate");
+  const [prompt, setPrompt] = useState<string>("");
+  const [aiOutput, setAiOutput] = useState<string>("");
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [changedPaths, setChangedPaths] = useState<string[]>([]);
+  const [activeAiTab, setActiveAiTab] = useState<"response" | "changes">(
+    "response"
+  );
+  const [lastAiFiles, setLastAiFiles] = useState<Record<string, { code: string }>>({});
+  const [newFilePath, setNewFilePath] = useState<string>("/NewFile.tsx");
+  const [newFileCode, setNewFileCode] = useState<string>("export default {} as const;\n");
+  const [selectedPath, setSelectedPath] = useState<string>("/App.tsx");
+  const [selStart, setSelStart] = useState<string>("");
+  const [selEnd, setSelEnd] = useState<string>("");
+  const [newFileOpen, setNewFileOpen] = useState<boolean>(false);
+
   // Load component when componentName or theme changes
   useEffect(() => {
     if (componentName) {
@@ -252,12 +277,145 @@ export function SandpackPlayground() {
     setPlaygroundTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  const runAI = async () => {
+    try {
+      setIsRunning(true);
+      setAiOutput("Thinking...");
+      setChangedPaths([]);
+      const payload: any = {
+        action: aiMode,
+        prompt,
+      };
+
+      // Limit files context size per request
+      const filesPayload: Record<string, { code: string }> = {};
+      Object.entries(files).forEach(([path, f]) => {
+        filesPayload[path] = { code: f.code };
+      });
+
+      if (aiMode !== "generate") {
+        payload.files = filesPayload;
+      }
+
+      if (aiMode === "explain") {
+        const file = files[selectedPath];
+        const start = parseInt(selStart || "0", 10);
+        const end = parseInt(selEnd || "0", 10);
+        const selection = {
+          path: selectedPath,
+          start: Number.isFinite(start) ? start : 0,
+          end: Number.isFinite(end) ? end : 0,
+          code: file?.code || "",
+        };
+        payload.selection = selection;
+      }
+
+      if (aiMode === "fix") {
+        // Optional: user can paste console errors into the prompt; we also pass it through
+        payload.errors = prompt;
+      }
+
+      const res = await aiRequest<any>(payload);
+
+      // Two possibilities: explanation string or files to apply
+      if (res?.explanation) {
+        setAiOutput(res.explanation);
+      }
+
+      if (res?.files) {
+        const next: SandpackFiles = { ...files };
+        const justChanged: string[] = [];
+        Object.entries(res.files as Record<string, { code: string }>).forEach(
+          ([path, v]) => {
+            next[path] = {
+              code: v.code,
+              active: next[path]?.active,
+              hidden: next[path]?.hidden,
+            };
+            justChanged.push(path);
+          }
+        );
+        setFiles(next);
+        setChangedPaths(justChanged);
+        setLastAiFiles(res.files as Record<string, { code: string }>);
+        const formatted = [
+          `**Applied ${justChanged.length} file${justChanged.length === 1 ? "" : "s"}:**`,
+          ...justChanged.map((p) => `- \`${p}\``),
+        ].join("\n");
+        setAiOutput(formatted);
+        setActiveAiTab("changes");
+      }
+
+      if (!res?.files && !res?.explanation) {
+        setAiOutput(typeof res === "string" ? res : "No changes.");
+      }
+    } catch (e: any) {
+      setAiOutput(e?.message || "AI request failed");
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  // Helpers
+  const sanitizeForCopy = (text: string) => {
+    if (!text) return "";
+    let t = text.trim();
+    // Strip triple backtick fences if present
+    if (t.startsWith("```")) {
+      // remove first line fence
+      const firstNl = t.indexOf("\n");
+      if (firstNl !== -1) t = t.slice(firstNl + 1);
+    }
+    if (t.endsWith("```")) {
+      t = t.slice(0, t.lastIndexOf("```"));
+    }
+    // Unescape common escaped sequences from JSON/plain text
+    // Only if we see literal \n, replace with real newline
+    if (t.includes("\\n")) t = t.replace(/\\n/g, "\n");
+    if (t.includes("\\t")) t = t.replace(/\\t/g, "\t");
+    // Remove stray CRs
+    t = t.replace(/\r/g, "");
+    return t.trim();
+  };
+
+  const sanitizeForView = (text: string) => {
+    if (!text) return "";
+    let t = text;
+    if (t.startsWith("```")) {
+      const firstNl = t.indexOf("\n");
+      if (firstNl !== -1) t = t.slice(firstNl + 1);
+    }
+    if (t.endsWith("```")) {
+      t = t.slice(0, t.lastIndexOf("```"));
+    }
+    t = t.replace(/\r/g, "");
+    t = t.replace(/\\n/g, "\n");
+    t = t.replace(/\\t/g, "\t");
+    return t;
+  };
+
   return (
     <div className="h-screen w-full relative">
       {/* Main Content */}
       <div className="h-full w-full relative">
         {/* Theme Toggle Button */}
-        <div className="absolute top-4 right-4 z-50">
+        <div className="absolute top-4 right-4 z-50 flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setNewFileOpen((v) => !v)}
+            className="bg-background/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all"
+            title="Create new file"
+          >
+            New file
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setAiOpen((v) => !v)}
+            className="bg-background/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all"
+            title="Toggle AI assistant"
+          >
+            AI
+          </Button>
           <Button
             variant="outline"
             size="icon"
@@ -276,6 +434,186 @@ export function SandpackPlayground() {
             )}
           </Button>
         </div>
+
+        {newFileOpen && (
+          <div className="absolute top-16 right-4 z-50 w-[520px] max-h-[70vh] bg-background/95 border rounded-lg shadow-xl p-4 flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="font-medium">Create new file</div>
+              <Button variant="outline" size="sm" onClick={() => setNewFileOpen(false)}>Close</Button>
+            </div>
+            <div className="text-xs text-muted-foreground">Path</div>
+            <Input
+              placeholder="/path/to/File.tsx"
+              value={newFilePath}
+              onChange={(e) => setNewFilePath(e.target.value)}
+            />
+            <div className="text-xs text-muted-foreground">Code</div>
+            <Textarea
+              rows={8}
+              value={newFileCode}
+              onChange={(e) => setNewFileCode(e.target.value)}
+              className="font-mono text-xs"
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => { setNewFilePath("/NewFile.tsx"); setNewFileCode("export default {} as const;\n"); }}>Reset</Button>
+              <Button
+                onClick={() => {
+                  if (!newFilePath) return;
+                  const nextFiles: SandpackFiles = { ...files };
+                  nextFiles[newFilePath] = { code: newFileCode, active: false, hidden: false };
+                  setFiles(nextFiles);
+                  setChangedPaths((prev) => Array.from(new Set([...prev, newFilePath])));
+                  setNewFileOpen(false);
+                }}
+              >
+                Create
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {aiOpen && (
+          <div className="absolute top-16 right-4 z-50 w-[520px] max-h-[80vh] overflow-auto bg-background/95 border rounded-lg shadow-xl p-4 flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="font-medium">AI Assistant</div>
+              <div className="flex items-center gap-2">
+                <div className="inline-flex rounded-md border overflow-hidden">
+                  {(["generate","explain","transform","fix","theme"] as const).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setAiMode(m)}
+                      className={
+                        "px-2.5 py-1.5 text-xs capitalize transition-colors " +
+                        (aiMode === m ? "bg-primary text-primary-foreground" : "bg-background hover:bg-muted")
+                      }
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+                <Button variant="outline" size="sm" onClick={() => setAiOpen(false)}>Close</Button>
+              </div>
+            </div>
+
+            {aiMode === "explain" && (
+              <div className="flex flex-col gap-2">
+                <label className="text-sm text-muted-foreground">File</label>
+                <select
+                  className="rounded-md border px-2 py-1 bg-background text-sm"
+                  value={selectedPath}
+                  onChange={(e) => setSelectedPath(e.target.value)}
+                >
+                  {Object.keys(files).map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+                <div className="grid grid-cols-2 gap-2">
+                  <Input placeholder="Start line (optional)" value={selStart} onChange={(e) => setSelStart(e.target.value)} />
+                  <Input placeholder="End line (optional)" value={selEnd} onChange={(e) => setSelEnd(e.target.value)} />
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-2">
+              <Textarea
+                rows={4}
+                placeholder={
+                  aiMode === "generate"
+                    ? "e.g. Create a pricing card with hover glass effect"
+                    : aiMode === "explain"
+                    ? "What would you like explained? Add context if needed"
+                    : aiMode === "transform"
+                    ? "e.g. Make the buttons rounded and add a loading state"
+                    : aiMode === "fix"
+                    ? "Paste console/type errors or describe the issue"
+                    : "e.g. Darken background and shift primary hue to 280"
+                }
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                className="min-h-[96px]"
+              />
+              <div className="flex justify-between items-center gap-2">
+                <div className="text-xs text-muted-foreground">Use Shift+Enter for newline. Enter to run.</div>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => setPrompt("")}>Clear</Button>
+                  <Button onClick={runAI} disabled={isRunning}>
+                    {isRunning ? (
+                      <span className="inline-flex items-center gap-2"><span className="w-3 h-3 border-2 border-primary-foreground/70 border-t-transparent rounded-full animate-spin" /> Running</span>
+                    ) : (
+                      "Run"
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="mt-3 border-b mb-2 flex gap-1">
+              <button
+                className={"px-3 py-1.5 text-xs rounded-t-md " + (activeAiTab === "response" ? "bg-muted" : "hover:bg-muted/60")}
+                onClick={() => setActiveAiTab("response")}
+              >
+                Response
+              </button>
+              <button
+                className={"px-3 py-1.5 text-xs rounded-t-md " + (activeAiTab === "changes" ? "bg-muted" : "hover:bg-muted/60")}
+                onClick={() => setActiveAiTab("changes")}
+              >
+                Changes
+              </button>
+              <div className="flex-1" />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigator.clipboard.writeText(sanitizeForCopy(aiOutput || ""))}
+              >
+                Copy
+              </Button>
+            </div>
+
+            <div className="flex-1 min-h-0 overflow-auto rounded-md border p-3 text-sm">
+              {activeAiTab === "response" ? (
+                <div className="prose prose-sm prose-invert max-w-none break-words whitespace-pre-wrap">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiOutput || ""}</ReactMarkdown>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {changedPaths.length === 0 ? (
+                    <div className="text-muted-foreground text-sm">No file changes yet.</div>
+                  ) : (
+                    <div className="space-y-3">
+                      {changedPaths.map((p) => (
+                        <div key={p} className="rounded-md border">
+                          <div className="flex items-center justify-between px-3 py-2 bg-muted/50 border-b">
+                            <code className="text-xs">{p}</code>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const raw = (lastAiFiles && lastAiFiles[p]?.code) ?? files[p]?.code ?? "";
+                                  navigator.clipboard.writeText(sanitizeForCopy(raw));
+                                }}
+                              >
+                                Copy
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="h-56 overflow-auto">
+                            <pre className="p-3 text-xs whitespace-pre">
+{sanitizeForView((lastAiFiles && lastAiFiles[p]?.code) ?? files[p]?.code ?? "")}
+                            </pre>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <Sandpack
           key={playgroundTheme}

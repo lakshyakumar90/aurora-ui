@@ -154,12 +154,24 @@ export default function App(): JSX.Element {
       hidden: false,
     };
 
-    // Convert and add UI component (it's in /components/ui/ so depth is 2)
-    const uiCode = convertImportsToRelative(componentFiles.ui, "components/ui");
-    files[`/components/ui/${entry.title.toLowerCase()}.tsx`] = {
-      code: uiCode,
-      hidden: false,
-    };
+    // Convert and add UI component(s)
+    if (componentFiles.uiFiles) {
+      const uiFilesRecord = componentFiles.uiFiles as Record<string, string>;
+      for (const [sourcePath, sourceCode] of Object.entries(uiFilesRecord)) {
+        const converted = convertImportsToRelative(sourceCode, "components/ui");
+        const outName = sourcePath.split("/").pop() || `${entry.title.toLowerCase()}.tsx`;
+        files[`/components/ui/${outName}`] = {
+          code: converted,
+          hidden: false,
+        };
+      }
+    } else if (componentFiles.ui) {
+      const uiCode = convertImportsToRelative(componentFiles.ui, "components/ui");
+      files[`/components/ui/${entry.title.toLowerCase()}.tsx`] = {
+        code: uiCode,
+        hidden: false,
+      };
+    }
 
     // Convert and add utility files (it's in /lib/ so depth is 1)
     const utilsCode = convertImportsToRelative(componentFiles.utils, "lib");
@@ -293,6 +305,8 @@ export default function App(): JSX.Element {
   --border: oklch(0.552 0.016 285.938);
   --input: oklch(0.552 0.016 285.938);
   --ring: oklch(0.606 0.25 292.717);
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
 }
 
 .dark {
@@ -315,6 +329,8 @@ export default function App(): JSX.Element {
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.541 0.281 293.009);
+  --animate-marquee: marquee 40s infinite linear;
+  --animate-marquee-vertical: marquee-vertical 40s linear infinite;
 }
 
 /* Background utilities */
@@ -430,7 +446,32 @@ body {
   align-items: center;
   background-color: var(--background);
   color: var(--foreground);
-}`,
+}
+
+.animate-marquee {
+  animation: var(--animate-marquee);
+}
+.animate-marquee-vertical {
+  animation: var(--animate-marquee-vertical);
+}
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - 10px));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+  `,
       hidden: false,
     };
 

@@ -1,7 +1,7 @@
 // src/app/(docs)/components/button/page.tsx
 import { metaConfig } from "@/config/site";
 import AnimatedComponentLayout from "@/components/layout/animated-component-layout";
-import GlassIconsDemo from "./glassicons-demo";
+import GlassIconsDemo from "./glass-icons-demo";
 
 export const metadata = metaConfig({
   title: "Glass-Icons",
@@ -17,12 +17,12 @@ export default function GlassIconsDocsPage() {
       note="This is a starting point for the GlassIcons component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{
         component: <GlassIconsDemo />,
-        filePath: "src/app/(docs)/components/glassicons/glassicons-demo.tsx",
+        filePath: "src/app/(docs)/components/glass-icons/glass-icons-demo.tsx",
       }}
       controls={[
         { id: "colorful", type: "toggle", label: "Colorful", defaultValue: true },
       ]}
-      installationFilePath="src/app/(docs)/components/glassicons/GlassIcons.tsx"
+      installationFilePath="src/app/(docs)/components/glass-icons/glass-icons.tsx"
       propsTable={[
         {
           prop: "items",
