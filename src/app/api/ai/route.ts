@@ -38,8 +38,26 @@ export async function POST(req: NextRequest) {
   try { 
     const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
     const geminiResult = await model.generateContent(userPrompt);
-    const response = geminiResult?.response?.text() ?? "";
-    return NextResponse.json({ result: response });
+    const rawResponse = geminiResult?.response?.text() ?? "";
+    
+    // Try to parse JSON from the response
+    let parsedResponse;
+    try {
+      // Clean the response - remove markdown code blocks if present
+      let cleanResponse = rawResponse.trim();
+      if (cleanResponse.startsWith('```json')) {
+        cleanResponse = cleanResponse.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      } else if (cleanResponse.startsWith('```')) {
+        cleanResponse = cleanResponse.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      }
+      
+      parsedResponse = JSON.parse(cleanResponse);
+    } catch (parseError) {
+      // If JSON parsing fails, return the raw response as explanation
+      parsedResponse = { explanation: rawResponse };
+    }
+    
+    return NextResponse.json(parsedResponse);
   } catch (err: any) {
     return NextResponse.json({ error: err?.message || "Gemini request failed" }, { status: 500 });
   }

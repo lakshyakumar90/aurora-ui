@@ -15,8 +15,7 @@ import { Moon, Sun } from "lucide-react";
 import { aiRequest } from "@/lib/ai";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+// Removed ReactMarkdown and remarkGfm for custom formatting
 // Sidebar removed
 
 // Default code when no component is selected
@@ -317,12 +316,11 @@ export function SandpackPlayground() {
 
       const res = await aiRequest<any>(payload);
 
-      // Two possibilities: explanation string or files to apply
+      // Handle different response types
       if (res?.explanation) {
         setAiOutput(res.explanation);
-      }
-
-      if (res?.files) {
+        setActiveAiTab("response");
+      } else if (res?.files) {
         const next: SandpackFiles = { ...files };
         const justChanged: string[] = [];
         Object.entries(res.files as Record<string, { code: string }>).forEach(
@@ -338,16 +336,29 @@ export function SandpackPlayground() {
         setFiles(next);
         setChangedPaths(justChanged);
         setLastAiFiles(res.files as Record<string, { code: string }>);
+        
         const formatted = [
+          `## Files Updated Successfully`,
+          ``,
           `**Applied ${justChanged.length} file${justChanged.length === 1 ? "" : "s"}:**`,
           ...justChanged.map((p) => `- \`${p}\``),
+          ``,
+          `Check the **Changes** tab to review the updated code.`
         ].join("\n");
+        
         setAiOutput(formatted);
         setActiveAiTab("changes");
-      }
-
-      if (!res?.files && !res?.explanation) {
-        setAiOutput(typeof res === "string" ? res : "No changes.");
+      } else if (res?.error) {
+        setAiOutput(`## Error\n\n${res.error}`);
+        setActiveAiTab("response");
+      } else {
+        // Handle raw string responses or unexpected formats
+        const responseText = typeof res === "string" ? res : 
+                           res?.result || 
+                           JSON.stringify(res, null, 2) || 
+                           "No response received.";
+        setAiOutput(responseText);
+        setActiveAiTab("response");
       }
     } catch (e: any) {
       setAiOutput(e?.message || "AI request failed");
@@ -392,6 +403,90 @@ export function SandpackPlayground() {
     t = t.replace(/\\n/g, "\n");
     t = t.replace(/\\t/g, "\t");
     return t;
+  };
+
+  // Custom text formatter component
+  const FormattedText = ({ text }: { text: string }) => {
+    if (!text) return <div className="text-muted-foreground">No response yet.</div>;
+
+    // Split text into lines and format
+    const lines = text.split('\n');
+    
+    return (
+      <div className="space-y-2">
+        {lines.map((line, index) => {
+          const trimmedLine = line.trim();
+          
+          // Handle different line types
+          if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**')) {
+            // Bold text
+            return (
+              <div key={index} className="font-semibold text-foreground">
+                {trimmedLine.slice(2, -2)}
+              </div>
+            );
+          } else if (trimmedLine.startsWith('- `') && trimmedLine.endsWith('`')) {
+            // Code list item
+            return (
+              <div key={index} className="flex items-center gap-2 text-sm">
+                <span className="text-muted-foreground">•</span>
+                <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+                  {trimmedLine.slice(3, -1)}
+                </code>
+              </div>
+            );
+          } else if (trimmedLine.startsWith('- ')) {
+            // Regular list item
+            return (
+              <div key={index} className="flex items-start gap-2 text-sm">
+                <span className="text-muted-foreground mt-1">•</span>
+                <span>{trimmedLine.slice(2)}</span>
+              </div>
+            );
+          } else if (trimmedLine.startsWith('# ')) {
+            // Heading
+            return (
+              <h3 key={index} className="text-lg font-semibold text-foreground mt-4 mb-2">
+                {trimmedLine.slice(2)}
+              </h3>
+            );
+          } else if (trimmedLine.startsWith('## ')) {
+            // Subheading
+            return (
+              <h4 key={index} className="text-base font-medium text-foreground mt-3 mb-1">
+                {trimmedLine.slice(3)}
+              </h4>
+            );
+          } else if (trimmedLine.includes('`') && !trimmedLine.startsWith('```')) {
+            // Inline code
+            const parts = trimmedLine.split('`');
+            return (
+              <div key={index} className="text-sm leading-relaxed">
+                {parts.map((part, partIndex) => 
+                  partIndex % 2 === 0 ? (
+                    <span key={partIndex}>{part}</span>
+                  ) : (
+                    <code key={partIndex} className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+                      {part}
+                    </code>
+                  )
+                )}
+              </div>
+            );
+          } else if (trimmedLine === '') {
+            // Empty line for spacing
+            return <div key={index} className="h-2" />;
+          } else {
+            // Regular text
+            return (
+              <div key={index} className="text-sm leading-relaxed text-muted-foreground">
+                {trimmedLine}
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
   };
 
   return (
@@ -574,8 +669,8 @@ export function SandpackPlayground() {
 
             <div className="flex-1 min-h-0 overflow-auto rounded-md border p-3 text-sm">
               {activeAiTab === "response" ? (
-                <div className="prose prose-sm prose-invert max-w-none break-words whitespace-pre-wrap">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiOutput || ""}</ReactMarkdown>
+                <div className="max-w-none break-words">
+                  <FormattedText text={aiOutput || ""} />
                 </div>
               ) : (
                 <div className="space-y-3">
