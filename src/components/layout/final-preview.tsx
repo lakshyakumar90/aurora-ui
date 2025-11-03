@@ -1,7 +1,6 @@
 import { srcUrl } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import React from "react";
-import OpenInV0 from "./open-in-v0";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
@@ -46,7 +45,7 @@ const FinalPreview = ({ component, className, filePath, disable }: ComponentPrev
               </Button>
             </Link>
           )}
-          <OpenInV0 url={registeryURL} disable={disable} />
+          {/* Open in v0 removed */}
         </div>
       </div>
 

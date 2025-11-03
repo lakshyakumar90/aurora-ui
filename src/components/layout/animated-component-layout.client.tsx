@@ -16,7 +16,6 @@ import {
 import type { Control, ExampleConfig } from "@/components/layout/animated-component-types";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
-import OpenInV0 from "@/components/layout/open-in-v0";
 import { srcUrl } from "@/lib/data";
 
 const buildInitialValues = (controls?: Control[]) => {
@@ -162,8 +161,7 @@ export default function AnimatedPreviewCustomize({
           // const componentName = example.filePath.split("/").pop()?.split(".")[0];
           const match = example.filePath.match(/\/components\/([^\/]+)\//);
           const componentSlug = match ? match[1] : null;
-          const registeryURL = componentSlug ? `${srcUrl}/e/${componentSlug}.json` : "";
-          const hasRegistry = Boolean(registeryURL);
+          // Open in v0 removed
           return (
             <>
               {componentSlug && (
@@ -174,7 +172,7 @@ export default function AnimatedPreviewCustomize({
                   </Button>
                 </Link>
               )}
-              <OpenInV0 url={registeryURL} disable={!hasRegistry} />
+              {/* Open in v0 removed */}
             </>
           );
         })()}
