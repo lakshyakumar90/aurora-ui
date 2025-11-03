@@ -36,9 +36,14 @@ function convertImportsToRelative(code: string, fileLocation: string = "root"): 
   return code;
 }
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(_req: NextRequest, context: { params: Promise<{ component: string }> }) {
   const { component } = await context.params;
-  const slug = (component || "").toLowerCase().trim();
+  const raw = (component || "").trim();
+  const normalized = raw.replace(/\.json$/i, "");
+  const slug = normalized.toLowerCase();
   if (!slug) return NextResponse.json({ error: "Missing component slug" }, { status: 400 });
 
   try {
