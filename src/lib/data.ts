@@ -1,4 +1,4 @@
-export const srcUrl = process.env.NEXT_PUBLIC_SRC_URL || "http://localhost:3000";
+export const srcUrl = "https://aurora-ui-five.vercel.app"
 
 export const animeData = [
   {

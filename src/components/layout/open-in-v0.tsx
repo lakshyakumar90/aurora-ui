@@ -10,7 +10,7 @@ const OpenInV0 = ({ url, disable = false }: { url: string; disable?: boolean }) 
       className="h-7 w-fit place-items-center px-2 py-1.5"
       disabled={disable}
     >
-      <a href={`https://v0.dev/chat/api/open?url=${url}`} target="_blank" rel="noreferrer">
+      <a href={`https://v0.dev/chat/api/open?url=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer">
         <span className="font-mono text-xs">Open in</span>
         <V0Logo className="ml-1.5 inline-block" />
       </a>
