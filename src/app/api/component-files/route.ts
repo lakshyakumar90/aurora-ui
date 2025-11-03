@@ -3,6 +3,8 @@ import { join } from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { componentRegistry } from "@/lib/component-registry";
 
+export const runtime = "nodejs";
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const raw = searchParams.get("component")?.toLowerCase().trim();

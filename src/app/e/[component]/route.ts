@@ -3,6 +3,8 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { componentRegistry, type ComponentRegistryEntry } from "@/lib/component-registry";
 
+export const runtime = "nodejs";
+
 function toKebabFromTitle(title: string): string {
   return title
     .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
