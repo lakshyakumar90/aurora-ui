@@ -51,18 +51,30 @@ export const NavigationLinks: NavigationGroup[] = [
       {
         name: "Dock",
         href: "/components/dock"
+      },
+      {
+        name: "Bento Grid",
+        href: "/components/bento-grid",
+      },
+      {
+        name: "Tweet Card",
+        href: "/components/tweet-card",
       }
     ],
   },
-  // {
-  //   name: "Animations",
-  //   children: [
-  //     {
-  //       name: "Glass Icons",
-  //       href: "/components/glass-icons",
-  //     },
-  //   ],
-  // },
+  {
+    name: "Animations",
+    children: [
+      {
+        name: "Glass Icons",
+        href: "/components/glass-icons",
+      },
+      {
+        name: "Animated List",
+        href: "/components/animated-list",
+      }
+    ],
+  },
 ] as const;
 
 export const useNavigationLinks = () =>

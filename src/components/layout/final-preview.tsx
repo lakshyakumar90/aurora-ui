@@ -16,21 +16,21 @@ type ComponentPreviewProps = {
 // TODO: hasReTrigger tobe implemented
 const FinalPreview = ({ component, className, filePath, disable }: ComponentPreviewProps) => {
   const componentName = filePath.split("/").pop()?.split(".")[0];
-  const registeryURL = `${srcUrl}/e/${componentName}.json`;
-  
-  // Extract component slug from filePath for playground
+  // Prefer folder slug for registry (e.g., /components/button/...) -> button.json
   const getComponentSlug = (filePath: string): string | null => {
-    // Extract component name from paths like: src/app/(docs)/components/button/button-basic.tsx
     const match = filePath.match(/\/components\/([^\/]+)\//);
     return match ? match[1] : null;
   };
+  const componentSlugForRegistry = getComponentSlug(filePath) || componentName;
+  const registeryURL = `${srcUrl}/e/${componentSlugForRegistry}.json`;
   
+  // Extract component slug from filePath for playground
   const componentSlug = getComponentSlug(filePath);
 
   return (
     <div
       className={cn(
-        "group/preview flex min-h-[350px] w-full items-center justify-center rounded-md",
+        "group/preview flex min-h-[350px] w-full items-center justify-center rounded-md py-10",
         className
       )}
     >

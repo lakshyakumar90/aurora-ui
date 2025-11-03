@@ -68,6 +68,7 @@ function convertImportsToRelative(
 /**
  * Resolves all dependencies for a component and generates Sandpack files
  */
+// ...
 export async function resolveComponentDependencies(
   entry: ComponentRegistryEntry,
   theme: "light" | "dark" = "light"
@@ -76,11 +77,9 @@ export async function resolveComponentDependencies(
 
   try {
     // Fetch component files from API
-    const response = await fetch(
-      `/api/component-files?component=${entry.title.toLowerCase()}`
-    );
+    const slug = entry.title.toLowerCase().replace(/\s+/g, "-");
+    const response = await fetch(`/api/component-files?component=${slug}`);
     const { files: componentFiles } = await response.json();
-
     // Convert and add demo component as a proper App component
     let demoCode = convertImportsToRelative(componentFiles.demo, "root");
 

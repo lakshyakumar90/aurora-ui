@@ -19,7 +19,7 @@ export default function DockDocsPage() {
         component: <DockDemo />,
         filePath: "src/app/(docs)/components/dock/dock-demo.tsx",
       }}
-      installationFilePath="src/app/(docs)/components/dock/dock.tsx"
+      installationFilePath="src/components/ui/dock.tsx"
       propsTable={[
         {
           prop: "children",

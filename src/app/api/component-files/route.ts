@@ -5,27 +5,26 @@ import { componentRegistry } from "@/lib/component-registry";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const componentName = searchParams.get("component")?.toLowerCase();
-  console.log(componentName);
+  const raw = searchParams.get("component")?.toLowerCase().trim();
+  const slug = raw?.replace(/\s+/g, "-") || ""; // normalize "animated list" -> "animated-list"
 
-  if (!componentName) {
-    return NextResponse.json(
-      { error: "Component name required" },
-      { status: 400 }
-    );
+  if (!slug) {
+    return NextResponse.json({ error: "Component name required" }, { status: 400 });
   }
 
   try {
-    // Read component files based on component name
     const files: Record<string, string | Record<string, string>> = {};
 
-    // Read demo file - handle different naming conventions
-    let demoPath: string;
-    demoPath = `src/app/(docs)/components/${componentName}/${componentName}-demo.tsx`;
+    // Prefer registry for paths when available
+    const entry = componentRegistry[slug];
+
+    // Demo file
+    const demoPath = entry?.demoFile
+      ? entry.demoFile
+      : `src/app/(docs)/components/${slug}/${slug}-demo.tsx`;
     files.demo = readFileSync(join(process.cwd(), demoPath), "utf-8");
 
-    // Read UI component(s) from registry if available, otherwise fall back to default single file
-    const entry = componentRegistry[componentName];
+    // UI files (prefer registry list; fallback to single UI file in docs)
     if (entry && Array.isArray(entry.uiFiles) && entry.uiFiles.length > 0) {
       const uiFiles: Record<string, string> = {};
       for (const path of entry.uiFiles) {
@@ -33,21 +32,17 @@ export async function GET(request: NextRequest) {
       }
       files.uiFiles = uiFiles;
     } else {
-      let uiPath: string;
-      uiPath = `src/app/(docs)/components/${componentName}/${componentName}.tsx`;
+      const uiPath = `src/app/(docs)/components/${slug}/${slug}.tsx`;
       files.ui = readFileSync(join(process.cwd(), uiPath), "utf-8");
     }
 
-    // Read utils
+    // Utils
     const utilsPath = "src/lib/utils.ts";
     files.utils = readFileSync(join(process.cwd(), utilsPath), "utf-8");
 
     return NextResponse.json({ files });
   } catch (error) {
     console.error("Failed to read component files:", error);
-    return NextResponse.json(
-      { error: "Failed to read files" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to read files" }, { status: 500 });
   }
 }

@@ -12,7 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
-import { aiRequest } from "@/lib/ai";
+import { aiRequest, type AIResponse } from "@/lib/ai";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 // Removed ReactMarkdown and remarkGfm for custom formatting
@@ -281,11 +281,21 @@ export function SandpackPlayground() {
       setIsRunning(true);
       setAiOutput("Thinking...");
       setChangedPaths([]);
-      const payload: any = {
+      type AIMode = "generate" | "explain" | "transform" | "fix" | "theme";
+      interface AISelection { path: string; start: number; end: number; code: string }
+      interface AIPayload {
+        action: AIMode;
+        prompt: string;
+        files?: Record<string, { code: string }>;
+        selection?: AISelection;
+        errors?: string;
+      }
+
+      const payload: AIPayload = {
         action: aiMode,
         prompt,
       };
-
+      //@ts-nocheck
       // Limit files context size per request
       const filesPayload: Record<string, { code: string }> = {};
       Object.entries(files).forEach(([path, f]) => {
@@ -314,7 +324,7 @@ export function SandpackPlayground() {
         payload.errors = prompt;
       }
 
-      const res = await aiRequest<any>(payload);
+      const res = await aiRequest<AIResponse>(payload);
 
       // Handle different response types
       if (res?.explanation) {
@@ -360,8 +370,9 @@ export function SandpackPlayground() {
         setAiOutput(responseText);
         setActiveAiTab("response");
       }
-    } catch (e: any) {
-      setAiOutput(e?.message || "AI request failed");
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      setAiOutput(message || "AI request failed");
     } finally {
       setIsRunning(false);
     }

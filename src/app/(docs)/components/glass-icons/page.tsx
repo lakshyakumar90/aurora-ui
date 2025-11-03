@@ -22,7 +22,7 @@ export default function GlassIconsDocsPage() {
       controls={[
         { id: "colorful", type: "toggle", label: "Colorful", defaultValue: true },
       ]}
-      installationFilePath="src/app/(docs)/components/glass-icons/glass-icons.tsx"
+      installationFilePath="src/components/ui/glass-icons.tsx"
       propsTable={[
         {
           prop: "items",

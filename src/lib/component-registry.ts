@@ -46,7 +46,7 @@ export const componentRegistry: Record<string, ComponentRegistryEntry> = {
   },
   glassIcons: {
     demoFile: "src/app/(docs)/components/glass-icons/glass-icons-demo.tsx",
-    uiFiles: ["src/app/(docs)/components/glass-icons/GlassIcons.tsx"],
+    uiFiles: ["src/components/ui/glass-icons.tsx"],
     dependencies: [],
     utilFiles: ["src/lib/utils.ts"],
     title: "GlassIcons",
@@ -54,7 +54,7 @@ export const componentRegistry: Record<string, ComponentRegistryEntry> = {
   },
   marquee: {
     demoFile: "src/app/(docs)/components/marquee/marquee-demo.tsx",
-    uiFiles: ["src/app/(docs)/components/marquee/marquee.tsx"],
+    uiFiles: ["src/components/ui/marquee.tsx"],
     dependencies: ["clsx", "tailwind-merge"],
     utilFiles: ["src/lib/utils.ts"],
     title: "Marquee",
@@ -63,11 +63,35 @@ export const componentRegistry: Record<string, ComponentRegistryEntry> = {
   },
   dock: {
     demoFile: "src/app/(docs)/components/dock/dock-demo.tsx",
-    uiFiles: ["src/app/(docs)/components/dock/dock.tsx", "src/components/ui/button.tsx", "src/components/ui/tooltip.tsx"],
-    dependencies: ["clsx", "tailwind-merge", "class-variance-authority", "@radix-ui/react-tooltip"],
+    uiFiles: ["src/components/ui/dock.tsx", "src/components/ui/button.tsx", "src/components/ui/tooltip.tsx"],
+    dependencies: ["clsx", "tailwind-merge", "class-variance-authority"],
     utilFiles: ["src/lib/utils.ts"],
     title: "Dock",
     description: "A customizable dock component with a variety of variants to choose from.",
+  },
+  "animated-list": {
+    demoFile: "src/app/(docs)/components/animated-list/animated-list-demo.tsx",
+    uiFiles: ["src/components/ui/animated-list.tsx"],
+    dependencies: ["clsx", "tailwind-merge"],
+    utilFiles: ["src/lib/utils.ts"],
+    title: "Animated List",
+    description: "A customizable animated list component.",
+  },
+  "bento-grid": {
+    demoFile: "src/app/(docs)/components/bento-grid/bento-grid-demo.tsx",
+    uiFiles: ["src/components/ui/bento-grid.tsx", "src/components/ui/button.tsx", "src/components/ui/marquee.tsx"],
+    dependencies: ["clsx", "tailwind-merge", "class-variance-authority"],
+    utilFiles: ["src/lib/utils.ts"],
+    title: "Bento Grid",
+    description: "A customizable bento grid component.",
+  },
+  "tweet-card": {
+    demoFile: "src/app/(docs)/components/tweet-card/tweet-card-demo.tsx",
+    uiFiles: ["src/components/ui/tweet-card.tsx"],
+    dependencies: ["clsx", "tailwind-merge", "react-tweet"],
+    utilFiles: ["src/lib/utils.ts"],
+    title: "Tweet Card",
+    description: "A customizable tweet card component.",
   },
 };
 

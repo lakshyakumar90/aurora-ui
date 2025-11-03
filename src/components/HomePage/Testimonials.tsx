@@ -81,7 +81,7 @@ export default function Testimonials() {
                 <Quote className="w-8 h-8 text-purple-400 mb-4" />
                 
                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                  "{testimonial.content}"
+                  &quot;{testimonial.content}&quot; 
                 </p>
                 
                 <div className="flex items-center gap-3">

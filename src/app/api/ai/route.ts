@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
   const { action, prompt, files, selection, errors } = await req.json();
   const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
   let userPrompt = "";
-  let codeContext = files ? JSON.stringify(files).slice(0, 5000) : ""; // Limit context size
-  let extraData = selection ? JSON.stringify(selection) : "";
+  const codeContext = files ? JSON.stringify(files).slice(0, 5000) : ""; // Limit context size
+  const extraData = selection ? JSON.stringify(selection) : "";
 
   switch (action) {
     case "generate":
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     }
     
     return NextResponse.json(parsedResponse);
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || "Gemini request failed" }, { status: 500 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 });
   }
 }

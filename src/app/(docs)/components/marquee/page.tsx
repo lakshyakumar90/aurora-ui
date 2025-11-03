@@ -19,7 +19,7 @@ export default function MarqueeDocsPage() {
         component: <MarqueeDemo />,
         filePath: "src/app/(docs)/components/marquee/marquee-demo.tsx",
       }}
-      installationFilePath="src/app/(docs)/components/marquee/marquee.tsx"
+      installationFilePath="src/components/ui/marquee.tsx"
       propsTable={[
         {
           prop: "children",

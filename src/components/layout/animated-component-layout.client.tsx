@@ -159,13 +159,11 @@ export default function AnimatedPreviewCustomize({
       <PreviewWithRefresh
         onRefresh={() => setPreviewKey((k) => k + 1)}
         toolbarExtras={(() => {
-          const componentName = example.filePath.split("/").pop()?.split(".")[0];
-          console.log(componentName);
-          const registeryURL = `${srcUrl}/e/${componentName}.json`;
+          // const componentName = example.filePath.split("/").pop()?.split(".")[0];
           const match = example.filePath.match(/\/components\/([^\/]+)\//);
           const componentSlug = match ? match[1] : null;
-          const hasRegistry =
-            Boolean(componentName) && Boolean(process.env.NEXT_PUBLIC_SRC_URL) && process.env.NEXT_PUBLIC_SRC_URL !== "http://localhost:3000";
+          const registeryURL = componentSlug ? `${srcUrl}/e/${componentSlug}.json` : "";
+          const hasRegistry = Boolean(registeryURL);
           return (
             <>
               {componentSlug && (
