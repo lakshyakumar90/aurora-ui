@@ -99,10 +99,10 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ compon
         const out = convertImportsToRelative(src, "components/ui");
         const outName = p.split("/").pop()!;
         files.push({
-          path: `components/content/${outName}`,
+          path: `components/ui/${outName}`,
           content: out,
           type: "registry:ui",
-          target: `components/content/${outName}`,
+          target: `components/ui/${outName}`,
         });
       }
     }

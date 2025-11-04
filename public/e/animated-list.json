@@ -11,10 +11,10 @@
       "target": "components/AnimatedListDemo.tsx"
     },
     {
-      "path": "components/content/animated-list.tsx",
+      "path": "components/ui/animated-list.tsx",
       "content": "import React, {\r\n  ComponentPropsWithoutRef,\r\n  useEffect,\r\n  useMemo,\r\n  useState,\r\n} from \"react\"\r\nimport { AnimatePresence, motion, MotionProps } from \"motion/react\"\r\n\r\nimport { cn } from \"../../lib/utils\"\r\n\r\nexport function AnimatedListItem({ children }: { children: React.ReactNode }) {\r\n  const animations: MotionProps = {\r\n    initial: { scale: 0, opacity: 0 },\r\n    animate: { scale: 1, opacity: 1, originY: 0 },\r\n    exit: { scale: 0, opacity: 0 },\r\n    transition: { type: \"spring\", stiffness: 350, damping: 40 },\r\n  }\r\n\r\n  return (\r\n    <motion.div {...animations} layout className=\"mx-auto w-full\">\r\n      {children}\r\n    </motion.div>\r\n  )\r\n}\r\n\r\nexport interface AnimatedListProps extends ComponentPropsWithoutRef<\"div\"> {\r\n  children: React.ReactNode\r\n  delay?: number\r\n}\r\n\r\nexport const AnimatedList = React.memo(\r\n  ({ children, className, delay = 1000, ...props }: AnimatedListProps) => {\r\n    const [index, setIndex] = useState(0)\r\n    const childrenArray = useMemo(\r\n      () => React.Children.toArray(children),\r\n      [children]\r\n    )\r\n\r\n    useEffect(() => {\r\n      if (index < childrenArray.length - 1) {\r\n        const timeout = setTimeout(() => {\r\n          setIndex((prevIndex) => (prevIndex + 1) % childrenArray.length)\r\n        }, delay)\r\n\r\n        return () => clearTimeout(timeout)\r\n      }\r\n    }, [index, delay, childrenArray.length])\r\n\r\n    const itemsToShow = useMemo(() => {\r\n      const result = childrenArray.slice(0, index + 1).reverse()\r\n      return result\r\n    }, [index, childrenArray])\r\n\r\n    return (\r\n      <div\r\n        className={cn(`flex flex-col items-center gap-4`, className)}\r\n        {...props}\r\n      >\r\n        <AnimatePresence>\r\n          {itemsToShow.map((item) => (\r\n            <AnimatedListItem key={(item as React.ReactElement).key}>\r\n              {item}\r\n            </AnimatedListItem>\r\n          ))}\r\n        </AnimatePresence>\r\n      </div>\r\n    )\r\n  }\r\n)\r\n\r\nAnimatedList.displayName = \"AnimatedList\"\r\n",
       "type": "registry:ui",
-      "target": "components/content/animated-list.tsx"
+      "target": "components/ui/animated-list.tsx"
     },
     {
       "path": "lib/utils.ts",
