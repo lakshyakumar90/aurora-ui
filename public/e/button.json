@@ -1,29 +1,41 @@
 {
-  "files": {
-    "/App.tsx": {
-      "code": "import React from \"react\";\nimport ButtonBasic from \"./ButtonBasic\";\nimport \"./styles.css\";\n\nexport default function App(): JSX.Element {\n  return (\n    <div className=\"p-8\">\n      <ButtonBasic />\n    </div>\n  );\n}",
-      "active": true
+  "name": "button-demo",
+  "type": "registry:component",
+  "description": "A customizable button component with a variety of variants to choose from.",
+  "componentName": "ButtonBasic",
+  "files": [
+    {
+      "path": "ButtonBasic.tsx",
+      "content": "import { Button } from \"./components/ui/button\";\nimport React from \"react\";\n\nfunction ButtonBasic() {\n  return (\n    <div className=\"flex flex-col gap-4\">\n      <Button onClick={() => alert(\"clicked\")}>Click me</Button>\n      <Button variant=\"destructive\" onClick={() => alert(\"clicked\")}>\n        Destructive\n      </Button>\n      <Button variant=\"outline\" onClick={() => alert(\"clicked\")}>\n        Success\n      </Button>\n    </div>\n  );\n}\n\nexport default ButtonBasic;",
+      "type": "registry:component",
+      "target": "components/ButtonBasic.tsx"
     },
-    "/ButtonBasic.tsx": {
-      "code": "import { Button } from \"./components/ui/button\";\nimport React from \"react\";\n\nfunction ButtonBasic() {\n  return (\n    <div className=\"flex flex-col gap-4\">\n      <Button onClick={() => alert(\"clicked\")}>Click me</Button>\n      <Button variant=\"destructive\" onClick={() => alert(\"clicked\")}>\n        Destructive\n      </Button>\n      <Button variant=\"outline\" onClick={() => alert(\"clicked\")}>\n        Success\n      </Button>\n    </div>\n  );\n}\n\nexport default ButtonBasic;"
+    {
+      "path": "components/content/button.tsx",
+      "content": "import React from \"react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport { cn } from \"../../lib/utils\";\n\nconst buttonVariants = cva(\n  \"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2\",\n  {\n    variants: {\n      variant: {\n        default:\n          \"bg-primary text-primary-foreground shadow hover:opacity-90 dark:bg-primary\",\n        destructive:\n          \"bg-destructive text-white shadow hover:opacity-90 dark:bg-destructive\",\n        outline:\n          \"border border-input bg-background hover:bg-accent hover:text-accent-foreground hover:opacity-90 dark:border-input dark:bg-transparent\",\n        secondary:\n          \"bg-secondary text-secondary-foreground shadow hover:opacity-90 dark:bg-secondary\",\n        ghost:\n          \"hover:bg-accent hover:text-accent-foreground hover:opacity-90 dark:hover:bg-accent\",\n        link:\n          \"text-primary underline-offset-4 hover:underline hover:opacity-90 dark:text-primary\",\n      },\n      size: {\n        default: \"h-9 px-4 py-2\",\n        sm: \"h-8 px-3 text-xs\",\n        lg: \"h-10 px-6 text-base\",\n        icon: \"h-9 w-9\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n      size: \"default\",\n    },\n  }\n);\n\nexport interface ButtonProps\n  extends React.ButtonHTMLAttributes<HTMLButtonElement>,\n    VariantProps<typeof buttonVariants> {}\n\nexport const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(\n  ({ className, variant, size, ...props }, ref) => (\n    <button\n      className={cn(buttonVariants({ variant, size, className }))}\n      ref={ref}\n      {...props}\n    />\n  )\n);\n\nButton.displayName = \"Button\";\n\nexport { buttonVariants };\n",
+      "type": "registry:ui",
+      "target": "components/content/button.tsx"
     },
-    "/components/ui/button.tsx": {
-      "code": "import React from \"react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport { cn } from \"../../lib/utils\";\n\nconst buttonVariants = cva(\n  \"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2\",\n  {\n    variants: {\n      variant: {\n        default:\n          \"bg-primary text-primary-foreground shadow hover:opacity-90 dark:bg-primary\",\n        destructive:\n          \"bg-destructive text-white shadow hover:opacity-90 dark:bg-destructive\",\n        outline:\n          \"border border-input bg-background hover:bg-accent hover:text-accent-foreground hover:opacity-90 dark:border-input dark:bg-transparent\",\n        secondary:\n          \"bg-secondary text-secondary-foreground shadow hover:opacity-90 dark:bg-secondary\",\n        ghost:\n          \"hover:bg-accent hover:text-accent-foreground hover:opacity-90 dark:hover:bg-accent\",\n        link:\n          \"text-primary underline-offset-4 hover:underline hover:opacity-90 dark:text-primary\",\n      },\n      size: {\n        default: \"h-9 px-4 py-2\",\n        sm: \"h-8 px-3 text-xs\",\n        lg: \"h-10 px-6 text-base\",\n        icon: \"h-9 w-9\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n      size: \"default\",\n    },\n  }\n);\n\nexport interface ButtonProps\n  extends React.ButtonHTMLAttributes<HTMLButtonElement>,\n    VariantProps<typeof buttonVariants> {}\n\nexport const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(\n  ({ className, variant, size, ...props }, ref) => (\n    <button\n      className={cn(buttonVariants({ variant, size, className }))}\n      ref={ref}\n      {...props}\n    />\n  )\n);\n\nButton.displayName = \"Button\";\n\nexport { buttonVariants };\n"
+    {
+      "path": "lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "type": "registry:ui",
+      "target": "lib/utils.ts"
     },
-    "/lib/utils.ts": {
-      "code": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}"
-    },
-    "/styles.css": {
-      "code": ":root{--animate-marquee:marquee 40s infinite linear;--animate-marquee-vertical:marquee-vertical 40s linear infinite}\n.animate-marquee{animation:var(--animate-marquee)}\n.animate-marquee-vertical{animation:var(--animate-marquee-vertical)}\n@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(calc(-100% - 10px))}}\n@keyframes marquee-vertical{from{transform:translateY(0)}to{transform:translateY(calc(-100% - 1rem))}}\n"
+    {
+      "path": "styles.css",
+      "content": ":root{--animate-marquee:marquee 40s infinite linear;--animate-marquee-vertical:marquee-vertical 40s linear infinite}\n.animate-marquee{animation:var(--animate-marquee)}\n.animate-marquee-vertical{animation:var(--animate-marquee-vertical)}\n@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(calc(-100% - 10px))}}\n@keyframes marquee-vertical{from{transform:translateY(0)}to{transform:translateY(calc(-100% - 1rem))}}\n",
+      "type": "registry:theme",
+      "target": "styles.css"
     }
-  },
-  "dependencies": {
-    "@radix-ui/react-slot": "latest",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
-    "tailwind-merge": "^2.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.0.0"
-  }
+  ],
+  "dependencies": [
+    "@radix-ui/react-slot",
+    "class-variance-authority",
+    "clsx",
+    "tailwind-merge",
+    "react",
+    "react-dom",
+    "typescript"
+  ]
 }

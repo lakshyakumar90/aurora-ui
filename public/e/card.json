@@ -1,27 +1,39 @@
 {
-  "files": {
-    "/App.tsx": {
-      "code": "import React from \"react\";\nimport CardBasic from \"./CardBasic\";\nimport \"./styles.css\";\n\nexport default function App(): JSX.Element {\n  return (\n    <div className=\"p-8\">\n      <CardBasic />\n    </div>\n  );\n}",
-      "active": true
+  "name": "card-demo",
+  "type": "registry:component",
+  "description": "A flexible container component for displaying content.",
+  "componentName": "CardBasic",
+  "files": [
+    {
+      "path": "CardBasic.tsx",
+      "content": "import { Card, CardContent, CardDescription, CardHeader, CardTitle } from \"./components/ui/card\";\r\n\r\nconst CardBasic = () => {\r\n    return (\r\n        <div className=\"max-w-md\">\r\n            <Card>\r\n                <CardHeader>\r\n                    <CardTitle>Card Title</CardTitle>\r\n                    <CardDescription>Card Description</CardDescription>\r\n                </CardHeader>\r\n                <CardContent>\r\n                    <p>This is the card content. You can put any content here.</p>\r\n                </CardContent>\r\n            </Card>\r\n        </div>\r\n    )\r\n}\n\nexport default CardBasic;",
+      "type": "registry:component",
+      "target": "components/CardBasic.tsx"
     },
-    "/CardBasic.tsx": {
-      "code": "import { Card, CardContent, CardDescription, CardHeader, CardTitle } from \"./components/ui/card\";\r\n\r\nconst CardBasic = () => {\r\n    return (\r\n        <div className=\"max-w-md\">\r\n            <Card>\r\n                <CardHeader>\r\n                    <CardTitle>Card Title</CardTitle>\r\n                    <CardDescription>Card Description</CardDescription>\r\n                </CardHeader>\r\n                <CardContent>\r\n                    <p>This is the card content. You can put any content here.</p>\r\n                </CardContent>\r\n            </Card>\r\n        </div>\r\n    )\r\n}\n\nexport default CardBasic;"
+    {
+      "path": "components/content/card.tsx",
+      "content": "import * as React from \"react\"\r\n\r\nimport { cn } from \"../../lib/utils\"\r\n\r\nfunction Card({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card\"\r\n      className={cn(\r\n        \"bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm\",\r\n        className\r\n      )}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardHeader({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-header\"\r\n      className={cn(\r\n        \"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6\",\r\n        className\r\n      )}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardTitle({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-title\"\r\n      className={cn(\"leading-none font-semibold\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardDescription({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-description\"\r\n      className={cn(\"text-muted-foreground text-sm\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardAction({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-action\"\r\n      className={cn(\r\n        \"col-start-2 row-span-2 row-start-1 self-start justify-self-end\",\r\n        className\r\n      )}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardContent({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-content\"\r\n      className={cn(\"px-6\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardFooter({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-footer\"\r\n      className={cn(\"flex items-center px-6 [.border-t]:pt-6\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nexport {\r\n  Card,\r\n  CardHeader,\r\n  CardFooter,\r\n  CardTitle,\r\n  CardAction,\r\n  CardDescription,\r\n  CardContent,\r\n}\r\n",
+      "type": "registry:ui",
+      "target": "components/content/card.tsx"
     },
-    "/components/ui/card.tsx": {
-      "code": "import * as React from \"react\"\r\n\r\nimport { cn } from \"../../lib/utils\"\r\n\r\nfunction Card({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card\"\r\n      className={cn(\r\n        \"bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm\",\r\n        className\r\n      )}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardHeader({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-header\"\r\n      className={cn(\r\n        \"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6\",\r\n        className\r\n      )}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardTitle({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-title\"\r\n      className={cn(\"leading-none font-semibold\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardDescription({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-description\"\r\n      className={cn(\"text-muted-foreground text-sm\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardAction({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-action\"\r\n      className={cn(\r\n        \"col-start-2 row-span-2 row-start-1 self-start justify-self-end\",\r\n        className\r\n      )}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardContent({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-content\"\r\n      className={cn(\"px-6\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction CardFooter({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"card-footer\"\r\n      className={cn(\"flex items-center px-6 [.border-t]:pt-6\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nexport {\r\n  Card,\r\n  CardHeader,\r\n  CardFooter,\r\n  CardTitle,\r\n  CardAction,\r\n  CardDescription,\r\n  CardContent,\r\n}\r\n"
+    {
+      "path": "lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "type": "registry:ui",
+      "target": "lib/utils.ts"
     },
-    "/lib/utils.ts": {
-      "code": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}"
-    },
-    "/styles.css": {
-      "code": ":root{--animate-marquee:marquee 40s infinite linear;--animate-marquee-vertical:marquee-vertical 40s linear infinite}\n.animate-marquee{animation:var(--animate-marquee)}\n.animate-marquee-vertical{animation:var(--animate-marquee-vertical)}\n@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(calc(-100% - 10px))}}\n@keyframes marquee-vertical{from{transform:translateY(0)}to{transform:translateY(calc(-100% - 1rem))}}\n"
+    {
+      "path": "styles.css",
+      "content": ":root{--animate-marquee:marquee 40s infinite linear;--animate-marquee-vertical:marquee-vertical 40s linear infinite}\n.animate-marquee{animation:var(--animate-marquee)}\n.animate-marquee-vertical{animation:var(--animate-marquee-vertical)}\n@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(calc(-100% - 10px))}}\n@keyframes marquee-vertical{from{transform:translateY(0)}to{transform:translateY(calc(-100% - 1rem))}}\n",
+      "type": "registry:theme",
+      "target": "styles.css"
     }
-  },
-  "dependencies": {
-    "clsx": "^2.0.0",
-    "tailwind-merge": "^2.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.0.0"
-  }
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "react",
+    "react-dom",
+    "typescript"
+  ]
 }

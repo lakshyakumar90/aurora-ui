@@ -32,7 +32,7 @@ function convertImportsToRelative(code: string, fileLocation: string = "root"): 
 
   code = code.replace(/from ["']@\/components\/ui\/([^"']+)["']/g, (_m, name) => `from "${prefix}components/ui/${keepExt(name)}"`);
   code = code.replace(/from ["']@\/lib\/([^"']+)["']/g, (_m, name) => `from "${prefix}lib/${keepExt(name)}"`);
-  code = code.replace(/from ["']@\/components\/([^"']+)["']/g, (_m, path) => `from "${prefix}components/${keepExt(path)}"`);
+  code = code.replace(/from ["']@\/components\/([^"']+)["']/g, (_m, path) => `from "${prefix}components/${path}"`);
   return code;
 }
 
@@ -50,7 +50,7 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ compon
     const entry = findRegistryEntry(slug);
     if (!entry) return NextResponse.json({ error: "Component not found" }, { status: 404 });
 
-    const files: Record<string, { code: string; hidden?: boolean; active?: boolean }> = {};
+    const files: Array<{ path: string; content: string; type: string; target: string }> = [];
 
     // Demo
     const demoAbs = join(process.cwd(), entry.demoFile);
@@ -83,19 +83,13 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ compon
       demoCode += `\n\nexport default ${demoComponentName};`;
     }
 
-    const appCode = `import React from "react";
-import ${demoComponentName} from "./${demoComponentName}";
-import "./styles.css";
-
-export default function App(): JSX.Element {
-  return (
-    <div className="p-8">
-      <${demoComponentName} />
-    </div>
-  );
-}`;
-    files["/App.tsx"] = { code: appCode, active: true };
-    files[`/${demoComponentName}.tsx`] = { code: demoCode };
+    // Add demo component file
+    files.push({
+      path: `${demoComponentName}.tsx`,
+      content: demoCode,
+      type: "registry:component",
+      target: `components/${demoComponentName}.tsx`,
+    });
 
     // UI files
     if (entry.uiFiles?.length) {
@@ -104,26 +98,39 @@ export default function App(): JSX.Element {
         const src = readFileSync(abs, "utf-8");
         const out = convertImportsToRelative(src, "components/ui");
         const outName = p.split("/").pop()!;
-        files[`/components/ui/${outName}`] = { code: out };
+        files.push({
+          path: `components/content/${outName}`,
+          content: out,
+          type: "registry:ui",
+          target: `components/content/${outName}`,
+        });
       }
     }
 
     // Utils
     const utilsAbs = join(process.cwd(), "src/lib/utils.ts");
     const utilsSrc = readFileSync(utilsAbs, "utf-8");
-    files["/lib/utils.ts"] = { code: convertImportsToRelative(utilsSrc, "lib") };
+    files.push({
+      path: "lib/utils.ts",
+      content: convertImportsToRelative(utilsSrc, "lib"),
+      type: "registry:ui",
+      target: "lib/utils.ts",
+    });
 
     // Minimal styles
-    files["/styles.css"] = {
-      code: `:root{--animate-marquee:marquee 40s infinite linear;--animate-marquee-vertical:marquee-vertical 40s linear infinite}
+    files.push({
+      path: "styles.css",
+      content: `:root{--animate-marquee:marquee 40s infinite linear;--animate-marquee-vertical:marquee-vertical 40s linear infinite}
 .animate-marquee{animation:var(--animate-marquee)}
 .animate-marquee-vertical{animation:var(--animate-marquee-vertical)}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(calc(-100% - 10px))}}
 @keyframes marquee-vertical{from{transform:translateY(0)}to{transform:translateY(calc(-100% - 1rem))}}
 `,
-    };
+      type: "registry:theme",
+      target: "styles.css",
+    });
 
-    // Dependencies
+    // Build dependencies array (v0 expects array, not object)
     const depVersion: Record<string, string> = {
       react: "^18.2.0",
       "react-dom": "^18.2.0",
@@ -136,15 +143,27 @@ export default function App(): JSX.Element {
       "tailwind-merge": "^2.0.0",
       "react-tweet": "^3.2.0",
     };
-    const dependencies: Record<string, string> = {};
+    
+    const dependencySet = new Set<string>();
     (entry.dependencies || []).forEach((d) => {
-      dependencies[d] = depVersion[d] || "latest";
+      dependencySet.add(d);
     });
-    dependencies.react ??= depVersion.react;
-    dependencies["react-dom"] ??= depVersion["react-dom"];
-    dependencies.typescript ??= depVersion.typescript;
+    dependencySet.add("react");
+    dependencySet.add("react-dom");
+    dependencySet.add("typescript");
+    
+    const dependencies = Array.from(dependencySet);
 
-    return NextResponse.json({ files, dependencies });
+    const registeryObject = {
+      name: `${slug}-demo`,
+      type: "registry:component",
+      description: entry.description,
+      componentName: demoComponentName,
+      files: files,
+      dependencies: dependencies,
+    };
+
+    return NextResponse.json(registeryObject);
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "Failed to build registry" }, { status: 500 });
