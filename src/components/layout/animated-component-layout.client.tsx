@@ -158,10 +158,10 @@ export default function AnimatedPreviewCustomize({
       <PreviewWithRefresh
         onRefresh={() => setPreviewKey((k) => k + 1)}
         toolbarExtras={(() => {
-          // const componentName = example.filePath.split("/").pop()?.split(".")[0];
           const match = example.filePath.match(/\/components\/([^\/]+)\//);
           const componentSlug = match ? match[1] : null;
-          // Open in v0 removed
+          const registeryURL = componentSlug ? `${srcUrl}/e/${componentSlug}.json` : "";
+          
           return (
             <>
               {componentSlug && (
@@ -172,7 +172,7 @@ export default function AnimatedPreviewCustomize({
                   </Button>
                 </Link>
               )}
-              {/* Open in v0 removed */}
+              {componentSlug && <OpenInV0 url={registeryURL} />}
             </>
           );
         })()}

@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:v0": "tsx scripts/generate-v0-json.ts",
+    "generate:v0:all": "tsx scripts/generate-all-v0.ts"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.20.0",
@@ -62,6 +64,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "tailwindcss": "^4.1.16",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }

@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
+import OpenInV0 from "./open-in-v0";
 
 type ComponentPreviewProps = {
   component: React.ReactElement;
@@ -45,7 +46,7 @@ const FinalPreview = ({ component, className, filePath, disable }: ComponentPrev
               </Button>
             </Link>
           )}
-          {/* Open in v0 removed */}
+          <OpenInV0 url={registeryURL} disable={!componentSlugForRegistry} />
         </div>
       </div>
 

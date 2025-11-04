@@ -34,3 +34,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## CLI (aurora-ui)
+
+Install components into your project via a simple command.
+
+Usage:
+
+```bash
+npx aurora-ui add <component>
+
+# options
+npx aurora-ui add <component> --dir components/ui    # change target dir
+npx aurora-ui add <component> --install              # run package manager install
+```
+
+Notes:
+- By default, files are written under `components/ui` and `src/lib` in the current working directory.
+- Set `AURORA_UI_BASE_URL` to override the API source (defaults to `https://aurora-ui-five.vercel.app`).
