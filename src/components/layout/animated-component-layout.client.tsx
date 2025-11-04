@@ -17,6 +17,7 @@ import type { Control, ExampleConfig } from "@/components/layout/animated-compon
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { srcUrl } from "@/lib/data";
+import OpenInV0 from "./open-in-v0";
 
 const buildInitialValues = (controls?: Control[]) => {
   const values: Record<string, unknown> = {};
@@ -113,7 +114,7 @@ const PreviewWithRefresh = ({
 }) => {
   return (
     <div className="relative group/preview rounded-lg border border-border/50 p-4">
-      <div className="absolute top-2 right-2 z-[10] md:top-3">
+      <div className="absolute top-2 right-2 z-10 md:top-3">
         <div className="flex items-center gap-3 opacity-0 transition-opacity group-hover/preview:opacity-100">
           <Button variant="outline" size="sm" onClick={onRefresh} className="gap-1">
             <RotateCw className="h-4 w-4" />
