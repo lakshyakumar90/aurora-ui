@@ -11,14 +11,9 @@ if (!fs.existsSync(registeryExamplesDir)) {
   fs.mkdirSync(registeryExamplesDir, { recursive: true });
 }
 
-function convertImportsToRelative(code: string, fileLocation: string = "root"): string {
+function convertImportsToRelative(code: string, _fileLocation: string = "root"): string {
+  // Only strip Next.js directives. Keep all @/* imports intact for v0.
   code = code.replace(/["']use (client|server)["'];?\s*/g, "");
-  const depth = fileLocation === "root" ? 0 : fileLocation.split("/").length;
-  const prefix = depth === 0 ? "./" : "../".repeat(depth);
-  
-  code = code.replace(/from ["']@\/components\/ui\/([^"']+)["']/g, (_m, name) => `from "${prefix}components/ui/${name}"`);
-  code = code.replace(/from ["']@\/lib\/([^"']+)["']/g, (_m, name) => `from "${prefix}lib/${name}"`);
-  code = code.replace(/from ["']@\/components\/([^"']+)["']/g, (_m, path) => `from "${prefix}components/${path}"`);
   return code;
 }
 
@@ -44,7 +39,7 @@ export function registerExample(componentName: string) {
     demoCode = convertImportsToRelative(demoCode, "root");
 
     const uiModuleName = entry.title.toLowerCase();
-    demoCode = demoCode.replace(/from\s+["']\.\/[A-Za-z0-9_-]+["']/g, () => `from "./components/ui/${uiModuleName}"`);
+    demoCode = demoCode.replace(/from\s+["']\.\/[A-Za-z0-9_-]+["']/g, () => `from "@/components/ui/${uiModuleName}"`);
 
     // Extract demo component name
     let demoComponentName = "DemoComponent";

@@ -22,17 +22,9 @@ function findRegistryEntry(slug: string): ComponentRegistryEntry | null {
   return null;
 }
 
-function convertImportsToRelative(code: string, fileLocation: string = "root"): string {
-  // Remove Next.js directives
+function convertImportsToRelative(code: string, _fileLocation: string = "root"): string {
+  // Only strip Next.js directives. Keep @/* imports intact for v0.
   code = code.replace(/["']use (client|server)["'];?\s*/g, "");
-
-  const depth = fileLocation === "root" ? 0 : fileLocation.split("/").length;
-  const prefix = depth === 0 ? "./" : "../".repeat(depth);
-  const keepExt = (p: string) => p;
-
-  code = code.replace(/from ["']@\/components\/ui\/([^"']+)["']/g, (_m, name) => `from "${prefix}components/ui/${keepExt(name)}"`);
-  code = code.replace(/from ["']@\/lib\/([^"']+)["']/g, (_m, name) => `from "${prefix}lib/${keepExt(name)}"`);
-  code = code.replace(/from ["']@\/components\/([^"']+)["']/g, (_m, path) => `from "${prefix}components/${path}"`);
   return code;
 }
 
@@ -57,9 +49,9 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ compon
     let demoCode = readFileSync(demoAbs, "utf-8");
     demoCode = convertImportsToRelative(demoCode, "root");
 
-    // Rewrite './X' demo imports to components/ui/<name>
+    // Rewrite './X' demo imports to @/components/ui/<name>
     const uiModuleName = entry.title.toLowerCase();
-    demoCode = demoCode.replace(/from\s+["']\.\/[A-Za-z0-9_-]+["']/g, () => `from "./components/ui/${uiModuleName}"`);
+    demoCode = demoCode.replace(/from\s+["']\.\/[A-Za-z0-9_-]+["']/g, () => `from "@/components/ui/${uiModuleName}"`);
 
     // Extract demo component name and ensure default export
     let demoComponentName = "DemoComponent";
