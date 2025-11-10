@@ -101,7 +101,7 @@ export function cn(...inputs: ClassValue[]) {
           className="my-4"
         />
         <p className="text-muted-foreground mt-4">
-          You'll also need to install the required dependencies:
+          You&apos;ll also need to install the required dependencies:
         </p>
         <CodeBlock
           code={`npm install clsx tailwind-merge`}
