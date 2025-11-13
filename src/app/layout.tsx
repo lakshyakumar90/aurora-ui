@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, Geist_Mono } from "next/font/google";
 import Header from "@/components/layout/header";
 import "./globals.css";
 import ParentProvider from "./_providers/parentProvider";
 import { SidebarProvider } from "@/components/layout/sidebar-toggle";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 
-const geistSans = Geist({
+const dmSans = DM_Sans({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -27,9 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${dmSans.variable} ${geistMono.variable}`}
+    >
       <body suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+        className="antialiased font-sans"
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SidebarProvider defaultOpen={true}>

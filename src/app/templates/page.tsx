@@ -3,18 +3,25 @@ import { templates, Template } from "@/templates/template-registry";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ExternalLink, Code, Eye } from "lucide-react";
 
 export default function TemplatesPage() {
-  const categories = [...new Set(templates.map(t => t.category))];
+  const categories = [...new Set(templates.map((t) => t.category))];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">Templates</h1>
-        <p className="text-muted-foreground text-lg">
-          Professional Next.js templates ready to use in your projects
+    <div className="container mx-auto px-4 py-12">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-semibold mb-4">Templates</h1>
+        <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+          Modern and minimalist templates for building your next product. Built
+          with React, NextJS, TailwindCSS, Framer Motion and Typescript.
         </p>
       </div>
 
@@ -22,9 +29,11 @@ export default function TemplatesPage() {
       <section className="mb-12">
         <h2 className="text-2xl font-semibold mb-6">Featured Templates</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {templates.filter(t => t.featured).map((template) => (
-            <TemplateCard key={template.id} template={template} />
-          ))}
+          {templates
+            .filter((t) => t.featured)
+            .map((template, index) => (
+              <TemplateCard key={template.id + index} template={template} />
+            ))}
         </div>
       </section>
 
@@ -34,7 +43,7 @@ export default function TemplatesPage() {
           <h2 className="text-2xl font-semibold mb-6">{category}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {templates
-              .filter(t => t.category === category)
+              .filter((t) => t.category === category)
               .map((template) => (
                 <TemplateCard key={template.id} template={template} />
               ))}

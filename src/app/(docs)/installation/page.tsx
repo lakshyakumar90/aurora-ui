@@ -134,7 +134,7 @@ export function cn(...inputs: ClassValue[]) {
           You can now start adding components to your project.
         </p>
         <CodeBlock
-          code={`npx shadcn@latest add "https://aurora-ui-five.vercel.app/c/button.json"`}
+          code={`npx shadcn@latest add "https://aurora-ui-opal.vercel.app/c/button.json"`}
           lang="bash"
           className="my-4"
         />

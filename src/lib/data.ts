@@ -1,4 +1,4 @@
-export const srcUrl = "https://aurora-ui-five.vercel.app"
+export const srcUrl = "https://aurora-ui-opal.vercel.app"
 
 export const animeData = [
   {
