@@ -1,22 +1,14 @@
 // src/app/templates/page.tsx
 import { templates, Template } from "@/templates/template-registry";
 import Link from "next/link";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ExternalLink, Code, Eye } from "lucide-react";
+import TemplateCard from "@/components/layout/template-card";
 
 export default function TemplatesPage() {
   const categories = [...new Set(templates.map((t) => t.category))];
 
   return (
     <div className="container mx-auto px-4 py-12">
+      {/* Header Section */}
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-semibold mb-4">Templates</h1>
         <p className="text-muted-foreground text-lg max-w-xl mx-auto">
@@ -25,90 +17,74 @@ export default function TemplatesPage() {
         </p>
       </div>
 
-      {/* Featured Templates */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-6">Featured Templates</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {templates
-            .filter((t) => t.featured)
-            .map((template, index) => (
-              <TemplateCard key={template.id + index} template={template} />
-            ))}
-        </div>
-      </section>
+      {/* Sidebar + Content Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-12">
 
-      {/* All Templates by Category */}
-      {categories.map((category) => (
-        <section key={category} className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">{category}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {templates
-              .filter((t) => t.category === category)
-              .map((template) => (
-                <TemplateCard key={template.id} template={template} />
-              ))}
+        {/* LEFT SIDEBAR */}
+        <aside className="md:col-span-1 space-y-4 sticky top-24 h-fit">
+          <h3 className="text-xl font-semibold mb-2">Categories</h3>
+
+          <div className="flex flex-col gap-2">
+            {categories.map((category) => (
+              <Link
+                key={category}
+                href={`#${category}`}
+                className="text-sm px-3 py-2 rounded-md hover:bg-accent transition"
+              >
+                {category}
+              </Link>
+            ))}
           </div>
-        </section>
-      ))}
+
+          <hr className="my-4" />
+
+          <div className="flex flex-col gap-2">
+            {templates.filter((t) => t.featured).map((template) => (
+              <Link
+                key={template.id}
+                href={`#${template.id}`}
+                className="text-sm px-3 py-2 rounded-md hover:bg-accent transition"
+              >
+                {template.title}
+              </Link>
+            ))}
+          </div>
+        </aside>
+
+        {/* MAIN CONTENT AREA */}
+        <main className="md:col-span-3 space-y-16">
+
+          {/* Featured Templates */}
+          <section id="featured">
+            <h2 className="text-2xl font-semibold mb-6">Featured Templates</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {templates
+                .filter((t) => t.featured)
+                .map((template, index) => (
+                  <TemplateCard
+                    key={template.id + index}
+                    template={template}
+                  />
+                ))}
+            </div>
+          </section>
+
+          {/* All Templates by Category */}
+          {categories.map((category) => (
+            <section id={category} key={category}>
+              <h2 className="text-2xl font-semibold mb-6">{category}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {templates
+                  .filter((t) => t.category === category)
+                  .map((template) => (
+                    <TemplateCard key={template.id} template={template} />
+                  ))}
+              </div>
+            </section>
+          ))}
+        </main>
+      </div>
     </div>
   );
 }
 
-function TemplateCard({ template }: { template: Template }) {
-  return (
-    <Card className="group hover:shadow-lg transition-all duration-300">
-      <div className="relative aspect-video overflow-hidden rounded-t-lg">
-        <Image
-          src={template.previewImage}
-          alt={template.title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-          <Link
-            href={`/templates/${template.id}`}
-            className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
-          >
-            <Eye className="w-5 h-5 text-white" />
-          </Link>
-          {template.demoUrl && (
-            <a
-              href={template.demoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
-            >
-              <ExternalLink className="w-5 h-5 text-white" />
-            </a>
-          )}
-          {template.sourceUrl && (
-            <a
-              href={template.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
-            >
-              <Code className="w-5 h-5 text-white" />
-            </a>
-          )}
-        </div>
-      </div>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{template.title}</CardTitle>
-          <Badge variant="secondary">{template.category}</Badge>
-        </div>
-        <CardDescription>{template.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-1">
-          {template.tags.map((tag) => (
-            <Badge key={tag} variant="outline" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
