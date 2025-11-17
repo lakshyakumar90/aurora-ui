@@ -8,6 +8,7 @@ export interface Template {
   demoUrl?: string;
   sourceUrl?: string;
   manifestUrl?: string;
+  shadcnUrl?: string;
   tags: string[];
   featured: boolean;
   createdAt: string;
@@ -24,6 +25,7 @@ export const templates: Template[] = [
     demoUrl: "https://modern-landing-page-omega.vercel.app/",
     sourceUrl: "https://github.com/lakshyakumar90/modern-landing-page",
     manifestUrl: "https://aurora-ui-opal.vercel.app/t/modern-landing-page.template.json",
+    shadcnUrl: "https://aurora-ui-opal.vercel.app/t/modern-landing-page.registry.json",
     tags: ["landing", "marketing", "responsive", "modern"],
     featured: true,
     createdAt: "2024-01-01",
