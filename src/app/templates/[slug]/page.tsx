@@ -244,7 +244,7 @@ export default async function TemplatePage({
                 needs? <span className="block mt-2">Get in touch</span>
               </h2>
               <p className="text-muted-foreground mb-6 leading-relaxed">
-                We've helped thousands of{" "}
+                We&apos;ve helped thousands of{" "}
                 <Link
                   href="/customers"
                   className="text-primary hover:underline"
@@ -265,10 +265,10 @@ export default async function TemplatePage({
             {/* Right Column - Testimonial */}
             <div className="flex flex-col justify-center">
               <blockquote className="text-lg leading-relaxed mb-6">
-                "Manu literally took our requirements and quite literally ran
-                with them. To anyone reading this - I can't recommend Manu
+                &quot;Manu literally took our requirements and quite literally ran
+                with them. To anyone reading this - I can&apos;t recommend Manu
                 enough, your job will be done exceptionally well, and you will
-                be delighted with the end result."
+                be delighted with the end result.&quot;
               </blockquote>
               <div>
                 <p className="font-semibold">John Shahawy</p>
