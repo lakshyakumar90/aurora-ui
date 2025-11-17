@@ -14,6 +14,7 @@ import PrevNextBtn from "@/components/layout/prev-next-btn";
 
 interface DocsLayoutProps {
   title: string;
+  fileName: string;
   description: string;
   note?: string;
   example: {
@@ -36,6 +37,7 @@ interface DocsLayoutProps {
 
 export default function DocsLayout({
   title,
+  fileName,
   description,
   note,
   example,
@@ -79,7 +81,7 @@ export default function DocsLayout({
           </TabsList>
 
           <TabsContent value="cli" className="mt-4">
-            <InstallationCli value={title.toLowerCase()} />
+            <InstallationCli value={fileName.toLowerCase()} />
           </TabsContent>
 
           <TabsContent value="manual" className="mt-4 space-y-8">

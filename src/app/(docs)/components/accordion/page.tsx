@@ -12,7 +12,7 @@ export const metadata = metaConfig({
 export default function ButtonDocsPage() {
   return (
     <DocsLayout
-      title="Accordion"
+      title="Accordion" fileName="accordion"
       description="A vertically stacked set of interactive headings that each reveal a section of content."
     //note="This is a starting point for the Button component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{

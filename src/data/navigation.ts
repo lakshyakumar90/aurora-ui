@@ -59,7 +59,11 @@ export const NavigationLinks: NavigationGroup[] = [
       {
         name: "Tweet Card",
         href: "/components/tweet-card",
-      }
+      },
+      {
+        name: "Avatar Circles",
+        href: "/components/avatar-circles",
+      },
     ],
   },
   {

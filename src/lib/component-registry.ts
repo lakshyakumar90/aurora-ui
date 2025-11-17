@@ -93,6 +93,14 @@ export const componentRegistry: Record<string, ComponentRegistryEntry> = {
     title: "Tweet Card",
     description: "A customizable tweet card component.",
   },
+  "avatar-circles": {
+    demoFile: "src/app/(docs)/components/avatar-circles/avatar-circles-demo.tsx",
+    uiFiles: ["src/components/ui/avatar-circles.tsx"],
+    dependencies: ["clsx", "tailwind-merge"],
+    utilFiles: ["src/lib/utils.ts"],
+    title: "Avatar Circles",
+    description: "A customizable avatar circles component.",
+  },
 };
 
 export function getComponentFromRegistry(

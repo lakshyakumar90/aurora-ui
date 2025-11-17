@@ -11,8 +11,8 @@ export const metadata = metaConfig({
 
 export default function CardDocsPage() {
   return (
-    <DocsLayout
-      title="Card"
+    <DocsLayout 
+      title="Card" fileName="card"
       description="A simple customizable card component with a variety of variants to choose from."
       note="This is a starting point for the Button component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{

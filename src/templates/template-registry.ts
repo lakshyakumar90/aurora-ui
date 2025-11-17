@@ -7,31 +7,12 @@ export interface Template {
   previewImage: string;
   demoUrl?: string;
   sourceUrl?: string;
+  manifestUrl?: string;
   tags: string[];
   featured: boolean;
   createdAt: string;
   updatedAt: string;
 }
-
-// Use localhost for development, production URL for production
-const isDevelopment = process.env.NODE_ENV === 'development';
-const getDemoUrl = (templateId: string) => {
-  if (isDevelopment) {
-    // Map template IDs to their local dev ports
-    const localPorts: Record<string, number> = {
-      'modern-landing-page': 3001,
-      // Add more templates as needed
-    };
-    const port = localPorts[templateId];
-    return port ? `http://localhost:${port}` : undefined;
-  }
-  // Production URLs
-  const productionUrls: Record<string, string> = {
-    'modern-landing-page': 'https://modern-landing-demo.vercel.app',
-    // Add more templates as needed
-  };
-  return productionUrls[templateId];
-};
 
 export const templates: Template[] = [
   {
@@ -40,8 +21,9 @@ export const templates: Template[] = [
     description: "A beautiful, responsive landing page with modern design elements",
     category: "Marketing",
     previewImage: "https://images.unsplash.com/photo-1762912302731-508b4580735f?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    demoUrl: getDemoUrl("modern-landing-page"),
-    sourceUrl: "#",
+    demoUrl: "https://modern-landing-page-omega.vercel.app/",
+    sourceUrl: "https://github.com/lakshyakumar90/modern-landing-page",
+    manifestUrl: "https://github.com/user-attachments/files/23576448/modern-landing-page.template.json",
     tags: ["landing", "marketing", "responsive", "modern"],
     featured: true,
     createdAt: "2024-01-01",
@@ -53,7 +35,7 @@ export const templates: Template[] = [
     description: "A beautiful, responsive landing page with modern design elements",
     category: "Marketing",
     previewImage: "https://images.unsplash.com/photo-1762912302731-508b4580735f?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    demoUrl: getDemoUrl("modern-landing-page"),
+    demoUrl: "",
     sourceUrl: "#",
     tags: ["landing", "marketing", "responsive", "modern"],
     featured: true,
@@ -66,7 +48,7 @@ export const templates: Template[] = [
     description: "A beautiful, responsive landing page with modern design elements",
     category: "Marketing",
     previewImage: "https://images.unsplash.com/photo-1762912302731-508b4580735f?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    demoUrl: getDemoUrl("modern-landing-page"),
+    demoUrl: "",
     sourceUrl: "#",
     tags: ["landing", "marketing", "responsive", "modern"],
     featured: true,

@@ -11,7 +11,7 @@ export const metadata = metaConfig({
 export default function TweetCardDocsPage() {
   return (
     <DocsLayout
-      title="Tweet Card"
+      title="Tweet Card" fileName="tweet-card"
       description="A simple customizable tweet card component."
       note="This is a starting point for the Tweet Card component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{

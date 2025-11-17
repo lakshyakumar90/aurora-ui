@@ -17,6 +17,7 @@ import type { Control, ExampleConfig } from "@/components/layout/animated-compon
 
 interface AnimatedDocsLayoutProps {
   title: string;
+  fileName: string;
   description: string;
   note?: string;
   example: ExampleConfig;
@@ -37,6 +38,7 @@ interface AnimatedDocsLayoutProps {
 
 export default function AnimatedComponentLayout({
   title,
+  fileName,
   description,
   note,
   example,
@@ -74,8 +76,8 @@ export default function AnimatedComponentLayout({
           </TabsList>
 
           <TabsContent value="cli" className="mt-4">
-            <InstallationCli value={title.toLowerCase()} />
-          </TabsContent>
+            <InstallationCli value={fileName.toLowerCase()} />
+          </TabsContent>  
 
           <TabsContent value="manual" className="mt-4 space-y-8">
             <ol className="list-decimal list-outside ml-5 space-y-4">

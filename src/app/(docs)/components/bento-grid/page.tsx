@@ -12,7 +12,7 @@ export const metadata = metaConfig({
 export default function BentoGridDocsPage() {
   return (
     <DocsLayout
-      title="Bento Grid"
+      title="Bento Grid" fileName="bento-grid"
       description="A customizable bento grid component."
     //note="This is a starting point for the Button component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{

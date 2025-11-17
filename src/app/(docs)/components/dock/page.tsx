@@ -12,7 +12,7 @@ export const metadata = metaConfig({
 export default function DockDocsPage() {
   return (
     <DocsLayout
-      title="Dock"
+      title="Dock" fileName="dock"
       description="A simple customizable Dock component with a variety of variants to choose from."
       note="This is a starting point for the Dock component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{

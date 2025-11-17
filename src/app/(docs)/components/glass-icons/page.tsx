@@ -12,6 +12,7 @@ export const metadata = metaConfig({
 export default function GlassIconsDocsPage() {
   return (
     <AnimatedComponentLayout
+      fileName="glass-icons"
       title="GlassIcons"
       description="A simple customizable glass icons component with a variety of variants to choose from."
       note="This is a starting point for the GlassIcons component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
