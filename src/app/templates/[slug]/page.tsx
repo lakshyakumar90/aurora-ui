@@ -177,15 +177,10 @@ export default async function TemplatePage({
               Requires Node.js 18+, Git, and any package manager (npm, pnpm, yarn, or bun) installed globally.
             </p>
             <CodeBlock
-              code={`npx aurora-ui template install --name ${template.id} --url "${template.manifestUrl}" --dir modern-landing-page`}
+              code={`npx shadcn@latest add "${template.manifestUrl}"`}
               lang="bash"
               className="mb-4"
             />
-            <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-5">
-              <li>The CLI fetches the manifest, recreates the directory structure, and writes every file locally.</li>
-              <li>Pass <code className="px-1 py-0.5 rounded bg-muted text-xs font-mono">--dir</code> to control the output folder (default is the current directory).</li>
-              <li>Run <code className="px-1 py-0.5 rounded bg-muted text-xs font-mono">npm install</code> (or your package manager) afterwards, then <code className="px-1 py-0.5 rounded bg-muted text-xs font-mono">npm run dev</code> to preview.</li>
-            </ul>
           </section>
         )}
 
