@@ -7,6 +7,7 @@ import SideBarToggle from "./sidebar-toggle";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import CommandMenu from "./command-menu";
+import { AuthButtons } from "@/components/auth/AuthButtons";
 
 function Header() {
   const pathname = usePathname();
@@ -56,6 +57,8 @@ function Header() {
 
         <span className="flex items-center gap-x-4">
           <CommandMenu />
+
+          <AuthButtons />
 
           <ThemeToggle />
           <SideBarToggle />

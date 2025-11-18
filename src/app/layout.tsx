@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { DM_Sans, Geist_Mono } from "next/font/google";
 import Header from "@/components/layout/header";
 import "./globals.css";
@@ -19,7 +20,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Aurora UI - Modern React Component Library",
-  description: "A beautiful and customizable React component library built with Next.js and Tailwind CSS",
+  description:
+    "A beautiful and customizable React component library built with Next.js and Tailwind CSS",
 };
 
 export default function RootLayout({
@@ -33,13 +35,15 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${dmSans.variable} ${geistMono.variable}`}
     >
-      <body suppressHydrationWarning
-        className="antialiased font-sans"
-      >
+      <body suppressHydrationWarning className="antialiased font-sans">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SidebarProvider defaultOpen={true}>
-            <Header />
-            <ParentProvider>{children}</ParentProvider>
+            <ParentProvider>
+              <Header />
+              <Suspense fallback={null}>
+                {children}
+              </Suspense>
+            </ParentProvider>
           </SidebarProvider>
         </ThemeProvider>
       </body>

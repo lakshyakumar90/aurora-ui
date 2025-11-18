@@ -3,18 +3,20 @@ import { getTemplateById } from "@/templates/template-registry";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, ArrowLeft, Check, ShoppingCart } from "lucide-react";
+import { ExternalLink, ArrowLeft, Check } from "lucide-react";
 import Footer from "@/components/HomePage/Footer";
 import { AvatarCircles } from "@/components/ui/avatar-circles";
 import CodeBlock from "@/components/layout/code-block";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export default async function TemplatePage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const session = await getServerSession(authOptions);
   const { slug } = await params;
   const template = await getTemplateById(slug);
 
@@ -39,7 +41,6 @@ export default async function TemplatePage({
     {
       imageUrl: "https://assets.aceternity.com/logos/framer.webp",
     },
-   
   ];
 
   // Features data
@@ -93,12 +94,10 @@ export default async function TemplatePage({
   ];
 
   // Sample images for the 2x2 grid (using the preview image as placeholder)
-  const galleryImages = [
-    template.previewImage,
-    template.previewImage,
-    template.previewImage,
-    template.previewImage,
-  ];
+  const galleryImages = template.previewImages;
+  if (!galleryImages) {
+    notFound();
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -148,53 +147,74 @@ export default async function TemplatePage({
                     </a>
                   </Button>
                 )}
-                <Button
-                  size="lg"
-                  className="bg-foreground text-background hover:opacity-90"
-                >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  Add to Cart
-                </Button>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold">$79</span>
-                <span className="text-muted-foreground line-through">$99</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                or get this with{" "}
-                <Link href="/bundle" className="font-semibold underline">
-                  the bundle
-                </Link>
-              </p>
             </div>
           </div>
         </div>
 
-        {template.manifestUrl && (
+        {session && template.shadcnUrl && (
           <section className="mb-16 border border-border rounded-lg p-6 bg-card">
             <h2 className="text-2xl font-semibold mb-4">Install via CLI</h2>
             <p className="text-muted-foreground mb-4">
-              Requires Node.js 18+, Git, and any package manager (npm, pnpm, yarn, or bun) installed globally.
+              Requires Node.js 18+, Git, and any package manager (npm, pnpm,
+              yarn, or bun) installed globally.
             </p>
-            {/* <CodeBlock
-              code={`npx aurora-ui template install --name ${template.id} --url "${template.manifestUrl}" --dir modern-landing-page`}
+            <p className="text-muted-foreground mb-4">
+              Start by generating a fresh Next.js app, switch into it, run the
+              Aurora template installer, then install dependencies and boot the
+              dev server:
+            </p>
+
+            <p className="text-muted-foreground mb-4 mt-10 font-semibold">
+              1. Generate a fresh Next.js app
+            </p>
+            <CodeBlock
+              code={`npx create-next-app@latest`}
               lang="bash"
               className="mb-4"
-            /> */}
-            {template.shadcnUrl && (
-              <CodeBlock
-                code={`npx shadcn@latest add "${template.shadcnUrl}"`}
-                lang="bash"
-                className="mb-4"
-              />
-            )}
-            <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-5">
-              <li>The CLI fetches the manifest, recreates the directory structure, and writes every file locally.</li>
-              <li>Pass <code className="px-1 py-0.5 rounded bg-muted text-xs font-mono">--dir</code> to control the output folder (default is the current directory).</li>
-              <li>
-                Run <code className="px-1 py-0.5 rounded bg-muted text-xs font-mono">npm install</code> (or your package manager) afterwards, then <code className="px-1 py-0.5 rounded bg-muted text-xs font-mono">npm run dev</code> to preview. Works with both the Aurora CLI and the <code className="px-1 py-0.5 rounded bg-muted text-xs font-mono">shadcn@latest</code> installer when available.
-              </li>
-            </ul>
+            />
+            <p className="text-muted-foreground mb-4 font-semibold">
+              2. Switch into the project directory
+            </p>
+            <CodeBlock
+              code={`cd your-project-name`}
+              lang="bash"
+              className="mb-4"
+            />
+            <p className="text-muted-foreground mb-4 font-semibold">
+              3. Run the Aurora template installer
+            </p>
+            <CodeBlock
+              code={`npx shadcn@latest add "${template.shadcnUrl}"`}
+              lang="bash"
+              className="mb-4"
+            />
+            <p className="text-muted-foreground mb-4 font-semibold">
+              4. Install dependencies
+            </p>
+            <CodeBlock code={`npm install`} lang="bash" className="mb-4" />
+            <p className="text-muted-foreground mb-4 font-semibold">
+              5. Run your project locally. Boot the dev server
+            </p>
+            <CodeBlock code={`npm run dev`} lang="bash" className="mb-4" />
+          </section>
+        )}
+        {!session && template.shadcnUrl && (
+          <section className="mb-16 border border-border rounded-lg p-6 bg-card">
+            <h2 className="text-2xl font-semibold mb-4">
+              Sign in to view CLI installation commands
+            </h2>
+            <p className="text-muted-foreground mb-4">
+              Create a free account or sign in to unlock the CLI commands for installing this template.
+            </p>
+            <div className="flex gap-3">
+              <Link href="/signup">
+                <Button>Sign up</Button>
+              </Link>
+              <Link href="/signin">
+                <Button variant="outline">Sign in</Button>
+              </Link>
+            </div>
           </section>
         )}
 
@@ -274,10 +294,10 @@ export default async function TemplatePage({
             {/* Right Column - Testimonial */}
             <div className="flex flex-col justify-center">
               <blockquote className="text-lg leading-relaxed mb-6">
-                &quot;Manu literally took our requirements and quite literally ran
-                with them. To anyone reading this - I can&apos;t recommend Manu
-                enough, your job will be done exceptionally well, and you will
-                be delighted with the end result.&quot;
+                &quot;Manu literally took our requirements and quite literally
+                ran with them. To anyone reading this - I can&apos;t recommend
+                Manu enough, your job will be done exceptionally well, and you
+                will be delighted with the end result.&quot;
               </blockquote>
               <div>
                 <p className="font-semibold">John Shahawy</p>

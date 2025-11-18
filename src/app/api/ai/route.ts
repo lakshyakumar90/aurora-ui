@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       parsedResponse = JSON.parse(cleanResponse);
     } catch (parseError) {
       // If JSON parsing fails, return the raw response as explanation
-      parsedResponse = { explanation: rawResponse };
+      parsedResponse = { explanation: rawResponse, error: parseError };
     }
     
     return NextResponse.json(parsedResponse);

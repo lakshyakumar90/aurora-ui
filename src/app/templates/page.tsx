@@ -1,5 +1,5 @@
 // src/app/templates/page.tsx
-import { templates, Template } from "@/templates/template-registry";
+import { templates } from "@/templates/template-registry";
 import Link from "next/link";
 import TemplateCard from "@/components/layout/template-card";
 

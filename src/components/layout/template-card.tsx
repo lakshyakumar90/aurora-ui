@@ -36,7 +36,7 @@ function TemplateCard({ template }: { template: Template }) {
     >
       <div className="relative aspect-video overflow-hidden rounded-t-lg">
         <Image
-          src={template.previewImage}
+          src={template.previewImages[0]}
           alt={template.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"

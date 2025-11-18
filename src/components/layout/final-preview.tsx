@@ -14,7 +14,7 @@ type ComponentPreviewProps = {
 };
 
 // TODO: hasReTrigger tobe implemented
-const FinalPreview = ({ component, className, filePath, disable }: ComponentPreviewProps) => {
+const FinalPreview = ({ component, className, filePath }: ComponentPreviewProps) => {
   const componentName = filePath.split("/").pop()?.split(".")[0];
   // Prefer folder slug for registry (e.g., /components/button/...) -> button.json
   const getComponentSlug = (filePath: string): string | null => {
