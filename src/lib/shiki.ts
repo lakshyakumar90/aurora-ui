@@ -20,18 +20,22 @@ class HighlighterManager {
 
   async getHighlighter(theme: BundledTheme, lang: BundledLanguage): Promise<Highlighter> {
     if (!this.highlighters) {
+      const themesToLoad: BundledTheme[] = [theme];
+      if (theme === "github-dark" || theme === "github-light") {
+        themesToLoad.push("github-dark" as BundledTheme, "github-light" as BundledTheme);
+      }
+      
       this.highlighters = await createHighlighter({
-        themes: [theme],
-        langs: ["tsx", "bash", lang], //TODO: there is a bug here where it doesn't load the lang
+        themes: [...new Set(themesToLoad)],
+        langs: ["tsx", "bash", lang],
       });
 
-      this.loadedThemes.add(theme);
+      themesToLoad.forEach(t => this.loadedThemes.add(t));
       this.loadedLangs.add(lang);
 
       return this.highlighters;
     }
 
-    // new themes or langs
     const themeToLoad: BundledTheme[] = [];
     const langToLoad: BundledLanguage[] = [];
 
@@ -70,13 +74,21 @@ export const codeToHtml = async ({
   code,
   lang,
   theme,
+  additionalThemes = [],
 }: {
   code: string;
   lang: BundledLanguage;
   theme: BundledTheme;
+  additionalThemes?: BundledTheme[];
 }) => {
   const manager = HighlighterManager.getInstance();
+  
   const highlighterInstance = await manager.getHighlighter(theme, lang);
+  
+  for (const additionalTheme of additionalThemes) {
+    await manager.getHighlighter(additionalTheme, lang);
+  }
+  
   const html = highlighterInstance.codeToHtml(code, {
     lang: lang,
     theme: theme,

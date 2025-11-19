@@ -11,14 +11,12 @@ import {
 } from "@/lib/resolve-component-deps";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
 import { aiRequest, type AIResponse } from "@/lib/ai";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-// Removed ReactMarkdown and remarkGfm for custom formatting
-// Sidebar removed
+import { useTheme } from "next-themes";
 
-// Default code when no component is selected
+
 const defaultCode = `import React from "react";
 
 export default function App(): JSX.Element {
@@ -41,13 +39,11 @@ export default function App(): JSX.Element {
   );
 }`;
 
-// Simple CSS file for default playground
 const appStyles = `/* Custom CSS - Edit me! */
 
 /* Add your custom styles here */
 `;
 
-// ✅ Base styles with OKLCH CSS variables
 const baseStyles = `:root {
   --radius: 0.65rem;
   --background: oklch(1 0 0);
@@ -106,9 +102,6 @@ body {
   min-height: 100vh;
 }`;
 
-// Tailwind config with CSS variable mapping
-
-// Helper function to get HTML with theme
 function getHtmlWithTheme(theme: "light" | "dark") {
   return `<!DOCTYPE html>
 <html lang="en" class="${theme}">
@@ -123,7 +116,6 @@ function getHtmlWithTheme(theme: "light" | "dark") {
 </html>`;
 }
 
-// Helper function to get default files with theme
 function getDefaultFiles(theme: "light" | "dark" = "light") {
   return {
     "/App.tsx": {
@@ -177,7 +169,6 @@ root.render(<App />);`,
   };
 }
 
-// Helper function to get default setup
 function getDefaultSetup() {
   return {
     dependencies: {
@@ -189,7 +180,6 @@ function getDefaultSetup() {
       "tailwind-merge": "^2.0.0",
       "@types/react": "^18.2.0",
       "@types/react-dom": "^18.2.0",
-      // Added requested packages for sandbox environment
       gsap: "^3.12.5",
       motion: "^12.23.12",
       tailwindcss: "^4",
@@ -204,9 +194,10 @@ export function SandpackPlayground() {
   const searchParams = useSearchParams();
   const componentName = searchParams.get("component");
 
-  const [playgroundTheme, setPlaygroundTheme] = useState<"light" | "dark">(
-    "dark"
-  );
+  const { resolvedTheme } = useTheme();
+  const playgroundTheme: "light" | "dark" =
+    resolvedTheme === "light" ? "light" : "dark";
+
   const [files, setFiles] = useState<SandpackFiles>(
     getDefaultFiles(playgroundTheme)
   );
@@ -216,7 +207,6 @@ export function SandpackPlayground() {
   const [loading, setLoading] = useState(false);
   const [activeFile] = useState<string>("/App.tsx");
 
-  // AI panel state
   const [aiOpen, setAiOpen] = useState<boolean>(false);
   const [aiMode, setAiMode] = useState<
     "generate" | "explain" | "transform" | "fix" | "theme"
@@ -228,21 +218,53 @@ export function SandpackPlayground() {
   const [activeAiTab, setActiveAiTab] = useState<"response" | "changes">(
     "response"
   );
-  const [lastAiFiles, setLastAiFiles] = useState<Record<string, { code: string }>>({});
+  const [lastAiFiles, setLastAiFiles] = useState<
+    Record<string, { code: string }>
+  >({});
   const [newFilePath, setNewFilePath] = useState<string>("/NewFile.tsx");
-  const [newFileCode, setNewFileCode] = useState<string>("export default {} as const;\n");
+  const [newFileCode, setNewFileCode] = useState<string>(
+    "export default {} as const;\n"
+  );
   const [selectedPath, setSelectedPath] = useState<string>("/App.tsx");
   const [selStart, setSelStart] = useState<string>("");
   const [selEnd, setSelEnd] = useState<string>("");
   const [newFileOpen, setNewFileOpen] = useState<boolean>(false);
 
-  // Load component when componentName or theme changes
+  const [aiWidth, setAiWidth] = useState<number>(420);
+  const [isResizing, setIsResizing] = useState<boolean>(false);
+
+  const quickPrompts: {
+    label: string;
+    mode: typeof aiMode;
+  }[] = [
+    {
+      mode: "generate",
+      label: "Create a hero section with Aurora UI styling",
+    },
+    {
+      mode: "transform",
+      label: "Refactor this into a responsive two-column layout",
+    },
+    {
+      mode: "fix",
+      label: "Fix TypeScript and runtime errors in the current file",
+    },
+    {
+      mode: "explain",
+      label: "Explain what this component does step by step",
+    },
+    {
+      mode: "theme",
+      label: "Adjust the theme to feel more playful and vibrant",
+    },
+  ];
+
   useEffect(() => {
     if (componentName) {
       const componentEntry = getComponentFromRegistry(componentName);
       if (componentEntry) {
         setLoading(true);
-        resolveComponentDependencies(componentEntry, playgroundTheme) // Pass theme here
+        resolveComponentDependencies(componentEntry, playgroundTheme)
           .then((resolvedFiles) => {
             setFiles(resolvedFiles);
             setCustomSetup(generateSandpackSetup(componentEntry));
@@ -261,9 +283,33 @@ export function SandpackPlayground() {
     }
   }, [componentName, playgroundTheme]);
 
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const minWidth = 320;
+      const maxWidth = Math.min(window.innerWidth - 360, 720);
+      const proposed = window.innerWidth - event.clientX;
+      const nextWidth = Math.min(Math.max(proposed, minWidth), maxWidth);
+      setAiWidth(nextWidth);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing]);
+
   if (!mounted || loading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center">
+      <div className="h-[calc(100vh-3.5rem)] w-full flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading Playground...</p>
@@ -271,10 +317,6 @@ export function SandpackPlayground() {
       </div>
     );
   }
-
-  const toggleTheme = () => {
-    setPlaygroundTheme((prev) => (prev === "light" ? "dark" : "light"));
-  };
 
   const runAI = async () => {
     try {
@@ -296,7 +338,6 @@ export function SandpackPlayground() {
         prompt,
       };
       //@ts-nocheck
-      // Limit files context size per request
       const filesPayload: Record<string, { code: string }> = {};
       Object.entries(files).forEach(([path, f]) => {
         filesPayload[path] = { code: f.code };
@@ -320,13 +361,11 @@ export function SandpackPlayground() {
       }
 
       if (aiMode === "fix") {
-        // Optional: user can paste console errors into the prompt; we also pass it through
         payload.errors = prompt;
       }
 
       const res = await aiRequest<AIResponse>(payload);
 
-      // Handle different response types
       if (res?.explanation) {
         setAiOutput(res.explanation);
         setActiveAiTab("response");
@@ -362,7 +401,6 @@ export function SandpackPlayground() {
         setAiOutput(`## Error\n\n${res.error}`);
         setActiveAiTab("response");
       } else {
-        // Handle raw string responses or unexpected formats
         const responseText = typeof res === "string" ? res : 
                            res?.result || 
                            JSON.stringify(res, null, 2) || 
@@ -378,24 +416,18 @@ export function SandpackPlayground() {
     }
   };
 
-  // Helpers
   const sanitizeForCopy = (text: string) => {
     if (!text) return "";
     let t = text.trim();
-    // Strip triple backtick fences if present
     if (t.startsWith("```")) {
-      // remove first line fence
       const firstNl = t.indexOf("\n");
       if (firstNl !== -1) t = t.slice(firstNl + 1);
     }
     if (t.endsWith("```")) {
       t = t.slice(0, t.lastIndexOf("```"));
     }
-    // Unescape common escaped sequences from JSON/plain text
-    // Only if we see literal \n, replace with real newline
     if (t.includes("\\n")) t = t.replace(/\\n/g, "\n");
     if (t.includes("\\t")) t = t.replace(/\\t/g, "\t");
-    // Remove stray CRs
     t = t.replace(/\r/g, "");
     return t.trim();
   };
@@ -416,11 +448,9 @@ export function SandpackPlayground() {
     return t;
   };
 
-  // Custom text formatter component
   const FormattedText = ({ text }: { text: string }) => {
     if (!text) return <div className="text-muted-foreground">No response yet.</div>;
 
-    // Split text into lines and format
     const lines = text.split('\n');
     
     return (
@@ -428,16 +458,13 @@ export function SandpackPlayground() {
         {lines.map((line, index) => {
           const trimmedLine = line.trim();
           
-          // Handle different line types
           if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**')) {
-            // Bold text
             return (
               <div key={index} className="font-semibold text-foreground">
                 {trimmedLine.slice(2, -2)}
               </div>
             );
           } else if (trimmedLine.startsWith('- `') && trimmedLine.endsWith('`')) {
-            // Code list item
             return (
               <div key={index} className="flex items-center gap-2 text-sm">
                 <span className="text-muted-foreground">•</span>
@@ -447,7 +474,6 @@ export function SandpackPlayground() {
               </div>
             );
           } else if (trimmedLine.startsWith('- ')) {
-            // Regular list item
             return (
               <div key={index} className="flex items-start gap-2 text-sm">
                 <span className="text-muted-foreground mt-1">•</span>
@@ -455,21 +481,18 @@ export function SandpackPlayground() {
               </div>
             );
           } else if (trimmedLine.startsWith('# ')) {
-            // Heading
             return (
               <h3 key={index} className="text-lg font-semibold text-foreground mt-4 mb-2">
                 {trimmedLine.slice(2)}
               </h3>
             );
           } else if (trimmedLine.startsWith('## ')) {
-            // Subheading
             return (
               <h4 key={index} className="text-base font-medium text-foreground mt-3 mb-1">
                 {trimmedLine.slice(3)}
               </h4>
             );
           } else if (trimmedLine.includes('`') && !trimmedLine.startsWith('```')) {
-            // Inline code
             const parts = trimmedLine.split('`');
             return (
               <div key={index} className="text-sm leading-relaxed">
@@ -485,10 +508,8 @@ export function SandpackPlayground() {
               </div>
             );
           } else if (trimmedLine === '') {
-            // Empty line for spacing
             return <div key={index} className="h-2" />;
           } else {
-            // Regular text
             return (
               <div key={index} className="text-sm leading-relaxed text-muted-foreground">
                 {trimmedLine}
@@ -501,11 +522,9 @@ export function SandpackPlayground() {
   };
 
   return (
-    <div className="h-screen w-full relative">
-      {/* Main Content */}
-      <div className="h-full w-full relative">
-        {/* Theme Toggle Button */}
-        <div className="absolute top-4 right-4 z-50 flex gap-2">
+    <div className="w-full flex overflow-hidden bg-background h-[calc(100vh-3.5rem)]">
+      <div className="relative flex-1 min-w-0">
+        <div className="absolute top-4 right-4 z-40 flex gap-2">
           <Button
             variant="outline"
             onClick={() => setNewFileOpen((v) => !v)}
@@ -522,30 +541,19 @@ export function SandpackPlayground() {
           >
             AI
           </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={toggleTheme}
-            className="bg-background/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all"
-            title={
-              playgroundTheme === "light"
-                ? "Switch to dark mode"
-                : "Switch to light mode"
-            }
-          >
-            {playgroundTheme === "light" ? (
-              <Moon className="h-5 w-5" />
-            ) : (
-              <Sun className="h-5 w-5" />
-            )}
-          </Button>
         </div>
 
         {newFileOpen && (
-          <div className="absolute top-16 right-4 z-50 w-[520px] max-h-[70vh] bg-background/95 border rounded-lg shadow-xl p-4 flex flex-col gap-2">
+          <div className="absolute top-16 right-4 z-40 w-[520px] max-h-[70vh] bg-background/95 border rounded-lg shadow-xl p-4 flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <div className="font-medium">Create new file</div>
-              <Button variant="outline" size="sm" onClick={() => setNewFileOpen(false)}>Close</Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setNewFileOpen(false)}
+              >
+                Close
+              </Button>
             </div>
             <div className="text-xs text-muted-foreground">Path</div>
             <Input
@@ -561,162 +569,33 @@ export function SandpackPlayground() {
               className="font-mono text-xs"
             />
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => { setNewFilePath("/NewFile.tsx"); setNewFileCode("export default {} as const;\n"); }}>Reset</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setNewFilePath("/NewFile.tsx");
+                  setNewFileCode("export default {} as const;\n");
+                }}
+              >
+                Reset
+              </Button>
               <Button
                 onClick={() => {
                   if (!newFilePath) return;
                   const nextFiles: SandpackFiles = { ...files };
-                  nextFiles[newFilePath] = { code: newFileCode, active: false, hidden: false };
+                  nextFiles[newFilePath] = {
+                    code: newFileCode,
+                    active: false,
+                    hidden: false,
+                  };
                   setFiles(nextFiles);
-                  setChangedPaths((prev) => Array.from(new Set([...prev, newFilePath])));
+                  setChangedPaths((prev) =>
+                    Array.from(new Set([...prev, newFilePath]))
+                  );
                   setNewFileOpen(false);
                 }}
               >
                 Create
               </Button>
-            </div>
-          </div>
-        )}
-
-        {aiOpen && (
-          <div className="absolute top-16 right-4 z-50 w-[520px] max-h-[80vh] overflow-auto bg-background/95 border rounded-lg shadow-xl p-4 flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-3">
-              <div className="font-medium">AI Assistant</div>
-              <div className="flex items-center gap-2">
-                <div className="inline-flex rounded-md border overflow-hidden">
-                  {(["generate","explain","transform","fix","theme"] as const).map((m) => (
-                    <button
-                      key={m}
-                      onClick={() => setAiMode(m)}
-                      className={
-                        "px-2.5 py-1.5 text-xs capitalize transition-colors " +
-                        (aiMode === m ? "bg-primary text-primary-foreground" : "bg-background hover:bg-muted")
-                      }
-                    >
-                      {m}
-                    </button>
-                  ))}
-                </div>
-                <Button variant="outline" size="sm" onClick={() => setAiOpen(false)}>Close</Button>
-              </div>
-            </div>
-
-            {aiMode === "explain" && (
-              <div className="flex flex-col gap-2">
-                <label className="text-sm text-muted-foreground">File</label>
-                <select
-                  className="rounded-md border px-2 py-1 bg-background text-sm"
-                  value={selectedPath}
-                  onChange={(e) => setSelectedPath(e.target.value)}
-                >
-                  {Object.keys(files).map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-                <div className="grid grid-cols-2 gap-2">
-                  <Input placeholder="Start line (optional)" value={selStart} onChange={(e) => setSelStart(e.target.value)} />
-                  <Input placeholder="End line (optional)" value={selEnd} onChange={(e) => setSelEnd(e.target.value)} />
-                </div>
-              </div>
-            )}
-
-            <div className="flex flex-col gap-2">
-              <Textarea
-                rows={4}
-                placeholder={
-                  aiMode === "generate"
-                    ? "e.g. Create a pricing card with hover glass effect"
-                    : aiMode === "explain"
-                    ? "What would you like explained? Add context if needed"
-                    : aiMode === "transform"
-                    ? "e.g. Make the buttons rounded and add a loading state"
-                    : aiMode === "fix"
-                    ? "Paste console/type errors or describe the issue"
-                    : "e.g. Darken background and shift primary hue to 280"
-                }
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                className="min-h-[96px]"
-              />
-              <div className="flex justify-between items-center gap-2">
-                <div className="text-xs text-muted-foreground">Use Shift+Enter for newline. Enter to run.</div>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => setPrompt("")}>Clear</Button>
-                  <Button onClick={runAI} disabled={isRunning}>
-                    {isRunning ? (
-                      <span className="inline-flex items-center gap-2"><span className="w-3 h-3 border-2 border-primary-foreground/70 border-t-transparent rounded-full animate-spin" /> Running</span>
-                    ) : (
-                      "Run"
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Tabs */}
-            <div className="mt-3 border-b mb-2 flex gap-1">
-              <button
-                className={"px-3 py-1.5 text-xs rounded-t-md " + (activeAiTab === "response" ? "bg-muted" : "hover:bg-muted/60")}
-                onClick={() => setActiveAiTab("response")}
-              >
-                Response
-              </button>
-              <button
-                className={"px-3 py-1.5 text-xs rounded-t-md " + (activeAiTab === "changes" ? "bg-muted" : "hover:bg-muted/60")}
-                onClick={() => setActiveAiTab("changes")}
-              >
-                Changes
-              </button>
-              <div className="flex-1" />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigator.clipboard.writeText(sanitizeForCopy(aiOutput || ""))}
-              >
-                Copy
-              </Button>
-            </div>
-
-            <div className="flex-1 min-h-0 overflow-auto rounded-md border p-3 text-sm">
-              {activeAiTab === "response" ? (
-                <div className="max-w-none break-words">
-                  <FormattedText text={aiOutput || ""} />
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {changedPaths.length === 0 ? (
-                    <div className="text-muted-foreground text-sm">No file changes yet.</div>
-                  ) : (
-                    <div className="space-y-3">
-                      {changedPaths.map((p) => (
-                        <div key={p} className="rounded-md border">
-                          <div className="flex items-center justify-between px-3 py-2 bg-muted/50 border-b">
-                            <code className="text-xs">{p}</code>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  const raw = (lastAiFiles && lastAiFiles[p]?.code) ?? files[p]?.code ?? "";
-                                  navigator.clipboard.writeText(sanitizeForCopy(raw));
-                                }}
-                              >
-                                Copy
-                              </Button>
-                            </div>
-                          </div>
-                          <div className="h-56 overflow-auto">
-                            <pre className="p-3 text-xs whitespace-pre">
-{sanitizeForView((lastAiFiles && lastAiFiles[p]?.code) ?? files[p]?.code ?? "")}
-                            </pre>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         )}
@@ -730,7 +609,7 @@ export function SandpackPlayground() {
           options={{
             showTabs: true,
             showLineNumbers: true,
-            editorHeight: "100vh",
+            editorHeight: "calc(100vh - 3.5rem)",
             wrapContent: true,
             resizablePanels: true,
             showConsole: true,
@@ -742,6 +621,283 @@ export function SandpackPlayground() {
           }}
         />
       </div>
+
+      {aiOpen && (
+        <>
+          <div
+            className={`h-full w-1 cursor-col-resize bg-border hover:bg-primary/40 transition-colors ${
+              isResizing ? "bg-primary/60" : ""
+            }`}
+            onMouseDown={(event) => {
+              event.preventDefault();
+              setIsResizing(true);
+            }}
+          />
+
+          <aside
+            className="h-full overflow-auto bg-background border-l shadow-xl flex flex-col"
+            style={{ width: aiWidth }}
+          >
+            <div className="px-4 py-3 border-b flex flex-col justify-between gap-6">
+              <div>
+                <div className="flex gap-2">
+                  <span className="text-sm font-medium">Aurora AI Agent</span>
+                  <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                    beta
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Let the agent generate, refactor, or explain code directly in
+                  this playground.
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <div className="hidden md:inline-flex rounded-md border overflow-hidden bg-muted/50">
+                  {(
+                    ["generate", "explain", "transform", "fix", "theme"] as const
+                  ).map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setAiMode(m)}
+                      className={
+                        "px-2.5 py-1.5 text-[11px] capitalize transition-colors " +
+                        (aiMode === m
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-background hover:bg-muted")
+                      }
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setAiOpen(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+
+            {/* Quick mode summary / status */}
+            <div className="px-4 pt-3 pb-1 flex items-center justify-between gap-2 text-xs text-muted-foreground border-b">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1">
+                  <span
+                    className={`inline-block w-1.5 h-1.5 rounded-full ${
+                      isRunning
+                        ? "bg-emerald-500 animate-pulse"
+                        : "bg-muted-foreground/60"
+                    }`}
+                  />
+                  {isRunning ? "Agent is updating your code…" : "Agent idle"}
+                </span>
+                <span className="hidden sm:inline text-muted-foreground/80">
+                  Mode:{" "}
+                  <span className="capitalize font-medium text-foreground">
+                    {aiMode}
+                  </span>
+                </span>
+              </div>
+              <span className="text-[10px] text-muted-foreground">
+                Drag left edge to resize
+              </span>
+            </div>
+
+            <div className="px-4 py-3 space-y-3 border-b">
+              {/* Mode-specific controls */}
+              {aiMode === "explain" && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs text-muted-foreground">
+                    Target selection
+                  </label>
+                  <select
+                    className="rounded-md border px-2 py-1 bg-background text-xs"
+                    value={selectedPath}
+                    onChange={(e) => setSelectedPath(e.target.value)}
+                  >
+                    {Object.keys(files).map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      placeholder="Start line (optional)"
+                      value={selStart}
+                      onChange={(e) => setSelStart(e.target.value)}
+                      className="h-7 text-xs"
+                    />
+                    <Input
+                      placeholder="End line (optional)"
+                      value={selEnd}
+                      onChange={(e) => setSelEnd(e.target.value)}
+                      className="h-7 text-xs"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Quick suggestions */}
+              <div className="flex flex-wrap gap-3 py-3">
+                {quickPrompts.map((qp) => (
+                  <button
+                    key={qp.label}
+                    type="button"
+                    onClick={() => {
+                      setAiMode(qp.mode);
+                      setPrompt(qp.label);
+                    }}
+                    className="text-[12px] px-2.5 py-1 rounded-full border bg-muted/40 hover:bg-muted text-foreground/80 transition-colors"
+                  >
+                    {qp.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Prompt input */}
+              <div className="flex flex-col gap-2">
+                <Textarea
+                  rows={4}
+                  placeholder={
+                    aiMode === "generate"
+                      ? "e.g. Create a pricing section using Aurora UI components"
+                      : aiMode === "explain"
+                      ? "What would you like explained? Mention file or lines if helpful."
+                      : aiMode === "transform"
+                      ? "e.g. Make this layout responsive and add subtle hover animations"
+                      : aiMode === "fix"
+                      ? "Paste console/type errors or describe what’s broken"
+                      : "e.g. Darken background and shift primary hue slightly toward purple"
+                  }
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  className="min-h-[96px] text-sm"
+                />
+                <div className="flex justify-between items-center gap-2">
+                  <div className="text-[11px] text-muted-foreground">
+                    Shift+Enter for newline. Click Run to let the agent edit
+                    your files.
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPrompt("")}
+                    >
+                      Clear
+                    </Button>
+                    <Button size="sm" onClick={runAI} disabled={isRunning}>
+                      {isRunning ? (
+                        <span className="inline-flex items-center gap-2">
+                          <span className="w-3 h-3 border-2 border-primary-foreground/70 border-t-transparent rounded-full animate-spin" />
+                          Running
+                        </span>
+                      ) : (
+                        "Run"
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Response / changes tabs */}
+            <div className="px-4 pt-3 h-full pb-2 border-b flex gap-1 items-center">
+              <button
+                type="button"
+                className={
+                  "px-3 py-1.5 text-xs rounded-md " +
+                  (activeAiTab === "response"
+                    ? "bg-muted text-foreground"
+                    : "hover:bg-muted/60 text-muted-foreground")
+                }
+                onClick={() => setActiveAiTab("response")}
+              >
+                Response
+              </button>
+              <button
+                type="button"
+                className={
+                  "px-3 py-1.5 text-xs rounded-md " +
+                  (activeAiTab === "changes"
+                    ? "bg-muted text-foreground"
+                    : "hover:bg-muted/60 text-muted-foreground")
+                }
+                onClick={() => setActiveAiTab("changes")}
+              >
+                Changes
+              </button>
+              <div className="flex-1" />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  navigator.clipboard.writeText(
+                    sanitizeForCopy(aiOutput || "")
+                  )
+                }
+              >
+                Copy
+              </Button>
+            </div>
+
+            <div className="flex-1 h-full p-4 pb-5">
+              {activeAiTab === "response" ? (
+                <div className="max-w-none break-words">
+                  <FormattedText text={aiOutput || ""} />
+                </div>
+              ) : changedPaths.length === 0 ? (
+                <div className="text-muted-foreground text-sm">
+                  No file changes yet. Ask the agent to generate, refactor, or
+                  fix something to see diffs here.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {changedPaths.map((p) => (
+                    <div key={p} className="rounded-md border bg-muted/40">
+                      <div className="flex items-center justify-between px-3 py-2 bg-muted/60 border-b">
+                        <code className="text-xs truncate max-w-[220px]">
+                          {p}
+                        </code>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const raw =
+                                (lastAiFiles && lastAiFiles[p]?.code) ??
+                                files[p]?.code ??
+                                "";
+                              navigator.clipboard.writeText(
+                                sanitizeForCopy(raw)
+                              );
+                            }}
+                          >
+                            Copy
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="h-56 overflow-auto">
+                        <pre className="p-3 text-xs whitespace-pre">
+                          {sanitizeForView(
+                            (lastAiFiles && lastAiFiles[p]?.code) ??
+                              files[p]?.code ??
+                              ""
+                          )}
+                        </pre>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </aside>
+        </>
+      )}
     </div>
   );
 }

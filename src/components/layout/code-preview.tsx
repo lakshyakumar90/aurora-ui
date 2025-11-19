@@ -57,23 +57,25 @@ export default function CodePreview({
       {shouldExpand && (
         <>
           {!isExpanded && (
-            <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-16 bg-gradient-to-t from-zinc-950/80 to-transparent" />
+            <div
+              className="pointer-events-none absolute right-0 bottom-0 left-0 h-16 bg-linear-to-t from-zinc-100/80 to-transparent rounded-b-md dark:from-zinc-950/80"
+            />
           )}
 
           {/* Collapse/Expand button */}
           <Button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-primary !bg-primary-foreground absolute bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-1 px-3 py-1.5 font-sans text-xs transition-colors"
+            className="absolute backdrop-blur-md bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-1 px-3 py-1.5 font-sans text-xs transition-colors"
             variant={"outline"}
           >
-            {isExpanded ? <span>Collapse</span> : <span>Expand</span>}
+            {isExpanded ? <span className="">Collapse</span> : <span className="">Expand</span>}
           </Button>
         </>
       )}
 
       <div
         className={cn(
-          "editor-bg rounded-md pb-2.5 transition-all duration-300",
+          "dark:bg-[#24292e] rounded-md pb-2.5 transition-all duration-300",
           isExpanded && shouldExpand
             ? "max-h-[650px] overflow-auto"
             : "max-h-[200px] overflow-hidden"

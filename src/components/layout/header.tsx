@@ -11,6 +11,11 @@ import { AuthButtons } from "@/components/auth/AuthButtons";
 
 function Header() {
   const pathname = usePathname();
+  const isPlayground = pathname.startsWith("/playground");
+  const isDocsLayout =
+    pathname === "/introduction" ||
+    pathname === "/installation" ||
+    pathname.startsWith("/components");
   return (
     <nav className="sticky top-0 z-15 border-b border-border bg-background px-6">
       <div className="mx-auto flex h-[3.5rem] w-full items-center justify-between max-sm:px-2 md:max-w-7xl">
@@ -51,17 +56,33 @@ function Header() {
               >
                 Templates
               </Link>
+              <Link
+                href="/playground"
+                className={cn(
+                  "hover:text-foreground transition-colors hover:font-medium",
+                  pathname.startsWith("/playground")
+                    ? "text-foreground"
+                    : "text-foreground/80"
+                )}
+              >
+                <span className="inline-flex items-center gap-1">
+                  Playground
+                  <span className="ml-1 rounded-md border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium tracking-wide text-emerald-700 dark:border-emerald-500 dark:bg-emerald-800/15 dark:text-emerald-100">
+                    New
+                  </span>
+                </span>
+              </Link>
             </div>
           </div>
         </div>
 
         <span className="flex items-center gap-x-4">
-          <CommandMenu />
+          {!isPlayground && <CommandMenu />}
 
           <AuthButtons />
 
           <ThemeToggle />
-          <SideBarToggle />
+          {isDocsLayout && !isPlayground && <SideBarToggle />}
         </span>
       </div>
     </nav>

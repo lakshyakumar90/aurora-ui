@@ -4,6 +4,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function AuthButtons() {
   const { data: session, status } = useSession();
@@ -35,11 +36,19 @@ export function AuthButtons() {
     );
   }
 
+  const initial =
+    (session.user?.name || session.user?.email || "?").charAt(0).toUpperCase();
+
   return (
     <div className="flex items-center gap-3">
-      <span className="text-sm text-muted-foreground hidden sm:inline">
+      <Avatar>
+        <AvatarFallback className="text-xs font-medium">
+          {initial}
+        </AvatarFallback>
+      </Avatar>
+      {/* <span className="text-sm text-muted-foreground">
         {session.user?.email}
-      </span>
+      </span> */}
       <Button size="sm" variant="outline" onClick={() => signOut()}>
         Sign out
       </Button>

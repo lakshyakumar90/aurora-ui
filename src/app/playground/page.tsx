@@ -1,31 +1,40 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 import { SandpackPlayground } from '@/components/playground';
 
 function PlaygroundContent() {
+  const { status } = useSession();
+  const router = useRouter();
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
+  // Redirect unauthenticated users to the sign-in page
   useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/signin?callbackUrl=/playground');
+    }
+  }, [status, router]);
+
+  // Only set up desktop check after auth state is known / user is authenticated
+  useEffect(() => {
+    if (status !== 'authenticated') return;
     if (typeof window === 'undefined') return;
 
-    // Function to check if screen is desktop size (typically 1024px and above)
     const checkIsDesktop = () => {
       setIsDesktop(window.innerWidth >= 1024);
     };
 
-    // Initial check
     checkIsDesktop();
-
-    // Listen for resize events
     window.addEventListener('resize', checkIsDesktop);
 
-    // Cleanup
     return () => window.removeEventListener('resize', checkIsDesktop);
-  }, []);
+  }, [status]);
 
-  // Show loading state during initial check
-  if (isDesktop === null) {
+  // While checking auth or redirecting, show a loading state
+  if (status === 'loading' || status === 'unauthenticated' || isDesktop === null) {
     return (
       <div className="h-screen w-full flex items-center justify-center">
         <div className="text-center">
@@ -36,7 +45,6 @@ function PlaygroundContent() {
     );
   }
 
-  // Show message if not desktop
   if (!isDesktop) {
     return (
       <div className="h-screen w-full flex items-center justify-center p-4">
@@ -68,20 +76,21 @@ function PlaygroundContent() {
     );
   }
 
-  // Show playground on desktop
   return <SandpackPlayground />;
 }
 
 export default function Playground() {
   return (
-    <Suspense fallback={
-      <div className="h-screen w-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading Playground...</p>
+    <Suspense
+      fallback={
+        <div className="h-screen w-full flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading Playground...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <PlaygroundContent />
     </Suspense>
   );
