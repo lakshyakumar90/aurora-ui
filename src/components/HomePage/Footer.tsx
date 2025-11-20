@@ -1,7 +1,5 @@
-"use client";
 import Link from "next/link";
 import { Github, Twitter, Mail, Heart } from "lucide-react";
-import { motion } from "motion/react";
 
 export default function Footer() {
   const footerLinks = {
@@ -42,12 +40,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand Section */}
-          <div className="lg:col-span-2">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
+          <div className="lg:col-span-2 animate-fade-in-up">
+            <div>
               <Link href="/" className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">A</span>
@@ -61,29 +55,23 @@ export default function Footer() {
               
               <div className="flex gap-4">
                 {socialLinks.map((social) => (
-                  <motion.a
+                  <a
                     key={social.name}
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="p-2 bg-muted/50 hover:bg-muted rounded-lg transition-colors"
+                    className="p-2 bg-muted/50 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110 active:scale-95"
                   >
                     <social.icon className="w-5 h-5" />
-                  </motion.a>
+                  </a>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Links Sections */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <div>
               <h3 className="font-semibold mb-4">Product</h3>
               <ul className="space-y-3">
                 {footerLinks.product.map((link) => (
@@ -97,15 +85,11 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           </div>
 
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <div>
               <h3 className="font-semibold mb-4">Company</h3>
               <ul className="space-y-3">
                 {footerLinks.company.map((link) => (
@@ -119,15 +103,11 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           </div>
 
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+            <div>
               <h3 className="font-semibold mb-4">Resources</h3>
               <ul className="space-y-3">
                 {footerLinks.resources.map((link) => (
@@ -141,15 +121,11 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           </div>
 
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+            <div>
               <h3 className="font-semibold mb-4">Legal</h3>
               <ul className="space-y-3">
                 {footerLinks.legal.map((link) => (
@@ -163,16 +139,14 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           </div>
         </div>
 
         {/* Bottom Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="border-t border-border/50 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
+        <div
+          className="border-t border-border/50 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 animate-fade-in-up"
+          style={{ animationDelay: "0.5s" }}
         >
           <div className="flex items-center gap-2 text-muted-foreground">
             <span>© 2024 Aurora UI. Made with</span>
@@ -183,7 +157,7 @@ export default function Footer() {
           <div className="text-muted-foreground text-sm">
             Built with Next.js, TypeScript, and Tailwind CSS
           </div>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );

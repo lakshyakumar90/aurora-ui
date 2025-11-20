@@ -41,6 +41,11 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        // Check if email is verified (only for credentials provider, not OAuth)
+        if (!user.emailVerified) {
+          throw new Error("Please verify your email before signing in. Check your inbox for the verification link.");
+        }
+
         return {
           id: user.id,
           email: user.email,
@@ -64,6 +69,20 @@ export const authOptions: NextAuthOptions = {
         (session.user as { id?: string }).id = (token as { id?: string }).id;
       }
       return session;
+    },
+  },
+  events: {
+    async signIn({ user, account }) {
+      if (account?.provider === "google" && user.email) {
+        try {
+          await prisma.user.update({
+            where: { email: user.email },
+            data: { emailVerified: new Date() },
+          });
+        } catch (error) {
+          console.error("Failed to mark Google user as verified", error);
+        }
+      }
     },
   },
 };

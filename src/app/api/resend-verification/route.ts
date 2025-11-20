@@ -1,43 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { hashPassword } from "@/lib/password";
 import { sendVerificationEmail } from "@/lib/email";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, name } = await req.json();
+    const { email } = await req.json();
 
-    if (!email || !password) {
+    if (!email) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "Email is required" },
         { status: 400 },
       );
     }
 
-    const existingUser = await prisma.user.findUnique({
+    // Check if user exists
+    const user = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (existingUser) {
+    if (!user) {
+      // Don't reveal if user exists or not for security
       return NextResponse.json(
-        { error: "User already exists" },
+        { message: "If an account exists with this email, a verification link has been sent." },
+        { status: 200 },
+      );
+    }
+
+    // Check if already verified
+    if (user.emailVerified) {
+      return NextResponse.json(
+        { error: "Email is already verified" },
         { status: 400 },
       );
     }
 
-    const hashedPassword = await hashPassword(password);
-
-    // Create user with emailVerified left as null
-    await prisma.user.create({
-      data: {
-        email,
-        name,
-        hashedPassword,
-      },
+    // Delete any existing verification tokens for this email
+    await prisma.verificationToken.deleteMany({
+      where: { identifier: email },
     });
 
-    // Create a verification token tied to this email
+    // Create a new verification token
     const token = crypto.randomUUID();
     const expires = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24 hours
 
@@ -63,36 +66,31 @@ export async function POST(req: NextRequest) {
       await sendVerificationEmail({
         email,
         verificationUrl,
-        name,
+        name: user.name,
       });
     } catch (emailError) {
       console.error("Failed to send verification email:", emailError);
-      // Still return success but log the error
-      // In production, you might want to handle this differently
       return NextResponse.json(
         {
-          success: true,
-          message: "User created, but failed to send verification email. Please contact support.",
-          error: "Email sending failed",
+          error: "Failed to send verification email. Please try again later.",
         },
-        { status: 201 },
+        { status: 500 },
       );
     }
 
     return NextResponse.json(
       {
         success: true,
-        message: "User created. Please check your email to verify your account.",
+        message: "Verification email sent successfully",
       },
-      { status: 201 },
+      { status: 200 },
     );
   } catch (error) {
-    console.error("Register error", error);
+    console.error("Resend verification email error", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
     );
   }
 }
-
 

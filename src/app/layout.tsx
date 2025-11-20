@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { DM_Sans, Geist_Mono } from "next/font/google";
 import Header from "@/components/layout/header";
 import "./globals.css";
 import ParentProvider from "./_providers/parentProvider";
-import { SidebarProvider } from "@/components/layout/sidebar-toggle";
-import { ThemeProvider } from "@/components/layout/theme-provider";
 
 const dmSans = DM_Sans({
   variable: "--font-geist-sans",
@@ -36,16 +33,10 @@ export default function RootLayout({
       className={`${dmSans.variable} ${geistMono.variable}`}
     >
       <body suppressHydrationWarning className="antialiased font-sans">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <SidebarProvider defaultOpen={true}>
-            <ParentProvider>
-              <Header />
-              <Suspense fallback={null}>
-                {children}
-              </Suspense>
-            </ParentProvider>
-          </SidebarProvider>
-        </ThemeProvider>
+        <ParentProvider>
+          <Header />
+          {children}
+        </ParentProvider>
       </body>
     </html>
   );

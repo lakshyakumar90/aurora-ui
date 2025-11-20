@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { Check, Star } from "lucide-react";
 
 export default function Pricing() {
@@ -54,12 +53,7 @@ export default function Pricing() {
   return (
     <div className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16 animate-fade-in-up">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
             Choose Your{" "}
             <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
@@ -69,20 +63,18 @@ export default function Pricing() {
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Start building amazing interfaces today. Upgrade anytime as your needs grow.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
-            <motion.div
+            <div
               key={plan.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`relative rounded-2xl p-8 border-2 transition-all duration-300 hover:scale-105 ${
+              className={`relative rounded-2xl p-8 border-2 transition-all duration-300 hover:scale-105 animate-fade-in-up ${
                 plan.popular
                   ? "border-purple-500 bg-gradient-to-b from-purple-500/10 to-blue-500/10"
                   : "border-border hover:border-purple-500/50"
               }`}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -113,31 +105,27 @@ export default function Pricing() {
                 ))}
               </ul>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
+              <button
+                className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${
                   plan.popular
                     ? "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl"
                     : "border-2 border-purple-500/50 bg-transparent hover:bg-purple-500/10 text-foreground"
                 }`}
               >
                 {plan.cta}
-              </motion.button>
-            </motion.div>
+              </button>
+            </div>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-12"
+        <div
+          className="text-center mt-12 animate-fade-in-up"
+          style={{ animationDelay: "0.4s" }}
         >
           <p className="text-muted-foreground">
             All plans include a 14-day free trial. No credit card required.
           </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
