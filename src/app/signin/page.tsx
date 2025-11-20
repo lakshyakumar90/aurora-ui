@@ -2,7 +2,7 @@
 
 import { FormEvent, useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,6 @@ import { Label } from "@/components/ui/react-label";
 
 export default function SignInPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/templates";
-  const verified = searchParams.get("verified");
   const { status } = useSession();
 
   const [email, setEmail] = useState("");
@@ -21,6 +18,7 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showVerifiedMessage, setShowVerifiedMessage] = useState(false);
+  const [callbackUrl, setCallbackUrl] = useState("/templates");
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -29,21 +27,32 @@ export default function SignInPage() {
   }, [status, router, callbackUrl]);
 
   useEffect(() => {
-    if (verified === "1") {
-      setShowVerifiedMessage(true);
-      // Clear the verified parameter from URL
-      const newUrl = new URL(window.location.href);
-      newUrl.searchParams.delete("verified");
-      window.history.replaceState({}, "", newUrl.toString());
-      
-      // Hide message after 5 seconds
-      const timer = setTimeout(() => {
-        setShowVerifiedMessage(false);
-      }, 5000);
-      
-      return () => clearTimeout(timer);
+    const params = new URLSearchParams(window.location.search);
+    const urlCallback = params.get("callbackUrl");
+    if (urlCallback) {
+      setCallbackUrl(urlCallback);
     }
-  }, [verified]);
+    const verifiedParam = params.get("verified");
+    if (verifiedParam === "1") {
+      setShowVerifiedMessage(true);
+      params.delete("verified");
+      const newQuery = params.toString();
+      const newUrl = `${window.location.pathname}${
+        newQuery ? `?${newQuery}` : ""
+      }`;
+      window.history.replaceState({}, "", newUrl);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!showVerifiedMessage) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      setShowVerifiedMessage(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [showVerifiedMessage]);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
