@@ -35,14 +35,15 @@ const FinalPreview = ({ component, className, filePath }: ComponentPreviewProps)
       )}
     >
       <div className="absolute top-1 right-2 z-[10] md:top-14">
-        <div className="flex items-center gap-3 opacity-0 transition-opacity group-hover/preview:opacity-100">
+        <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-3 opacity-100 md:transition-opacity md:group-hover/preview:opacity-100">
           {/* Re trigger */}
           <></>
           {componentSlug && (
             <Link href={`/playground?component=${componentSlug}`} target="_blank">
               <Button variant="outline" size="sm" className="gap-2">
                 <ExternalLink className="h-4 w-4" />
-                Open in Playground
+                <span className="hidden sm:inline">Open in Playground</span>
+                <span className="sm:hidden">Playground</span>
               </Button>
             </Link>
           )}

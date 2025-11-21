@@ -115,12 +115,14 @@ const PreviewWithRefresh = ({
   return (
     <div className="relative group/preview rounded-lg border border-border/50 p-4">
       <div className="absolute top-2 right-2 z-10 md:top-3">
-        <div className="flex items-center gap-3 opacity-0 transition-opacity group-hover/preview:opacity-100">
+        <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-3 opacity-100 md:opacity-0 md:transition-opacity md:group-hover/preview:opacity-100">
           <Button variant="outline" size="sm" onClick={onRefresh} className="gap-1">
             <RotateCw className="h-4 w-4" />
-            Refresh
+            <span className="hidden sm:inline">Refresh</span>
           </Button>
-          {toolbarExtras}
+          <div className="flex flex-col md:flex-row gap-2 md:gap-3">
+            {toolbarExtras}
+          </div>
         </div>
       </div>
       {children}
@@ -169,7 +171,8 @@ export default function AnimatedPreviewCustomize({
                 <Link href={`/playground?component=${componentSlug}`} target="_blank">
                   <Button variant="outline" size="sm" className="gap-2">
                     <ExternalLink className="h-4 w-4" />
-                    Open in Playground
+                    <span className="hidden sm:inline">Open in Playground</span>
+                    <span className="sm:hidden">Playground</span>
                   </Button>
                 </Link>
               )}
