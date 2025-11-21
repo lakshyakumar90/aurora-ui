@@ -15,6 +15,8 @@ import { aiRequest, type AIResponse } from "@/lib/ai";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useTheme } from "next-themes";
+import { ApiKeyModal } from "./ApiKeyModal";
+import { Settings, Key } from "lucide-react";
 
 
 const defaultCode = `import React from "react";
@@ -230,6 +232,9 @@ export function SandpackPlayground() {
   const [selEnd, setSelEnd] = useState<string>("");
   const [newFileOpen, setNewFileOpen] = useState<boolean>(false);
 
+  const [apiKey, setApiKey] = useState<string>("");
+  const [apiKeyModalOpen, setApiKeyModalOpen] = useState<boolean>(false);
+
   const [aiWidth, setAiWidth] = useState<number>(420);
   const [isResizing, setIsResizing] = useState<boolean>(false);
 
@@ -284,6 +289,11 @@ export function SandpackPlayground() {
   }, [componentName, playgroundTheme]);
 
   useEffect(() => {
+    const key = localStorage.getItem("gemini_api_key");
+    if (key) setApiKey(key);
+  }, []);
+
+  useEffect(() => {
     if (!isResizing) return;
 
     const handleMouseMove = (event: MouseEvent) => {
@@ -319,6 +329,11 @@ export function SandpackPlayground() {
   }
 
   const runAI = async () => {
+    if (!apiKey) {
+      setApiKeyModalOpen(true);
+      return;
+    }
+
     try {
       setIsRunning(true);
       setAiOutput("Thinking...");
@@ -331,11 +346,13 @@ export function SandpackPlayground() {
         files?: Record<string, { code: string }>;
         selection?: AISelection;
         errors?: string;
+        apiKey?: string;
       }
 
       const payload: AIPayload = {
         action: aiMode,
         prompt,
+        apiKey,
       };
       //@ts-nocheck
       const filesPayload: Record<string, { code: string }> = {};
@@ -640,13 +657,24 @@ export function SandpackPlayground() {
           >
             <div className="px-4 py-3 border-b flex flex-col justify-between gap-6">
               <div>
-                <div className="flex gap-2">
-                  <span className="text-sm font-medium">Aurora AI Agent</span>
-                  <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                    beta
-                  </span>
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-2 items-center">
+                    <span className="text-sm font-medium">Aurora AI Agent</span>
+                    <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                      beta
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                    onClick={() => setApiKeyModalOpen(true)}
+                    title="API Key Settings"
+                  >
+                    <Settings className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-1">
                   Let the agent generate, refactor, or explain code directly in
                   this playground.
                 </p>
@@ -898,6 +926,12 @@ export function SandpackPlayground() {
           </aside>
         </>
       )}
+
+      <ApiKeyModal
+        open={apiKeyModalOpen}
+        onOpenChange={setApiKeyModalOpen}
+        onSave={setApiKey}
+      />
     </div>
   );
 }

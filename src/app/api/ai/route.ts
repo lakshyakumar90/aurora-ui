@@ -5,12 +5,17 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = "gemini-2.5-flash";
 
 export async function POST(req: NextRequest) {
-  if (!GEMINI_API_KEY) {
+  const body = await req.json();
+  const { action, prompt, files, selection, errors, apiKey } = body;
+
+  // Prioritize key from request, then env var
+  const effectiveApiKey = apiKey || GEMINI_API_KEY;
+
+  if (!effectiveApiKey) {
     return NextResponse.json({ error: "Missing Gemini API key" }, { status: 400 });
   }
 
-  const { action, prompt, files, selection, errors } = await req.json();
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+  const genAI = new GoogleGenerativeAI(effectiveApiKey);
   let userPrompt = "";
   const codeContext = files ? JSON.stringify(files).slice(0, 5000) : ""; // Limit context size
   const extraData = selection ? JSON.stringify(selection) : "";
