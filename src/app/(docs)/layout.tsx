@@ -5,6 +5,7 @@ import { NavigationDesktop, NavigationMobile } from "@/components/layout/Sidebar
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Toc from "@/components/layout/table-of-content";
 import { useSidebar } from "@/components/layout/sidebar-toggle";
+import { cn } from "@/lib/utils";
 // import { SiteFooter } from "@/components/web/site-footer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -27,16 +28,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Scrollable Main Content */}
       <main
-        className={`prose prose-zinc dark:prose-invert 
-                   prose-h1:scroll-m-20 prose-h1:text-2xl prose-h1:font-semibold 
-                   prose-h2:mt-12 prose-h2:scroll-m-20 prose-h2:text-xl prose-h2:font-medium 
-                   prose-h3:scroll-m-20 prose-h3:text-base prose-h3:font-medium 
-                   prose-h4:scroll-m-20 prose-h5:scroll-m-20 prose-h6:scroll-m-20 
-                   prose-strong:font-medium prose-table:block prose-table:overflow-y-auto 
-                   min-h-screen px-6 pt-8 lg:px-8 xl:px-12 transition-all duration-300
-                   ${open ? 'ml-[220px]' : 'ml-0'} xl:mr-[220px]`}
+        className={cn(
+          "prose prose-zinc dark:prose-invert",
+          "prose-h1:scroll-m-20 prose-h1:text-2xl prose-h1:font-semibold",
+          "prose-h2:mt-12 prose-h2:scroll-m-20 prose-h2:text-xl prose-h2:font-medium",
+          "prose-h3:scroll-m-20 prose-h3:text-base prose-h3:font-medium",
+          "prose-h4:scroll-m-20 prose-h5:scroll-m-20 prose-h6:scroll-m-20",
+          "prose-strong:font-medium prose-table:block prose-table:overflow-y-auto",
+          "min-h-screen px-6 pt-8 lg:px-8 xl:px-12 transition-all duration-300",
+          "xl:mr-[220px]",
+          "ml-0",
+          open ? "md:ml-[220px]" : "md:ml-0"
+        )}
       >
-        <div className={`mx-auto transition-all duration-300 ${open ? 'max-w-4xl' : 'max-w-6xl'}`}>
+        <div className={cn("mx-auto transition-all duration-300", open ? "max-w-4xl" : "max-w-6xl")}>
           {children}
         </div>
       </main>

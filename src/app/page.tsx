@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import HeroSection from "@/components/HomePage/Hero";
-import Pricing from "@/components/HomePage/Pricing";
 import Publish from "@/components/HomePage/Publish";
 import ShowCase from "@/components/HomePage/ShowCase";  
 import Testimonials from "@/components/HomePage/Testimonials";
 import Footer from "@/components/HomePage/Footer";
+import TemplateShow from "@/components/HomePage/TemplateShow";
 
 export const metadata: Metadata = {
   title: "Aurora UI - Build Faster with Modern React Components | Next.js Component Library",
@@ -75,11 +75,8 @@ export default async function Home() {
   return (
     <div className="min-h-screen w-full bg-background">
       <HeroSection />
-      {/* <TemplateShow /> */}
       <ShowCase />
-      {/* <Benefits /> */}
       <Testimonials />
-      <Pricing />
       <Publish />
       <Footer />
     </div>

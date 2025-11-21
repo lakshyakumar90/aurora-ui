@@ -21,7 +21,7 @@ export default function TemplatesPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-12">
 
         {/* LEFT SIDEBAR */}
-        <aside className="md:col-span-1 space-y-4 sticky top-24 h-fit">
+        <aside className="hidden md:block md:col-span-1 space-y-4 sticky top-24 h-fit">
           <h3 className="text-xl font-semibold mb-2">Categories</h3>
 
           <div className="flex flex-col gap-2">

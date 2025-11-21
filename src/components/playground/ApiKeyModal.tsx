@@ -50,7 +50,7 @@ export function ApiKeyModal({ open, onOpenChange, onSave }: ApiKeyModalProps) {
             />
           </div>
           <div className="text-sm text-muted-foreground">
-            Don't have a key?{" "}
+            Don&apos;t have a key?{" "}
             <a
               href="https://aistudio.google.com/app/apikey"
               target="_blank"

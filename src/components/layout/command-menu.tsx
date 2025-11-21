@@ -16,7 +16,12 @@ import { Component, ListStartIcon, Search, StarsIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-function CommandMenu({ ...props }: DialogProps) {
+interface CommandMenuProps extends DialogProps {
+  forceFullWidth?: boolean;
+  className?: string;
+}
+
+function CommandMenu({ forceFullWidth = false, className, ...props }: CommandMenuProps) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
 
@@ -52,18 +57,33 @@ function CommandMenu({ ...props }: DialogProps) {
       <Button
         variant="outline"
         className={cn(
-          "bg-muted/50 text-muted-foreground relative h-8 w-fit justify-start rounded-[0.5rem] text-sm font-normal shadow-none sm:pr-12 md:w-40 lg:w-56 xl:w-64"
+          "bg-muted/50 text-muted-foreground relative h-8 justify-start rounded-[0.5rem] text-sm font-normal shadow-none",
+          forceFullWidth 
+            ? "w-full pr-12" 
+            : "w-fit sm:pr-12 md:w-40 lg:w-56 xl:w-64",
+          className
         )}
         onClick={() => setOpen(true)}
         {...props}
       >
-        <span className="hidden lg:inline-flex">Search documentation...</span>
-        <span className="inline-flex lg:hidden">
-          <Search />
-        </span>
-        <kbd className="bg-muted pointer-events-none absolute top-[0.3rem] right-[0.3rem] hidden h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none sm:flex">
-          <span className="text-xs">⌘</span>K
-        </kbd>
+        {forceFullWidth ? (
+          <>
+            <span className="inline-flex">Search documentation...</span>
+            <kbd className="bg-muted pointer-events-none absolute top-[0.3rem] right-[0.3rem] h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none flex">
+              <span className="text-xs">⌘</span>K
+            </kbd>
+          </>
+        ) : (
+          <>
+            <span className="hidden lg:inline-flex">Search documentation...</span>
+            <span className="inline-flex lg:hidden">
+              <Search />
+            </span>
+            <kbd className="bg-muted pointer-events-none absolute top-[0.3rem] right-[0.3rem] hidden h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none sm:flex">
+              <span className="text-xs">⌘</span>K
+            </kbd>
+          </>
+        )}
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>

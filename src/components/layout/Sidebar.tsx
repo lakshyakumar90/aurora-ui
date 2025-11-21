@@ -60,18 +60,28 @@ function NavigationMobile() {
   return (
     <AnimatePresence>
       {openMobile && (
-        <motion.nav
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.3,
-            type: "spring",
-            damping: 10,
-            stiffness: 70,
-          }}
-          exit={{ opacity: 0, y: -20 }}
-          className="border-primary/10 bg-background/85 fixed z-[999] h-full w-full border-b px-7 backdrop-blur-md"
-        >
+        <>
+          {/* Backdrop overlay */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[998] bg-background/80 backdrop-blur-sm md:hidden"
+            onClick={toggleSidebar}
+          />
+          {/* Sidebar */}
+          <motion.nav
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{
+              duration: 0.3,
+              type: "spring",
+              bounce: 0,
+            }}
+            className="border-primary/10 bg-background/95 fixed left-0 top-14 z-[999] h-[calc(100vh-3.5rem)] w-[280px] border-r px-7 backdrop-blur-md md:hidden"
+          >
           <ScrollArea className="h-full w-full pb-20">
             <div className="pt-4">
               <ul role="list" className="h-full pb-9 [&>li:not(:first-child)>div]:pt-6">
@@ -101,6 +111,7 @@ function NavigationMobile() {
             </div>
           </ScrollArea>
         </motion.nav>
+        </>
       )}
     </AnimatePresence>
   );

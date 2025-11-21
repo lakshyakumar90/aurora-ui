@@ -107,7 +107,7 @@ export function InstallationCli({ value, className }: InstallationCliProps) {
           className="overflow-hidden rounded-b-md border-none"
         >
           <pre
-            className="not-prose p-4 font-mono text-sm"
+            className="not-prose overflow-x-auto p-4 font-mono text-sm"
           >
             {cmd.code}
           </pre>
