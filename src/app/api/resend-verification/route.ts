@@ -14,20 +14,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if user exists
     const user = await prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) {
-      // Don't reveal if user exists or not for security
       return NextResponse.json(
         { message: "If an account exists with this email, a verification link has been sent." },
         { status: 200 },
       );
     }
 
-    // Check if already verified
     if (user.emailVerified) {
       return NextResponse.json(
         { error: "Email is already verified" },
@@ -35,14 +32,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Delete any existing verification tokens for this email
     await prisma.verificationToken.deleteMany({
       where: { identifier: email },
     });
 
-    // Create a new verification token
     const token = crypto.randomUUID();
-    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24 hours
+    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24);
 
     await prisma.verificationToken.create({
       data: {
@@ -61,7 +56,6 @@ export async function POST(req: NextRequest) {
       token,
     )}&identifier=${encodeURIComponent(email)}`;
 
-    // Send verification email via Nodemailer
     try {
       await sendVerificationEmail({
         email,

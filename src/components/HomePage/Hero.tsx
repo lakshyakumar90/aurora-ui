@@ -15,10 +15,8 @@ import {
 export default function HeroSection() {
   return (
     <div className="relative min-h-[90vh] w-full flex flex-col justify-center items-center text-center gap-8 px-4 overflow-hidden">
-      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-background to-blue-900/20 -z-10" />
 
-      {/* Floating elements */}
       <div className="absolute top-20 left-20 text-purple-500/30 animate-float">
         <Sparkles size={24} />
       </div>
@@ -39,7 +37,7 @@ export default function HeroSection() {
           </span>
         </h1>
 
-        <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl leading-relaxed">
+        <p className="text-lg md:text-xl lg:text-xl text-muted-foreground  leading-relaxed">
           The ultimate Next.js component library designed for modern developers.
           <br className="hidden md:block" />
           Transform your development workflow with beautiful, accessible

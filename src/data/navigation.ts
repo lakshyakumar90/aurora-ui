@@ -46,11 +46,11 @@ export const NavigationLinks: NavigationGroup[] = [
       },
       {
         name: "Marquee",
-        href: "/components/marquee"
+        href: "/components/marquee",
       },
       {
         name: "Dock",
-        href: "/components/dock"
+        href: "/components/dock",
       },
       {
         name: "Bento Grid",
@@ -70,13 +70,9 @@ export const NavigationLinks: NavigationGroup[] = [
     name: "Animations",
     children: [
       {
-        name: "Glass Icons",
-        href: "/components/glass-icons",
-      },
-      {
         name: "Animated List",
         href: "/components/animated-list",
-      }
+      },
     ],
   },
 ] as const;
@@ -88,7 +84,3 @@ export const useNavigationLinks = () =>
       name: item.name.toLowerCase().replaceAll(" ", "-"),
     }))
   );
-
-// TODO: find a way to enforce string literal type in registery-examples
-// const NavItems = NavigationLinks.flatMap((group) => group.children.map((item) => item.name));
-// export type NavItemNames = (typeof NavItems)[number];

@@ -31,7 +31,7 @@ function TemplateCard({ template }: { template: Template }) {
 
   return (
     <Card 
-      className="cursor-pointer hover:shadow-lg transition-all duration-300 pt-0 group"
+      className="cursor-pointer hover:shadow-lg hover:scale-[1.01] transition-all duration-300 pt-0 group"
       onClick={handleCardClick}
     >
       <div className="relative aspect-video overflow-hidden rounded-t-lg">
@@ -39,31 +39,8 @@ function TemplateCard({ template }: { template: Template }) {
           src={template.previewImages[0]}
           alt={template.title}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          className="object-cover transition-transform duration-300"
         />
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-          <div className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors">
-            <Eye className="w-5 h-5 text-white" />
-          </div>
-          {template.demoUrl && (
-            <button
-              onClick={(e) => handleActionClick(e, template.demoUrl)}
-              className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
-              aria-label="Open live preview"
-            >
-              <ExternalLink className="w-5 h-5 text-white" />
-            </button>
-          )}
-          {template.sourceUrl && (
-            <button
-              onClick={(e) => handleActionClick(e, template.sourceUrl)}
-              className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
-              aria-label="View source code"
-            >
-              <Code className="w-5 h-5 text-white" />
-            </button>
-          )}
-        </div>
       </div>
       <CardHeader>
         <div className="flex items-center justify-between">

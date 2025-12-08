@@ -6,7 +6,6 @@ export interface Template {
   category: string;
   previewImages: string[];
   demoUrl?: string;
-  sourceUrl?: string;
   manifestUrl?: string;
   shadcnUrl?: string;
   tags: string[];
@@ -29,7 +28,6 @@ export const templates: Template[] = [
       "/preview-images/modern-landing-page/image4.png",
     ],
     demoUrl: "https://modern-landing-page-omega.vercel.app/",
-    sourceUrl: "https://github.com/lakshyakumar90/modern-landing-page",
     shadcnUrl:
       "https://aurora-ui-opal.vercel.app/t/modern-landing-page.registry.json",
     tags: ["landing", "marketing", "responsive", "modern"],
@@ -38,33 +36,21 @@ export const templates: Template[] = [
     updatedAt: "2024-01-15",
   },
   {
-    id: "modern-landing",
-    title: "Modern Landing Page",
+    id: "minimal-portfolio-template",
+    title: "Minimal Portfolio Template",
     description:
-      "A beautiful, responsive landing page with modern design elements",
-    category: "Marketing",
+      "A minimal portfolio template with modern design elements",
+    category: "Portfolio",
     previewImages: [
-      "https://images.unsplash.com/photo-1762912302731-508b4580735f?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "/preview-images/minimal-portfolio/image1.png",
+      "/preview-images/minimal-portfolio/image2.png",
+      "/preview-images/minimal-portfolio/image3.png",
+      "/preview-images/minimal-portfolio/image4.png",
     ],
-    demoUrl: "",
-    sourceUrl: "#",
-    tags: ["landing", "marketing", "responsive", "modern"],
-    featured: true,
-    createdAt: "2024-01-01",
-    updatedAt: "2024-01-15",
-  },
-  {
-    id: "modern",
-    title: "Modern Landing Page",
-    description:
-      "A beautiful, responsive landing page with modern design elements",
-    category: "Marketing",
-    previewImages: [
-      "https://images.unsplash.com/photo-1762912302731-508b4580735f?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-    demoUrl: "",
-    sourceUrl: "#",
-    tags: ["landing", "marketing", "responsive", "modern"],
+    demoUrl: "https://minimal-portfolio-template-seven.vercel.app/",
+    shadcnUrl:
+      "https://aurora-ui-opal.vercel.app/t/minimal-portfolio-template.registry.json",
+    tags: ["portfolio", "minimal", "modern"],
     featured: true,
     createdAt: "2024-01-01",
     updatedAt: "2024-01-15",

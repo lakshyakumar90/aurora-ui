@@ -34,18 +34,15 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Mark the user as verified
     await prisma.user.update({
       where: { email: identifier },
       data: { emailVerified: new Date() },
     });
 
-    // Delete token after successful verification
     await prisma.verificationToken.delete({
       where: { token },
     });
 
-    // Redirect to sign-in with a query flag to show a message if you want
     const redirectUrl = new URL("/signin?verified=1", req.url);
     return NextResponse.redirect(redirectUrl);
   } catch (error) {

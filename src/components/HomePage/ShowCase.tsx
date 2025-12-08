@@ -25,8 +25,8 @@ export default function ShowCase() {
       icon: <Palette className="w-8 h-8" />,
       count: 12,
       suffix: "",
-      title: "Design Systems",
-      description: "Pre-built themes and variants",
+      title: "Templates Available",
+      description: "Pre-built templates",
       color: "from-blue-400 to-cyan-500"
     },
     {

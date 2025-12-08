@@ -47,7 +47,6 @@ export default function SignUpPage() {
         return;
       }
 
-      // Show verification message instead of redirecting
       setVerificationSent(true);
       setLoading(false);
     } catch (err) {

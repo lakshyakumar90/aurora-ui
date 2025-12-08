@@ -95,26 +95,6 @@ export default function Testimonials() {
             </div>
           ))}
         </div>
-
-        {/* Trusted by Companies */}
-        <div
-          className="text-center animate-fade-in-up"
-          style={{ animationDelay: "0.4s" }}
-        >
-          <p className="text-muted-foreground mb-8">Trusted by teams at</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-            {companies.map((company, index) => (
-              <div
-                key={company.name}
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-300 animate-fade-in-up hover:scale-110"
-                style={{ animationDelay: `${0.4 + index * 0.1}s` }}
-              >
-                <span className="text-2xl">{company.logo}</span>
-                <span className="font-medium">{company.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );

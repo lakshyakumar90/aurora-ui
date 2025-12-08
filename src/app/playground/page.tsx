@@ -11,14 +11,12 @@ function PlaygroundContent() {
   const router = useRouter();
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
-  // Redirect unauthenticated users to the sign-in page
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/signin?callbackUrl=/playground');
     }
   }, [status, router]);
 
-  // Only set up desktop check after auth state is known / user is authenticated
   useEffect(() => {
     if (status !== 'authenticated') return;
     if (typeof window === 'undefined') return;
@@ -32,8 +30,7 @@ function PlaygroundContent() {
 
     return () => window.removeEventListener('resize', checkIsDesktop);
   }, [status]);
-
-  // While checking auth or redirecting, show a loading state
+    
   if (status === 'loading' || status === 'unauthenticated' || isDesktop === null) {
     return (
       <div className="h-screen w-full flex items-center justify-center">

@@ -17,16 +17,13 @@ export async function GET(request: NextRequest) {
   try {
     const files: Record<string, string | Record<string, string>> = {};
 
-    // Prefer registry for paths when available
     const entry = componentRegistry[slug];
 
-    // Demo file
     const demoPath = entry?.demoFile
       ? entry.demoFile
       : `src/app/(docs)/components/${slug}/${slug}-demo.tsx`;
     files.demo = readFileSync(join(process.cwd(), demoPath), "utf-8");
 
-    // UI files (prefer registry list; fallback to single UI file in docs)
     if (entry && Array.isArray(entry.uiFiles) && entry.uiFiles.length > 0) {
       const uiFiles: Record<string, string> = {};
       for (const path of entry.uiFiles) {
@@ -38,7 +35,6 @@ export async function GET(request: NextRequest) {
       files.ui = readFileSync(join(process.cwd(), uiPath), "utf-8");
     }
 
-    // Utils
     const utilsPath = "src/lib/utils.ts";
     files.utils = readFileSync(join(process.cwd(), utilsPath), "utf-8");
 

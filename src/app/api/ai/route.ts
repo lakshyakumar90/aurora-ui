@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { action, prompt, files, selection, errors, apiKey } = body;
 
-  // Prioritize key from request, then env var
   const effectiveApiKey = apiKey || GEMINI_API_KEY;
 
   if (!effectiveApiKey) {
@@ -45,10 +44,8 @@ export async function POST(req: NextRequest) {
     const geminiResult = await model.generateContent(userPrompt);
     const rawResponse = geminiResult?.response?.text() ?? "";
     
-    // Try to parse JSON from the response
     let parsedResponse;
     try {
-      // Clean the response - remove markdown code blocks if present
       let cleanResponse = rawResponse.trim();
       if (cleanResponse.startsWith('```json')) {
         cleanResponse = cleanResponse.replace(/^```json\s*/, '').replace(/\s*```$/, '');
@@ -58,7 +55,6 @@ export async function POST(req: NextRequest) {
       
       parsedResponse = JSON.parse(cleanResponse);
     } catch (parseError) {
-      // If JSON parsing fails, return the raw response as explanation
       parsedResponse = { explanation: rawResponse, error: parseError };
     }
     

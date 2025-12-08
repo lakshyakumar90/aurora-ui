@@ -8,6 +8,7 @@ import {
   resolveComponentDependencies,
   generateSandpackSetup,
   SandpackFiles,
+  getNextPolyfillFiles,
 } from "@/lib/resolve-component-deps";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTheme } from "next-themes";
 import { ApiKeyModal } from "./ApiKeyModal";
 import { Settings, Key } from "lucide-react";
-
 
 const defaultCode = `import React from "react";
 
@@ -120,6 +120,7 @@ function getHtmlWithTheme(theme: "light" | "dark") {
 
 function getDefaultFiles(theme: "light" | "dark" = "light") {
   return {
+    ...getNextPolyfillFiles(),
     "/App.tsx": {
       code: defaultCode,
       active: true,
@@ -161,6 +162,8 @@ root.render(<App />);`,
     "typescript": "^5.0.0",
     "gsap": "^3.12.5",
     "motion": "^12.23.12",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "lucide-react": "^0.542.0",
     "tailwindcss": "^4",
     "@tailwindcss/postcss": "^4",
     "postcss": "^8.4.47"
@@ -184,6 +187,8 @@ function getDefaultSetup() {
       "@types/react-dom": "^18.2.0",
       gsap: "^3.12.5",
       motion: "^12.23.12",
+      "@radix-ui/react-tooltip": "^1.0.7",
+      "lucide-react": "^0.542.0",
       tailwindcss: "^4",
       "@tailwindcss/postcss": "^4",
       postcss: "^8.4.47",
@@ -339,7 +344,12 @@ export function SandpackPlayground() {
       setAiOutput("Thinking...");
       setChangedPaths([]);
       type AIMode = "generate" | "explain" | "transform" | "fix" | "theme";
-      interface AISelection { path: string; start: number; end: number; code: string }
+      interface AISelection {
+        path: string;
+        start: number;
+        end: number;
+        code: string;
+      }
       interface AIPayload {
         action: AIMode;
         prompt: string;
@@ -402,26 +412,30 @@ export function SandpackPlayground() {
         setFiles(next);
         setChangedPaths(justChanged);
         setLastAiFiles(res.files as Record<string, { code: string }>);
-        
+
         const formatted = [
           `## Files Updated Successfully`,
           ``,
-          `**Applied ${justChanged.length} file${justChanged.length === 1 ? "" : "s"}:**`,
+          `**Applied ${justChanged.length} file${
+            justChanged.length === 1 ? "" : "s"
+          }:**`,
           ...justChanged.map((p) => `- \`${p}\``),
           ``,
-          `Check the **Changes** tab to review the updated code.`
+          `Check the **Changes** tab to review the updated code.`,
         ].join("\n");
-        
+
         setAiOutput(formatted);
         setActiveAiTab("changes");
       } else if (res?.error) {
         setAiOutput(`## Error\n\n${res.error}`);
         setActiveAiTab("response");
       } else {
-        const responseText = typeof res === "string" ? res : 
-                           res?.result || 
-                           JSON.stringify(res, null, 2) || 
-                           "No response received.";
+        const responseText =
+          typeof res === "string"
+            ? res
+            : res?.result ||
+              JSON.stringify(res, null, 2) ||
+              "No response received.";
         setAiOutput(responseText);
         setActiveAiTab("response");
       }
@@ -466,22 +480,26 @@ export function SandpackPlayground() {
   };
 
   const FormattedText = ({ text }: { text: string }) => {
-    if (!text) return <div className="text-muted-foreground">No response yet.</div>;
+    if (!text)
+      return <div className="text-muted-foreground">No response yet.</div>;
 
-    const lines = text.split('\n');
-    
+    const lines = text.split("\n");
+
     return (
       <div className="space-y-2">
         {lines.map((line, index) => {
           const trimmedLine = line.trim();
-          
-          if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**')) {
+
+          if (trimmedLine.startsWith("**") && trimmedLine.endsWith("**")) {
             return (
               <div key={index} className="font-semibold text-foreground">
                 {trimmedLine.slice(2, -2)}
               </div>
             );
-          } else if (trimmedLine.startsWith('- `') && trimmedLine.endsWith('`')) {
+          } else if (
+            trimmedLine.startsWith("- `") &&
+            trimmedLine.endsWith("`")
+          ) {
             return (
               <div key={index} className="flex items-center gap-2 text-sm">
                 <span className="text-muted-foreground">•</span>
@@ -490,45 +508,60 @@ export function SandpackPlayground() {
                 </code>
               </div>
             );
-          } else if (trimmedLine.startsWith('- ')) {
+          } else if (trimmedLine.startsWith("- ")) {
             return (
               <div key={index} className="flex items-start gap-2 text-sm">
                 <span className="text-muted-foreground mt-1">•</span>
                 <span>{trimmedLine.slice(2)}</span>
               </div>
             );
-          } else if (trimmedLine.startsWith('# ')) {
+          } else if (trimmedLine.startsWith("# ")) {
             return (
-              <h3 key={index} className="text-lg font-semibold text-foreground mt-4 mb-2">
+              <h3
+                key={index}
+                className="text-lg font-semibold text-foreground mt-4 mb-2"
+              >
                 {trimmedLine.slice(2)}
               </h3>
             );
-          } else if (trimmedLine.startsWith('## ')) {
+          } else if (trimmedLine.startsWith("## ")) {
             return (
-              <h4 key={index} className="text-base font-medium text-foreground mt-3 mb-1">
+              <h4
+                key={index}
+                className="text-base font-medium text-foreground mt-3 mb-1"
+              >
                 {trimmedLine.slice(3)}
               </h4>
             );
-          } else if (trimmedLine.includes('`') && !trimmedLine.startsWith('```')) {
-            const parts = trimmedLine.split('`');
+          } else if (
+            trimmedLine.includes("`") &&
+            !trimmedLine.startsWith("```")
+          ) {
+            const parts = trimmedLine.split("`");
             return (
               <div key={index} className="text-sm leading-relaxed">
-                {parts.map((part, partIndex) => 
+                {parts.map((part, partIndex) =>
                   partIndex % 2 === 0 ? (
                     <span key={partIndex}>{part}</span>
                   ) : (
-                    <code key={partIndex} className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+                    <code
+                      key={partIndex}
+                      className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono"
+                    >
                       {part}
                     </code>
                   )
                 )}
               </div>
             );
-          } else if (trimmedLine === '') {
+          } else if (trimmedLine === "") {
             return <div key={index} className="h-2" />;
           } else {
             return (
-              <div key={index} className="text-sm leading-relaxed text-muted-foreground">
+              <div
+                key={index}
+                className="text-sm leading-relaxed text-muted-foreground"
+              >
                 {trimmedLine}
               </div>
             );
@@ -682,7 +715,13 @@ export function SandpackPlayground() {
               <div className="flex gap-2">
                 <div className="hidden md:inline-flex rounded-md border overflow-hidden bg-muted/50">
                   {(
-                    ["generate", "explain", "transform", "fix", "theme"] as const
+                    [
+                      "generate",
+                      "explain",
+                      "transform",
+                      "fix",
+                      "theme",
+                    ] as const
                   ).map((m) => (
                     <button
                       key={m}
@@ -864,9 +903,7 @@ export function SandpackPlayground() {
                 variant="outline"
                 size="sm"
                 onClick={() =>
-                  navigator.clipboard.writeText(
-                    sanitizeForCopy(aiOutput || "")
-                  )
+                  navigator.clipboard.writeText(sanitizeForCopy(aiOutput || ""))
                 }
               >
                 Copy

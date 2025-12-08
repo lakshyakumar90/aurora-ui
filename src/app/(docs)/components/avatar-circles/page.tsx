@@ -14,7 +14,6 @@ export default function AvatarCirclesDocsPage() {
       title="Avatar Circles"
       fileName="avatar-circles"
       description="A customizable avatar circles component."
-      //note="This is a starting point for the Button component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{
         component: <AvatarCirclesDemo />,
         filePath:

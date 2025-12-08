@@ -15,10 +15,8 @@ export async function aiRequest<T = AIResponse>(payload: unknown): Promise<T> {
   if (data?.error) throw new Error(data.error as string);
   if (data?.result) {
     try {
-      // Try parse as JSON returned by Gemini
       return JSON.parse(data.result as string) as T;
     } catch {
-      // If explanation plain text, wrap in object
       return { explanation: data.result as string } as unknown as T;
     }
   }

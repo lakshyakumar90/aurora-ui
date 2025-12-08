@@ -69,7 +69,6 @@ export default function SignInPage() {
     setLoading(false);
 
     if (result?.error) {
-      // Check if it's an email verification error
       if (result.error.includes("verify your email")) {
         setError(result.error);
       } else {

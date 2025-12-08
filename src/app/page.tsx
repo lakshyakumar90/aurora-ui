@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import HeroSection from "@/components/HomePage/Hero";
 import Publish from "@/components/HomePage/Publish";
-import ShowCase from "@/components/HomePage/ShowCase";  
+import ShowCase from "@/components/HomePage/ShowCase";
 import Testimonials from "@/components/HomePage/Testimonials";
 import Footer from "@/components/HomePage/Footer";
-import TemplateShow from "@/components/HomePage/TemplateShow";
+import Benefits from "@/components/HomePage/Benefits";
 
 export const metadata: Metadata = {
-  title: "Aurora UI - Build Faster with Modern React Components | Next.js Component Library",
-  description: "The ultimate Next.js component library designed for modern developers. Transform your development workflow with beautiful, accessible components. Built with React, TypeScript, Tailwind CSS, and Framer Motion.",
+  title:
+    "Aurora UI - Build Faster with Modern React Components | Next.js Component Library",
+  description:
+    "The ultimate Next.js component library designed for modern developers. Transform your development workflow with beautiful, accessible components. Built with React, TypeScript, Tailwind CSS, and Framer Motion.",
   keywords: [
     "React components",
     "Next.js components",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "Next.js UI",
     "Design system",
     "Frontend components",
-    "Web components"
+    "Web components",
   ],
   authors: [{ name: "Aurora UI" }],
   creator: "Aurora UI",
@@ -31,10 +31,11 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://aurora-ui.com",
+    url: "https://aurora-ui-opal.vercel.app",
     siteName: "Aurora UI",
     title: "Aurora UI - Build Faster with Modern React Components",
-    description: "The ultimate Next.js component library designed for modern developers. Transform your development workflow with beautiful, accessible components.",
+    description:
+      "The ultimate Next.js component library designed for modern developers. Transform your development workflow with beautiful, accessible components.",
     images: [
       {
         url: "/og-image.png",
@@ -47,7 +48,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Aurora UI - Build Faster with Modern React Components",
-    description: "The ultimate Next.js component library designed for modern developers. Transform your development workflow with beautiful, accessible components.",
+    description:
+      "The ultimate Next.js component library designed for modern developers. Transform your development workflow with beautiful, accessible components.",
     images: ["/og-image.png"],
     creator: "@aurora-ui",
   },
@@ -63,23 +65,23 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://aurora-ui.com",
+    canonical: "https://aurora-ui-opal.vercel.app",
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://aurora-ui.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://aurora-ui-opal.vercel.app"
+  ),
 };
 
 export default async function Home() {
-  // Get server session for auth check (can be used for conditional rendering if needed)
-  const session = await getServerSession(authOptions);
 
   return (
     <div className="min-h-screen w-full bg-background">
       <HeroSection />
       <ShowCase />
+      <Benefits />
       <Testimonials />
       <Publish />
       <Footer />
     </div>
   );
 }
- 

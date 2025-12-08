@@ -1,25 +1,12 @@
-// import { generateId } from "@/mdx-components";
 import type { Metadata } from "next";
 
 export const siteConfig = {
-  name: "Aether/ui",
-  url: "https://aetherui.in",
-  bgImage:
-    "https://res.cloudinary.com/di0av3xly/image/upload/v1744973705/Aether-ui/au-meta-banner_vidmtc.png",
+  name: "Aurora UI",
+    url: "https://aurora-ui-opal.vercel.app",
+    bgImage:
+    "https://res.cloudinary.com/dkfvy12i6/image/upload/v1765198866/og-image_bcexd8.png",
   description:
-    "Aether/ui is a collection of beautiful, animated components for your next product, built with Motion and Tailwind CSS.",
-  links: {
-    twitter: "https://dub.sh/harshit-x?utm_source=aether-ui",
-    github: "https://git.new/aether-ui?utm_source=aether-ui",
-  },
-};
-
-const formatName = (name: string) => {
-  return name
-    .toLowerCase()
-    .replace(/_/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "");
+    "Aurora UI is a collection of beautiful, animated components for your next product, built with Motion and Tailwind CSS.",
 };
 
 export interface MetaConfigProps {
@@ -27,12 +14,8 @@ export interface MetaConfigProps {
   description: string;
 }
 
-const fallbackURL = "https://ui-aether.vercel.app";
+const fallbackURL = "https://aurora-ui-opal.vercel.app";
 
-/**
- * @param title: Metadata["title"];
- * @param description: Metadata["description"];
- */
 export const metaConfig = ({
   title = siteConfig.name,
   description = siteConfig.description,
@@ -40,20 +23,20 @@ export const metaConfig = ({
   title,
   description,
   category: "Web Development",
-  keywords: ["Next.js", "React", "Tailwind CSS", "Motion", "JavaScript", "TypeScript"],
+  keywords: ["Next.js", "React", "Tailwind CSS", "Motion", "JavaScript", "TypeScript", "Aurora UI"],
   metadataBase: new URL(siteConfig.url),
   applicationName: siteConfig.name,
-  authors: [{ name: "Aether/ui's Team", url: siteConfig.url }],
-  publisher: "Aether/ui's Team",
+  authors: [{ name: "Aurora UI's Team", url: siteConfig.url }],
+  publisher: "Aurora UI's Team",
   alternates: { canonical: fallbackURL },
   twitter: {
-    creator: "@pantharhsit007",
+    creator: "@lakshyakumar90",
     title,
     description,
     card: "summary_large_image",
     images: [
       {
-        url: `/meta?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`,
+        url: siteConfig.bgImage,
         width: 1200,
         height: 630,
         alt: title + " Banner",
@@ -65,11 +48,11 @@ export const metaConfig = ({
     title,
     description,
     siteName: siteConfig.name,
-    url: `${siteConfig.url}/docs/${formatName(title)}`,
+    url: siteConfig.url,
     locale: "en_US",
     images: [
       {
-        url: `/meta?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`,
+        url: siteConfig.bgImage,
         width: 1200,
         height: 630,
         alt: title + " Banner",
@@ -81,7 +64,7 @@ export const metaConfig = ({
 export const rootSiteConfig = {
   title: {
     default: siteConfig.name,
-    template: "%s | Aether/ui",
+    template: "%s | Aurora UI",
   },
   description: siteConfig.description,
   url: siteConfig.url,
@@ -95,11 +78,11 @@ export const rootSiteConfig = {
   keywords: ["Next.js", "React", "Tailwind CSS", "Motion", "JavaScript", "TypeScript"],
   metadataBase: new URL(siteConfig.url),
   applicationName: siteConfig.name,
-  authors: [{ name: "Aether/ui's Team", url: siteConfig.url }],
-  publisher: "Aether/ui's Team",
+  authors: [{ name: "Aurora UI's Team", url: siteConfig.url }],
+  publisher: "Aurora UI's Team",
   alternates: { canonical: fallbackURL },
   twitter: {
-    creator: "@pantharhsit007",
+    creator: "@lakshyakumar90",
     title: siteConfig.name,
     description: siteConfig.description,
     card: "summary_large_image",
@@ -108,7 +91,7 @@ export const rootSiteConfig = {
         url: siteConfig.bgImage,
         width: 1200,
         height: 630,
-        alt: "Aether/ui Banner",
+        alt: "Aurora UI Banner",
       },
     ],
   },
@@ -123,7 +106,7 @@ export const rootSiteConfig = {
         url: siteConfig.bgImage,
         width: 1200,
         height: 630,
-        alt: "Aether/ui Banner",
+        alt: "Aurora UI Banner",
       },
     ],
   },

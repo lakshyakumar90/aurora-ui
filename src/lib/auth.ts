@@ -41,8 +41,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Check if email is verified (only for credentials provider, not OAuth)
-        if (!user.emailVerified) {
+         if (!user.emailVerified) {
           throw new Error("Please verify your email before signing in. Check your inbox for the verification link.");
         }
 

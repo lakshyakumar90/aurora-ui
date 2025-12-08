@@ -11,16 +11,100 @@ export interface SandpackFiles {
 }
 
 /**
- * Converts @/ imports to relative paths for Sandpack and removes Next.js specific directives
- * @param code - The source code to convert
- * @param fileLocation - The location of the file (e.g., 'root', 'components/ui', 'lib')
+ * Lightweight stubs for Next.js modules so demos that import next/image or
+ * next/link can run inside the Sandpack React template. They render plain
+ * DOM elements but preserve the core props to avoid TypeScript/runtime errors.
  */
+export function getNextPolyfillFiles(): SandpackFiles {
+  const linkShim = `import React from "react";
+
+type LinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+  href: string | URL;
+  children?: React.ReactNode;
+  prefetch?: boolean;
+  replace?: boolean;
+  scroll?: boolean;
+  shallow?: boolean;
+  locale?: string | false;
+};
+
+const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
+  { href, children, ...rest },
+  ref
+) {
+  const normalized =
+    typeof href === "string" ? href : href ? href.toString() : "#";
+  return (
+    <a ref={ref} href={normalized} {...rest}>
+      {children}
+    </a>
+  );
+});
+
+export default Link;
+export { Link };
+`;
+
+  const imageShim = `import React from "react";
+
+type ImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
+  fill?: boolean;
+  src: string | URL;
+  alt: string;
+  sizes?: string;
+  priority?: boolean;
+  placeholder?: "blur" | "empty";
+  blurDataURL?: string;
+};
+
+const Image = React.forwardRef<HTMLImageElement, ImageProps>(function Image(
+  { src, alt, fill, style, ...rest },
+  ref
+) {
+  const resolvedSrc = typeof src === "string" ? src : src ? src.toString() : "";
+  const resolvedStyle = fill
+    ? { position: "absolute", inset: 0, objectFit: rest.objectFit || "cover", ...style }
+    : style;
+
+  return <img ref={ref} src={resolvedSrc} alt={alt || ""} style={resolvedStyle} {...rest} />;
+});
+
+export default Image;
+export { Image };
+`;
+
+  return {
+    "/node_modules/next/link.tsx": {
+      code: linkShim,
+      hidden: true,
+    },
+    "/node_modules/next/image.tsx": {
+      code: imageShim,
+      hidden: true,
+    },
+  };
+}
+
 function convertImportsToRelative(
   code: string,
   fileLocation: string = "root"
 ): string {
-  // Remove "use client" and "use server" directives
   code = code.replace(/["']use (client|server)["'];?\s*/g, "");
+
+  // Route next/image and next/link to our lightweight shims inside sandbox
+  code = code
+    .replace(
+      /from ["']next\/image["']/g,
+      fileLocation === "root"
+        ? 'from "./node_modules/next/image"'
+        : 'from "../node_modules/next/image"'
+    )
+    .replace(
+      /from ["']next\/link["']/g,
+      fileLocation === "root"
+        ? 'from "./node_modules/next/link"'
+        : 'from "../node_modules/next/link"'
+    );
 
   // Calculate relative path prefix based on file location depth
   const depth = fileLocation === "root" ? 0 : fileLocation.split("/").length;
@@ -65,15 +149,11 @@ function convertImportsToRelative(
   return code;
 }
 
-/**
- * Resolves all dependencies for a component and generates Sandpack files
- */
-// ...
 export async function resolveComponentDependencies(
   entry: ComponentRegistryEntry,
   theme: "light" | "dark" = "light"
 ): Promise<SandpackFiles> {
-  const files: SandpackFiles = {};
+  const files: SandpackFiles = { ...getNextPolyfillFiles() };
 
   try {
     // Fetch component files from API
@@ -93,15 +173,11 @@ export async function resolveComponentDependencies(
       (match) => `from "./components/ui/${uiModuleName}"`
     );
 
-    // Extract a reliable component name from the demo code
-    // Priority:
-    // 1) export default function Name
-    // 2) function Name
-    // 3) const Name
-    // 4) export default Name
     let demoComponentName = "DemoComponent";
 
-    const exportDefaultFn = demoCode.match(/export\s+default\s+function\s+(\w+)/);
+    const exportDefaultFn = demoCode.match(
+      /export\s+default\s+function\s+(\w+)/
+    );
     const namedFn = demoCode.match(/\bfunction\s+(\w+)/);
     const constDecl = demoCode.match(/\bconst\s+(\w+)/);
     const exportDefaultName = demoCode.match(/export\s+default\s+(\w+)/);
@@ -109,7 +185,10 @@ export async function resolveComponentDependencies(
     if (exportDefaultFn && exportDefaultFn[1]) {
       demoComponentName = exportDefaultFn[1];
       // Transform to a normal function declaration so we can add a single default export later
-      demoCode = demoCode.replace(/export\s+default\s+function\s+(\w+)/, "function $1");
+      demoCode = demoCode.replace(
+        /export\s+default\s+function\s+(\w+)/,
+        "function $1"
+      );
     } else if (namedFn && namedFn[1]) {
       demoComponentName = namedFn[1];
     } else if (constDecl && constDecl[1]) {
@@ -158,14 +237,18 @@ export default function App(): JSX.Element {
       const uiFilesRecord = componentFiles.uiFiles as Record<string, string>;
       for (const [sourcePath, sourceCode] of Object.entries(uiFilesRecord)) {
         const converted = convertImportsToRelative(sourceCode, "components/ui");
-        const outName = sourcePath.split("/").pop() || `${entry.title.toLowerCase()}.tsx`;
+        const outName =
+          sourcePath.split("/").pop() || `${entry.title.toLowerCase()}.tsx`;
         files[`/components/ui/${outName}`] = {
           code: converted,
           hidden: false,
         };
       }
     } else if (componentFiles.ui) {
-      const uiCode = convertImportsToRelative(componentFiles.ui, "components/ui");
+      const uiCode = convertImportsToRelative(
+        componentFiles.ui,
+        "components/ui"
+      );
       files[`/components/ui/${entry.title.toLowerCase()}.tsx`] = {
         code: uiCode,
         hidden: false,
@@ -186,30 +269,43 @@ export default function App(): JSX.Element {
       description: entry.description,
       main: "index.tsx",
       dependencies: {
-        "react": "^18.2.0",
+        react: "^18.2.0",
         "react-dom": "^18.2.0",
-        "typescript": "^5.0.0",
-        // Added requested packages for sandbox environment
-        "gsap": "^3.12.5",
-        "motion": "^12.23.12",
+        typescript: "^5.0.0",
+        gsap: "^3.12.5",
+        motion: "^12.23.12",
         "lucide-react": "^0.542.0",
-        ...entry.dependencies.reduce(
-          (acc, dep) => {
-            const versionMap: Record<string, string> = {
-              "class-variance-authority": "^0.7.0",
-              "clsx": "^2.0.0",
-              "tailwind-merge": "^2.0.0",
-              "framer-motion": "^12.23.12",
-            };
-            acc[dep] = versionMap[dep] || "latest";
-            return acc;
-          },
-          {} as Record<string, string>
-        ),
+        "@radix-ui/react-tooltip": "^1.0.7",
+        "@radix-ui/react-accordion": "^1.2.12",
+        "@radix-ui/react-alert-dialog": "^1.1.15",
+        "@radix-ui/react-avatar": "^1.1.10",
+        "@radix-ui/react-checkbox": "^1.3.3",
+        "@radix-ui/react-dialog": "^1.1.15",
+        "@radix-ui/react-dropdown-menu": "^2.1.16",
+        "@radix-ui/react-hover-card": "^1.1.15",
+        "@radix-ui/react-label": "^2.1.7",
+        "@radix-ui/react-popover": "^1.1.15",
+        "@radix-ui/react-radio-group": "^1.3.8",
+        "@radix-ui/react-scroll-area": "^1.2.10",
+        "@radix-ui/react-select": "^2.2.6",
+        "@radix-ui/react-slot": "^1.2.3",
+        "@radix-ui/react-switch": "^1.2.6",
+        "@radix-ui/react-tabs": "^1.1.13",
+        "@radix-ui/react-toggle": "^1.1.10",
+        "@radix-ui/react-toggle-group": "^1.1.11",
+        ...entry.dependencies.reduce((acc, dep) => {
+          const versionMap: Record<string, string> = {
+            "class-variance-authority": "^0.7.0",
+            clsx: "^2.0.0",
+            "tailwind-merge": "^2.0.0",
+            "framer-motion": "^12.23.12",
+          };
+          acc[dep] = versionMap[dep] || "latest";
+          return acc;
+        }, {} as Record<string, string>),
       },
     };
 
-    // Add tsconfig.json for proper TypeScript configuration
     files["/tsconfig.json"] = {
       code: JSON.stringify(
         {
@@ -224,7 +320,7 @@ export default function App(): JSX.Element {
             jsxFactory: "React.createElement",
             jsxFragmentFactory: "React.Fragment",
             lib: ["dom", "dom.iterable", "esnext"],
-            strict: false, // Changed from true to false for playground
+            strict: false,
             isolatedModules: true,
             skipLibCheck: true,
             forceConsistentCasingInFileNames: true,
@@ -250,7 +346,6 @@ export default function App(): JSX.Element {
       hidden: false,
     };
 
-    // Create index.tsx entry point
     files["/index.tsx"] = {
       code: `import React from "react";
       import ReactDOM from "react-dom/client";
@@ -262,7 +357,6 @@ export default function App(): JSX.Element {
       hidden: false,
     };
 
-    // Create HTML template with Tailwind CSS CDN and proper configuration
     files["/public/index.html"] = {
       code: `<!DOCTYPE html>
 <html lang="en" class="${theme}">
@@ -279,9 +373,7 @@ export default function App(): JSX.Element {
       hidden: false,
     };
 
-    // Create base styles with CSS variables for design system
     files["/styles.css"] = {
-
       code: `
 :root {
   --radius: 0.65rem;
@@ -491,18 +583,19 @@ export function generateSandpackSetup(entry: ComponentRegistryEntry) {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     typescript: "^5.0.0",
-    // Added requested packages for sandbox environment
     gsap: "^3.12.5",
     motion: "^12.23.12",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "lucide-react": "^0.542.0",
   };
 
-  // Add component-specific dependencies
   entry.dependencies.forEach((dep) => {
     const versionMap: Record<string, string> = {
       "class-variance-authority": "^0.7.0",
       clsx: "^2.0.0",
       "tailwind-merge": "^2.0.0",
-      "lucide-react": "^0.263.1",
+      "lucide-react": "^0.542.0",
+      "@radix-ui/react-tooltip": "^1.0.7",
     };
     dependencies[dep] = versionMap[dep] || "latest";
   });

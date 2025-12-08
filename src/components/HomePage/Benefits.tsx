@@ -1,142 +1,110 @@
 import Image from "next/image";
-export default function Benefits(){
-    return(
-       <div className=" flex flex-col gap-25 mt-15">
-        
-        <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-15 p-10">
-                      <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
-                          <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
-                              <Image src="/first.png" alt="" fill className="rounded-lg object-cover absolute hover:scale-75 transition-transform duration-500"/>
-                          </div>
-                      </div>
-                      <div className=" w-[40%] h-[70%] rounded-lg  mt-8 flex flex-col gap-3">
-                          <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-primary bg-card
-                           hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 transition-transform duration-500">built for speed</p>
-                          <h3 className="text-6xl font-medium">Lightning Fast Development</h3>
-                          <p className="mb-1">Cut your development time by 80% with our extensive library of pre-built components.</p>
-                          <div className="flex gap-4">
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500 ">rapid prototyping</p>
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">scalable apps</p>
-                              <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">modern ui/ux</p>
-                          </div>
-                      </div>
-                  </div>
+
+const benefitsData = [
+  {
+    id: 1,
+    title: "Lightning Fast Development",
+    description:
+      "Cut your development time by 80% with our extensive library of pre-built components.",
+    topTag: "built for speed",
+    tags: ["rapid prototyping", "scalable apps", "modern ui/ux"],
+    imageSrc: "/first.png",
+  },
+  {
+    id: 2,
+    title: "Beautiful by Default",
+    description:
+      "Every component follows modern design principles with built-in dark mode support, responsive layouts, and accessibility features.",
+    topTag: "modern design",
+    tags: ["responsive", "dark mode", "accessibility"],
+    imageSrc: "/second.png",
+  },
+  {
+    id: 3,
+    title: "Next.js Optimized",
+    description:
+      "Built specifically for Next.js with server-side rendering support, automatic code splitting, and performance optimizations out of the box.",
+    topTag: "framework optimized",
+    tags: ["server-side rendering", "code splitting", "performance"],
+    imageSrc: "/third.png",
+  },
+  {
+    id: 4,
+    title: "Accessibility Built-In",
+    description:
+      "Deliver a seamless experience for all users with features designed to meet accessibility standards.",
+    topTag: "built for everyone",
+    tags: ["universal", "accessible design", "screen friendly"],
+    imageSrc: "/fourth.png",
+  },
+  {
+    id: 5,
+    title: "Easily Personalized",
+    description:
+      "Easily customize colors, typography, spacing, and animations using Tailwind CSS classes. Make it match your brand perfectly.",
+    topTag: "fully customizable",
+    tags: ["custom themes", "animations", "personalized ui/ux"],
+    imageSrc: "/fifth.png",
+  },
+];
+
+export default function Benefits() {
+  return (
+    <section className="flex flex-col gap-12 py-10 px-4 md:px-10 lg:px-20 max-w-[1440px] mx-auto">
+      {benefitsData.map((item, index) => (
+        <div key={item.id} className="w-full h-full flex items-center">
+          <div
+            className={`
+              w-full h-full rounded-2xl border border-[#A44BF8] p-6 md:p-10 
+              flex flex-col md:flex-row gap-10 items-center
+              hover:border-[3px] transition-all duration-500 ease-out bg-black/20
+              ${index % 2 === 1 ? "md:flex-row-reverse" : ""}
+            `}
+          >
+            {/* Image Container */}
+            <div className="w-full md:w-1/2 h-[300px] md:h-[350px] rounded-xl flex justify-center items-center overflow-hidden group">
+              <div className="relative w-[90%] h-[90%] rounded-lg">
+                <Image
+                  src={item.imageSrc}
+                  alt={item.title}
+                  fill
+                  className="rounded-lg object-contain"
+                />
               </div>
+            </div>
 
-        <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex  gap-20 p-10">
-                     
-                      <div className=" w-[40%] h-[70%] rounded-lg  mt-8 flex flex-col gap-3">
-                          <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-primary bg-card
-                           hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 transition-transform duration-500">modern design</p>
-                          <h3 className="text-6xl font-medium leading-13"> Beautiful by Default</h3>
-                          <p className="mb-1">Every component follows modern design principles with built-in dark mode support, responsive layouts, and accessibility features.</p>
-                          <div className="flex gap-4">
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500 ">responsive</p>
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">dark mode</p>
-                              <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">accessibility</p>
-                          </div>
-                      </div>
+            <div className="w-full md:w-1/2 flex flex-col justify-center gap-6">
+              <span
+                className="text-sm md:text-lg border border-primary w-fit px-4 py-1.5 rounded-full bg-card
+                hover:bg-primary/10 hover:scale-105 transition-all duration-300 capitalize text-white"
+              >
+                {item.topTag}
+              </span>
 
-                       <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
-                          <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
-                              <Image src="/second.png" alt="" fill className="rounded-lg object-cover absolute hover:scale-75 transition-transform duration-500"/>
-                          </div>
-                      </div>
-                  </div>
+              <h3 className="text-xl md:text-3xl font-medium leading-tight text-white">
+                {item.title}
+              </h3>
+
+              <p className="text-gray-300 text-md leading-relaxed">
+                {item.description}
+              </p>
+
+              {/* Bottom Tags */}
+              <div className="flex flex-wrap gap-3 mt-2">
+                {item.tags.map((tag, i) => (
+                  <span
+                    key={i}
+                    className="text-sm md:text-base border border-white/20 w-fit px-3 py-1.5 rounded-xl bg-card
+                    hover:border-primary/80 hover:bg-primary/10 hover:scale-105 transition-all duration-300 capitalize text-gray-200 cursor-default"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
-
-
-              <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-15 p-10">
-                      <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
-                          <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
-                              <Image src="/third.png" alt="" height={350} width={350} className="rounded-lg object-contain absolute hover:scale-75 transition-transform duration-500"/>
-                          </div>
-                      </div>
-                      <div className=" w-[40%] h-[70%] rounded-lg  mt-7 flex flex-col gap-2">
-                          <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-primary bg-card
-                           hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 transition-transform duration-500">framework optimized</p>
-                          <h3 className="text-6xl font-medium">Next.js Optimized</h3>
-                          <p className="mb-1">Built specifically for Next.js with server-side rendering support, automatic code splitting, and performance optimizations out of the box.</p>
-                          <div className="flex gap-3">
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500 ">server-side rendering</p>
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">code splitting</p>
-                              <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">performance</p>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-
-              <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-20 p-10">
-                      
-                      <div className=" w-[40%] h-[70%] rounded-lg  mt-8 flex flex-col gap-3">
-                          <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-primary bg-card
-                           hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 transition-transform duration-500">built for everyone</p>
-                          <h3 className="text-6xl font-medium">Accessibility Built-In</h3>
-                          <p className="mb-1">Deliver a seamless experience for all users with features designed to meet accessibility standards.</p>
-                          <div className="flex gap-4">
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500 ">universal</p>
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">accessible design</p>
-                              <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">screen friendly</p>
-                          </div>
-                      </div>
-                      <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
-                          <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
-                              <Image src="/fourth.png" alt="" fill className="rounded-lg object-cover absolute hover:scale-75 transition-transform duration-500"/>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-
-              <div className="h-[60vh] w-full  px-25 ">
-                  <div className=" h-full rounded-lg border-1 hover:border-3 hover:scale-110 transition-transform duration-600 border-[#A44BF8] flex gap-15 p-10">
-                      <div className="bg-[#0A0A0A] w-[50%] h-full rounded-lg ">
-                          <div className="h-[90%] w-[90%] relative  rounded-lg flex flex-col justify-center items-center m-auto mt-5">
-                              <Image src="/fifth.png" alt="" height={350} width={350} className="rounded-lg object-contain absolute hover:scale-75 transition-transform duration-500"/>
-                          </div>
-                      </div>
-                      <div className=" w-[40%] h-[70%] rounded-lg  mt-8 flex flex-col gap-2">
-                          <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-primary bg-card
-                           hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 transition-transform duration-500">fully customizable</p>
-                          <h3 className="text-6xl font-medium">Easily Personalized</h3>
-                          <p className="mb-1">Easily customize colors, typography, spacing, and animations using Tailwind CSS classes. Make it match your brand perfectly.</p>
-                          <div className="flex gap-4">
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500 ">custom themes</p>
-                              <p  className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">animations</p>
-                              <p className="text-xl border-1 w-fit px-3 py-1 rounded-xl border-border bg-card
-                               hover:border-primary/80 hover:bg-gradient-to-br from-primary to-primary/80 hover:scale-110 leading-6 transition-transform duration-500">personalized ui/ux</p>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-
-
-
-       </div>
-              
-
-
-              
-              
-    )
+            </div>
+          </div>
+        </div>
+      ))}
+    </section>
+  );
 }

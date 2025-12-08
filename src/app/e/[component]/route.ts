@@ -15,7 +15,6 @@ function toKebabFromTitle(title: string): string {
 function findRegistryEntry(slug: string): ComponentRegistryEntry | null {
   const direct = (componentRegistry as Record<string, ComponentRegistryEntry>)[slug];
   if (direct) return direct;
-  // Try to find by transformed title (e.g., GlassIcons -> glass-icons)
   for (const entry of Object.values(componentRegistry)) {
     if (toKebabFromTitle(entry.title) === slug) return entry;
   }
@@ -23,7 +22,6 @@ function findRegistryEntry(slug: string): ComponentRegistryEntry | null {
 }
 
 function convertImportsToRelative(code: string, _fileLocation: string = "root"): string {
-  // Only strip Next.js directives. Keep @/* imports intact for v0.
   code = code.replace(/["']use (client|server)["'];?\s*/g, "");
   return code;
 }
@@ -49,11 +47,9 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ compon
     let demoCode = readFileSync(demoAbs, "utf-8");
     demoCode = convertImportsToRelative(demoCode, "root");
 
-    // Rewrite './X' demo imports to @/components/ui/<name>
     const uiModuleName = entry.title.toLowerCase();
     demoCode = demoCode.replace(/from\s+["']\.\/[A-Za-z0-9_-]+["']/g, () => `from "@/components/ui/${uiModuleName}"`);
 
-    // Extract demo component name and ensure default export
     let demoComponentName = "DemoComponent";
     const exportDefaultFn = demoCode.match(/export\s+default\s+function\s+(\w+)/);
     const namedFn = demoCode.match(/\bfunction\s+(\w+)/);
@@ -83,7 +79,6 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ compon
       target: `components/${demoComponentName}.tsx`,
     });
 
-    // UI files
     if (entry.uiFiles?.length) {
       for (const p of entry.uiFiles) {
         const abs = join(process.cwd(), p);
@@ -99,7 +94,6 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ compon
       }
     }
 
-    // Utils
     const utilsAbs = join(process.cwd(), "src/lib/utils.ts");
     const utilsSrc = readFileSync(utilsAbs, "utf-8");
     files.push({
@@ -109,7 +103,6 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ compon
       target: "lib/utils.ts",
     });
 
-    // Minimal styles
     files.push({
       path: "styles.css",
       content: `:root{--animate-marquee:marquee 40s infinite linear;--animate-marquee-vertical:marquee-vertical 40s linear infinite}
@@ -122,7 +115,6 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ compon
       target: "styles.css",
     });
 
-    // Build dependencies array (v0 expects array, not object)
     const depVersion: Record<string, string> = {
       react: "^18.2.0",
       "react-dom": "^18.2.0",

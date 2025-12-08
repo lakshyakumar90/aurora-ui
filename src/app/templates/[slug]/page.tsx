@@ -24,7 +24,6 @@ export default async function TemplatePage({
     notFound();
   }
 
-  // Technology badges data
   const techBadges = [
     {
       imageUrl: "https://assets.aceternity.com/logos/react.png",
@@ -43,7 +42,6 @@ export default async function TemplatePage({
     },
   ];
 
-  // Features data
   const features = [
     {
       title:
@@ -93,7 +91,6 @@ export default async function TemplatePage({
     },
   ];
 
-  // Sample images for the 2x2 grid (using the preview image as placeholder)
   const galleryImages = template.previewImages;
   if (!galleryImages) {
     notFound();
@@ -102,7 +99,6 @@ export default async function TemplatePage({
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        {/* Back Button */}
         <Link
           href="/templates"
           className="inline-flex items-center gap-2 mb-8 text-muted-foreground hover:text-foreground transition-colors"
@@ -111,23 +107,19 @@ export default async function TemplatePage({
           Back to Templates
         </Link>
 
-        {/* Product Card Section */}
         <div className="bg-card border border-border rounded-lg p-8 mb-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left Column - Title, Description, Tech Badges */}
             <div>
               <h1 className="text-4xl font-bold mb-4">{template.title}</h1>
               <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
                 {template.description}
               </p>
 
-              {/* Technology Badges */}
               <div className="flex flex-wrap gap-3 mb-8">
                 <AvatarCircles avatarUrls={techBadges} />
               </div>
             </div>
 
-            {/* Right Column - Action Buttons */}
             <div className="flex flex-col items-end justify-start gap-4">
               <div className="flex gap-4">
                 {template.demoUrl && (
@@ -218,7 +210,6 @@ export default async function TemplatePage({
           </section>
         )}
 
-        {/* Images Section - 2x2 Grid */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-6">Gallery</h2>
           <div className="grid grid-cols-2 gap-4">
@@ -238,7 +229,6 @@ export default async function TemplatePage({
           </div>
         </section>
 
-        {/* Features Section */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-8">Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -262,55 +252,8 @@ export default async function TemplatePage({
             ))}
           </div>
         </section>
-
-        {/* Testimonial/CTA Section */}
-        <section className="mb-16 border border-border rounded-lg p-8 md:p-12 bg-card">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Left Column - CTA */}
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
-                Want a professional, extraordinary website tailored to your
-                needs? <span className="block mt-2">Get in touch</span>
-              </h2>
-              <p className="text-muted-foreground mb-6 leading-relaxed">
-                We&apos;ve helped thousands of{" "}
-                <Link
-                  href="/customers"
-                  className="text-primary hover:underline"
-                >
-                  founders and teams
-                </Link>{" "}
-                build their products and apps from scratch, and we can help you
-                too.
-              </p>
-              <Button
-                size="lg"
-                className="bg-foreground text-background hover:opacity-90"
-              >
-                Talk to us
-              </Button>
-            </div>
-
-            {/* Right Column - Testimonial */}
-            <div className="flex flex-col justify-center">
-              <blockquote className="text-lg leading-relaxed mb-6">
-                &quot;Manu literally took our requirements and quite literally
-                ran with them. To anyone reading this - I can&apos;t recommend
-                Manu enough, your job will be done exceptionally well, and you
-                will be delighted with the end result.&quot;
-              </blockquote>
-              <div>
-                <p className="font-semibold">John Shahawy</p>
-                <p className="text-sm text-muted-foreground">
-                  Founder - Moonbeam, Rogue.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

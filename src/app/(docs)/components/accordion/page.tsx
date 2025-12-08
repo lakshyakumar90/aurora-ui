@@ -14,7 +14,6 @@ export default function ButtonDocsPage() {
     <DocsLayout
       title="Accordion" fileName="accordion"
       description="A vertically stacked set of interactive headings that each reveal a section of content."
-    //note="This is a starting point for the Button component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{
         component: <AccordionDemo />,
         filePath: "src/app/(docs)/components/accordion/accordion-demo.tsx",

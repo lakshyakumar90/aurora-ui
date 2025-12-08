@@ -28,7 +28,6 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await hashPassword(password);
 
-    // Create user with emailVerified left as null
     await prisma.user.create({
       data: {
         email,
@@ -37,7 +36,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create a verification token tied to this email
     const token = crypto.randomUUID();
     const expires = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24 hours
 
@@ -58,7 +56,6 @@ export async function POST(req: NextRequest) {
       token,
     )}&identifier=${encodeURIComponent(email)}`;
 
-    // Send verification email via Nodemailer
     try {
       await sendVerificationEmail({
         email,
@@ -67,8 +64,6 @@ export async function POST(req: NextRequest) {
       });
     } catch (emailError) {
       console.error("Failed to send verification email:", emailError);
-      // Still return success but log the error
-      // In production, you might want to handle this differently
       return NextResponse.json(
         {
           success: true,

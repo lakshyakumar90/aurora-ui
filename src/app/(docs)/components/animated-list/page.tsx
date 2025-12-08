@@ -15,7 +15,6 @@ export default function AnimatedListDocsPage() {
       fileName="animated-list"
       title="Animated List"
       description="An animated list component that animates items as they appear."
-    //note="This is a starting point for the Button component. You can customize it according to your needs, we are adding more variants as you read this guide, so stay tuned for more updates."
       example={{
         component: <AnimatedListDemo />,
         filePath: "src/app/(docs)/components/animated-list/animated-list-demo.tsx",

@@ -84,17 +84,17 @@ export async function sendVerificationEmail({
         </html>
       `,
       text: `
-Hi ${name || "there"},
+      Hi ${name || "there"},
 
-Thanks for signing up! Please verify your email address by clicking the link below:
+      Thanks for signing up! Please verify your email address by clicking the link below:
 
-${verificationUrl}
+      ${verificationUrl}
 
-This link will expire in 24 hours.
+      This link will expire in 24 hours.
 
-If you didn't create an account, you can safely ignore this email.
+      If you didn't create an account, you can safely ignore this email.
 
-© ${new Date().getFullYear()} Aurora UI. All rights reserved.
+      <p>© ${new Date().getFullYear()} Aurora UI. All rights reserved.</p>
       `.trim(),
     });
 

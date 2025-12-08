@@ -3,15 +3,14 @@ import Link from "next/link";
 
 export default function Publish() {
   return (
-    <div className="py-20 px-4 relative overflow-hidden">
+    <div className="py-10 px-4 relative overflow-hidden">
       <div className="max-w-4xl mx-auto text-center">
-        {/* Background elements */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-blue-900/20 -z-10" />
-        
+
         <div className="absolute top-20 left-20 text-purple-500/20 animate-rotate-slow">
           <Sparkles size={40} />
         </div>
-        
+
         <div className="absolute bottom-20 right-20 text-blue-500/20 animate-float">
           <Rocket size={36} />
         </div>
@@ -23,9 +22,10 @@ export default function Publish() {
               Amazing Products?
             </span>
           </h2>
-          
+
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Join thousands of developers who are building faster, better, and more beautiful applications with Aurora UI.
+            Join thousands of developers who are building faster, better, and
+            more beautiful applications with Aurora UI.
           </p>
         </div>
 
@@ -38,8 +38,6 @@ export default function Publish() {
               <Rocket className="w-5 h-5" />
               Start Building Now
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              
-              {/* Glow effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 -z-10" />
             </button>
           </Link>
@@ -51,15 +49,6 @@ export default function Publish() {
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
           </Link>
-        </div>
-
-        <div
-          className="mt-12 text-center animate-fade-in-up"
-          style={{ animationDelay: "0.6s" }}
-        >
-          <p className="text-muted-foreground">
-            Free forever • No credit card required • Start in seconds
-          </p>
         </div>
       </div>
     </div>

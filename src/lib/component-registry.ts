@@ -44,14 +44,6 @@ export const componentRegistry: Record<string, ComponentRegistryEntry> = {
     title: "Card",
     description: "A flexible container component for displaying content.",
   },
-  glassIcons: {
-    demoFile: "src/app/(docs)/components/glass-icons/glass-icons-demo.tsx",
-    uiFiles: ["src/components/ui/glass-icons.tsx"],
-    dependencies: [],
-    utilFiles: ["src/lib/utils.ts"],
-    title: "GlassIcons",
-    description: "A customizable glass icons grid.",
-  },
   marquee: {
     demoFile: "src/app/(docs)/components/marquee/marquee-demo.tsx",
     uiFiles: ["src/components/ui/marquee.tsx"],
