@@ -8,16 +8,16 @@ export function SiteFooter() {
           <div className="text-muted-foreground text-center text-sm leading-loose text-balance md:text-left">
             Built by{" "}
             <a
-              href={siteConfig.links.twitter}
+              href="https://github.com/lakshyakumar90"
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
-              Aether/ui
+              Lakshya Kumar
             </a>
             . The source code is available on{" "}
             <a
-              href={siteConfig.links.github}
+              href="https://github.com/lakshyakumar90/aurora-ui"
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
