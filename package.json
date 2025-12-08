@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "generate:v0": "tsx scripts/generate-v0-json.ts",
-    "generate:v0:all": "tsx scripts/generate-all-v0.ts"
+    "generate:v0:all": "tsx scripts/generate-all-v0.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
