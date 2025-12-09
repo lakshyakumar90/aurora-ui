@@ -6,7 +6,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Toc from "@/components/layout/table-of-content";
 import { useSidebar } from "@/components/layout/sidebar-toggle";
 import { cn } from "@/lib/utils";
-// import { SiteFooter } from "@/components/web/site-footer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { open } = useSidebar();

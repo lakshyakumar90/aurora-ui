@@ -29,7 +29,6 @@ type SidebarProviderProps = {
   defaultOpen?: boolean;
 };
 
-// TODO: do we need to add cookies and local storage for this?
 function SidebarProvider({ children, defaultOpen = true }: SidebarProviderProps) {
   const [open, setOpen] = useState(defaultOpen);
   const [openMobile, setOpenMobile] = useState(false);
